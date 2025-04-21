@@ -1,10 +1,9 @@
 <script setup lang="ts">
+
 </script>
 
 <template>
-<div id="app">
-  <router-view></router-view>
-</div>
+<h1>Main Layout</h1>
 </template>
 
 <style scoped>
