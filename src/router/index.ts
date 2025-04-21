@@ -1,0 +1,43 @@
+import { createRouter, createWebHistory } from 'vue-router';
+
+
+const router = createRouter({
+  history: createWebHistory(),
+  routes: [
+    {
+      path: '',
+      name: 'mainPage',
+      component: () => import('@/layout/MainLayout.vue'),
+      beforeEnter: (to, from, next) => {
+        if (!localStorage.token) {
+          next('/login');
+        } else {
+          next();
+        }
+      },
+    },
+    {
+      path: '/login',
+      name: 'login',
+      component: () => import('@/components/LoginPage.vue'),
+      beforeEnter: (to, from, next) => {
+        if (localStorage.token) {
+          next('/');
+        } else {
+          next();
+        }
+      },
+    },
+    // {
+    //   path: '/callback',
+    //   name: 'callback',
+    //   component: () => import('@/components/AuthenticationCallback.vue'),
+    // },
+    {
+      path: '/:catchAll(.*)',
+      redirect: { name: 'mainPage' },
+    },
+  ],
+});
+
+export default router;
