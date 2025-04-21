@@ -19,7 +19,7 @@ const router = createRouter({
     {
       path: '/login',
       name: 'login',
-      component: () => import('@/components/LoginPage.vue'),
+      component: () => import('@/pages/LoginPage.vue'),
       beforeEnter: (to, from, next) => {
         if (localStorage.token) {
           next('/');
