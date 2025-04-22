@@ -27,7 +27,21 @@
     <div class="login-form">
       <div class="title">Увiйти</div>
       <div class="description">
-        Ласкаво просимо до Gelios School
+        Ласкаво просимо до <span class="name-company">Gelios School</span>
+      </div>
+      <div class="form">
+        <div class="form-email">
+          <div class="label">Адрес електронний пошти</div>
+          <div class="field-email">
+            <input type="text" placeholder="Електронний адрес"/>
+          </div>
+        </div>
+        <div class="form-password">
+          <div class="label">Введіть ваш пароль</div>
+          <div class="field-password">
+            <input type="text" placeholder="Пароль"/>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -149,6 +163,50 @@
       font-size: 21px;
       line-height: 100%;
       letter-spacing: 0%;
+      color: #888888;
+      
+      .name-company {
+        color: #0066FF;
+      }
+    }
+    
+    .form {
+      margin-top: 53px;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      
+      .form-email {
+        .label {
+          font-family: Onest;
+          font-weight: 400;
+          font-size: 16px;
+          line-height: 100%;
+          letter-spacing: 0%;
+          color: #30303D;
+          margin-bottom: 17px;
+        }
+
+        .field-email {
+
+        }
+      }
+      
+      .form-password {
+        .label {
+          font-family: Onest;
+          font-weight: 400;
+          font-size: 16px;
+          line-height: 100%;
+          letter-spacing: 0%;
+          color: #30303D;
+          margin-bottom: 17px;
+        }
+        
+        .field-password {
+          
+        }
+      }
     }
   }
 }
