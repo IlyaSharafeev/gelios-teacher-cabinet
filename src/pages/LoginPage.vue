@@ -1,5 +1,31 @@
 <script setup lang="ts">
+import SelectInput from "@/components/SelectInput.vue";
+import ukrainianLanguageIcon from "@/assets/images/language-icons/UA.svg";
+import englishLanguageIcon from "@/assets/images/language-icons/GB.svg";
+import {ref, watch} from "vue";
 
+const selectOptions = [
+  {value: "ua", label: "Українська", icon: ukrainianLanguageIcon},
+  {value: "en", label: "English", icon: englishLanguageIcon},
+];
+
+const selectedValueLanguage = ref<string>(
+    localStorage.getItem("selectedLanguage") || "ua"
+);
+
+const isPasswordRecoveryVisible = ref<boolean>(false); // Реактивная переменная для управления видимостью
+
+const showPasswordRecovery = () => {
+  isPasswordRecoveryVisible.value = true;
+};
+
+const showLoginForm = () => {
+  isPasswordRecoveryVisible.value = false;
+};
+
+watch(selectedValueLanguage, (newValue) => {
+  localStorage.setItem("selectedLanguage", newValue);
+});
 </script>
 
 <template>
@@ -24,32 +50,54 @@
         <div class="woman-lego"></div>
       </div>
     </div>
-    <div class="login-form">
-      <div class="title">Увiйти</div>
-      <div class="description">
-        Ласкаво просимо до <span class="name-company">Gelios School</span>
+    <div class="login-form-wrapper" v-if="!isPasswordRecoveryVisible">
+      <div class="login-form">
+        <div class="title">Увiйти</div>
+        <div class="description">
+          Ласкаво просимо до <span class="name-company cursor-pointer">Gelios School</span>
+        </div>
+        <div class="form">
+          <div class="form-email">
+            <div class="label">Адрес електронний пошти</div>
+            <div class="field-email">
+              <input class="input" type="text" placeholder="Електронний адрес"/>
+            </div>
+          </div>
+          <div class="form-password">
+            <div class="label">Введіть ваш пароль</div>
+            <div class="field-password">
+              <input class="input" type="text" placeholder="Пароль"/>
+            </div>
+          </div>
+        </div>
+        <div class="button login-button">Увійти</div>
+        <div class="forgot-password">
+          Забули пароль?
+          <div class="refresh" @click="showPasswordRecovery">Відновити</div>
+        </div>
       </div>
+      <div class="registration-button">Реєстрація</div>
+    </div>
+    <div class="password-recovery" v-else>
+      <div class="title">Відновлення пароля</div>
+      <div class="description"><span class="second-description">Введіть пошту,</span> прив'язану до вашого профілю</div>
       <div class="form">
         <div class="form-email">
           <div class="label">Адрес електронний пошти</div>
           <div class="field-email">
-            <input type="text" placeholder="Електронний адрес"/>
+            <input class="input" type="text" placeholder="Електронний адрес"/>
           </div>
         </div>
-        <div class="form-password">
-          <div class="label">Введіть ваш пароль</div>
-          <div class="field-password">
-            <input type="text" placeholder="Пароль"/>
-          </div>
-        </div>
+        <div class="button recovery-button">Відновити</div>
+        <div class="back-to-login" @click="showLoginForm">Увiйти</div>
       </div>
     </div>
+    <SelectInput class="select-language" v-model="selectedValueLanguage" :options="selectOptions"
+                 :isSelectFirstOptionDefault="true"/>
   </div>
 </template>
 
 <style scoped lang="scss">
-@import url('https://fonts.googleapis.com/css2?family=Onest:wght@100..900&display=swap');
-
 .login-page {
   .background-gradient {
     position: relative;
@@ -136,75 +184,189 @@
       }
     }
   }
-  
-  .login-form {
+
+  .login-form-wrapper {
+    width: 539px;
     position: absolute;
     right: 69px;
     top: 50%;
     transform: translateY(-50%);
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 59px;
+
+    .login-form {
+      padding: 39px 44px;
+      border-radius: 40px;
+      box-shadow: 0px 25px 42.9px -18px #0066FF5C;
+      background-color: #FFFFFF;
+      z-index: 2;
+
+      .title {
+        font-family: "Onest", sans-serif;
+        font-weight: 600;
+        font-size: 48px;
+        line-height: 100%;
+        letter-spacing: -2%;
+      }
+
+      .description {
+        margin-top: 5px;
+        font-family: Onest;
+        font-weight: 400;
+        font-size: 21px;
+        line-height: 100%;
+        letter-spacing: 0%;
+        color: #888888;
+
+        .name-company {
+          color: #0066FF;
+        }
+      }
+
+      .form {
+        margin-top: 53px;
+        display: flex;
+        flex-direction: column;
+        gap: 22px;
+
+        .form-email {
+          .label {
+            font-family: Onest;
+            font-weight: 400;
+            font-size: 16px;
+            line-height: 100%;
+            letter-spacing: 0%;
+            color: #30303D;
+            margin-bottom: 17px;
+          }
+
+          .field-email {
+            .input {
+
+            }
+          }
+        }
+
+        .form-password {
+          .label {
+            font-family: Onest;
+            font-weight: 400;
+            font-size: 16px;
+            line-height: 100%;
+            letter-spacing: 0%;
+            color: #30303D;
+            margin-bottom: 9px;
+          }
+
+          .field-password {
+
+          }
+        }
+      }
+
+      .login-button {
+        margin-top: 35px;
+      }
+
+      .forgot-password {
+        margin-top: 15px;
+        display: flex;
+        gap: 4px;
+        justify-content: center;
+        font-weight: 500;
+        font-size: 16px;
+        line-height: 100%;
+        letter-spacing: 0%;
+
+        .refresh {
+          cursor: pointer;
+          color: #0066FF;
+        }
+      }
+    }
+
+    .registration-button {
+      display: flex;
+      justify-content: center;
+      background-color: #454A53;
+      border-radius: 16px;
+      padding: 16px;
+      font-weight: 600;
+      font-size: 18px;
+      color: #FFFFFF;
+      width: 100%;
+    }
+  }
+
+  .select-language {
+    margin: 60px;
+  }
+
+  .password-recovery {
+    width: 539px;
+    position: absolute;
+    right: 69px;
+    top: 50%;
+    transform: translateY(-50%);
+    z-index: 2;
     padding: 39px 44px;
     border-radius: 40px;
-    box-shadow: 0px 25px 42.9px -18px #0066FF5C;
-    background-color: #FFFFFF;
-    z-index: 2;
-    
+    box-shadow: 0px 25px 42.9px -18px #0066ff5c;
+    background-color: #ffffff;
+
+    .back-to-login {
+      text-align: center;
+      cursor: pointer;
+      color: #0066ff;
+      font-family: Onest;
+      font-weight: 500;
+      font-size: 16px;
+      margin-bottom: 20px;
+    }
+
     .title {
       font-family: "Onest", sans-serif;
       font-weight: 600;
-      font-size: 48px;
+      font-size: 44px;
       line-height: 100%;
       letter-spacing: -2%;
     }
-    
+
     .description {
-      margin-top: 5px;
+      margin-top: 10px;
       font-family: Onest;
       font-weight: 400;
       font-size: 21px;
       line-height: 100%;
-      letter-spacing: 0%;
       color: #888888;
       
-      .name-company {
+      .second-description {
         color: #0066FF;
       }
     }
-    
+
     .form {
       margin-top: 53px;
       display: flex;
       flex-direction: column;
-      gap: 16px;
-      
+      gap: 22px;
+
       .form-email {
         .label {
           font-family: Onest;
           font-weight: 400;
           font-size: 16px;
           line-height: 100%;
-          letter-spacing: 0%;
-          color: #30303D;
+          color: #30303d;
           margin-bottom: 17px;
         }
 
         .field-email {
-
-        }
-      }
-      
-      .form-password {
-        .label {
-          font-family: Onest;
-          font-weight: 400;
-          font-size: 16px;
-          line-height: 100%;
-          letter-spacing: 0%;
-          color: #30303D;
-          margin-bottom: 17px;
-        }
-        
-        .field-password {
-          
+          .input {
+            /* Стили для input */
+          }
         }
       }
     }
