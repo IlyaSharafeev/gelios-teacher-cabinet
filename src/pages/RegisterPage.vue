@@ -180,7 +180,7 @@ watch(selectedValueLanguage, (newValue) => {
   .background-gradient {
     position: relative;
     height: 450px;
-    padding: 60px 35px;
+    padding: 35px 60px;
     display: flex;
 
     &::before {
@@ -251,7 +251,7 @@ watch(selectedValueLanguage, (newValue) => {
 
       .woman-lego {
         position: absolute;
-        bottom: -71px;
+        bottom: -46px;
         left: -170px;
         background-image: url("@/assets/images/lego-models/woman-with-phone.png");
         background-size: cover;

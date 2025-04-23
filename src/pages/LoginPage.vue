@@ -200,8 +200,7 @@ watch(selectedValueLanguage, (newValue) => {
   .background-gradient {
     position: relative;
     height: 450px;
-    padding: 60px 35px;
-    z-index: 1;
+    padding: 35px 60px;
     display: flex;
 
     &::before {
@@ -272,13 +271,14 @@ watch(selectedValueLanguage, (newValue) => {
 
       .woman-lego {
         position: absolute;
-        bottom: -60px;
+        bottom: -35px;
         background-image: url("@/assets/images/lego-models/woman-with-roses.png");
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
         width: 376px;
         height: 327px;
+        z-index: 3;
       }
     }
   }
