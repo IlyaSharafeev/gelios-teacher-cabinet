@@ -28,6 +28,18 @@ const router = createRouter({
         }
       },
     },
+    {
+      path: '/register',
+      name: 'register',
+      component: () => import('@/pages/RegisterPage.vue'),
+      beforeEnter: (to, from, next) => {
+        if (localStorage.token) {
+          next('/');
+        } else {
+          next();
+        }
+      },
+    },
     // {
     //   path: '/callback',
     //   name: 'callback',

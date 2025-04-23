@@ -148,7 +148,7 @@ watch(selectedValueLanguage, (newValue) => {
           <div class="refresh" @click="showPasswordRecovery">Відновити</div>
         </div>
       </div>
-      <div class="registration-button">Реєстрація</div>
+      <router-link to="/register" class="registration-button">Реєстрація</router-link>
     </div>
 
     <div class="password-recovery" v-else>
@@ -420,6 +420,7 @@ watch(selectedValueLanguage, (newValue) => {
     }
 
     .registration-button {
+      text-decoration: none;
       display: flex;
       justify-content: center;
       background-color: #454a53;
