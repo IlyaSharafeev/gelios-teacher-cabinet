@@ -5,27 +5,56 @@ const router = createRouter({
   history: createWebHistory(),
   routes: [
     {
-      path: '',
+      path: '/',
       name: 'mainPage',
       component: () => import('@/layout/MainLayout.vue'),
-      beforeEnter: (to, from, next) => {
-        if (!localStorage.token) {
-          next('/login');
-        } else {
-          next();
-        }
-      },
+      children: [
+        {
+          path: '',
+          redirect: { name: 'dashboard' },
+        },
+        {
+          path: 'dashboard',
+          name: 'dashboard',
+          component: () => import('@/pages/DashboardPage.vue'),
+        },
+        {
+          path: 'schedule',
+          name: 'schedule',
+          component: () => import('@/pages/SchedulePage.vue'),
+        },
+        {
+          path: 'homework',
+          name: 'homework',
+          component: () => import('@/pages/HomeworkPage.vue'),
+        },
+        {
+          path: 'add-homework',
+          name: 'add-homework',
+          component: () => import('@/pages/AddHomeworkPage.vue'),
+        },
+        {
+          path: 'students',
+          name: 'students',
+          component: () => import('@/pages/StudentsPage.vue'),
+        },
+        {
+          path: 'settings',
+          name: 'settings',
+          component: () => import('@/pages/SettingsPage.vue'),
+        },
+      ],
     },
     {
       path: '/login',
       name: 'login',
       component: () => import('@/pages/LoginPage.vue'),
       beforeEnter: (to, from, next) => {
-        if (localStorage.token) {
-          next('/');
-        } else {
-          next();
-        }
+        // if (localStorage.token) {
+        //   next('/');
+        // } else {
+        //   next();
+        // }
       },
     },
     {
@@ -33,11 +62,11 @@ const router = createRouter({
       name: 'register',
       component: () => import('@/pages/RegisterPage.vue'),
       beforeEnter: (to, from, next) => {
-        if (localStorage.token) {
-          next('/');
-        } else {
-          next();
-        }
+        // if (localStorage.token) {
+        //   next('/');
+        // } else {
+        //   next();
+        // }
       },
     },
     // {
@@ -47,7 +76,7 @@ const router = createRouter({
     // },
     {
       path: '/:catchAll(.*)',
-      redirect: { name: 'mainPage' },
+      redirect: { name: 'dashboard' },
     },
   ],
 });
