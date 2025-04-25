@@ -1,19 +1,94 @@
 <script setup lang="ts">
+interface Statistic {
+  title: string;
+  description: string;
+}
 
+interface UpcomingClass {
+  name: string;
+  date: string;
+}
+
+interface Homework {
+  studentName: string;
+  trainerName: string;
+  date: string;
+  isOverdue: boolean; // Флаг для просроченных заданий
+}
+
+const statistics: Statistic[] = [
+  { title: "74", description: "Кількість учнів" },
+  { title: "315", description: "Домашніх завдань на виконання" },
+  { title: "213", description: "Уроків за останній місяць" }
+];
+
+const upcomingClasses: UpcomingClass[] = [
+  { name: "Засядько I.О.", date: "12.01 10:00" },
+  { name: "Азарко А.Б.", date: "12.01 11:30" },
+  { name: "Кличко I.У.", date: "12.01 14:00" },
+  { name: "Засядько I.О.", date: "12.01 14:00" },
+  { name: "Азарко А.Б.", date: "12.01 14:00" },
+  { name: "Азарко А.Б.", date: "12.01 14:00" },
+];
+
+const homeworks: Homework[] = [
+  { studentName: "Засядько I.О.", trainerName: "Кіберкiшка", date: "30 Вересня 12:30", isOverdue: true },
+  { studentName: "Кличко I.У.", trainerName: "Знайди слово", date: "1 Жовтня 14:30", isOverdue: false },
+  { studentName: "Азарко А.Б.", trainerName: "Кіберкiшка", date: "3 Жовтня 12:30", isOverdue: false }
+];
 </script>
 
 <template>
-<div class="dashboard">
-  <div class="header">
-    <div class="welcome-message">Добридень, Оксана</div>
-    <div class="profile">
-      <div class="notification-wrapper cursor-pointer">
-        <div class="notification"></div>
+  <div class="dashboard">
+    <div class="header">
+      <div class="welcome-message">Добридень, Оксана</div>
+      <div class="profile">
+        <div class="notification-wrapper cursor-pointer">
+          <div class="notification"></div>
+        </div>
+        <div class="profile-image cursor-pointer"></div>
       </div>
-      <div class="profile-image cursor-pointer"></div>
+    </div>
+    <div class="main">
+      <div class="content-left">
+        <div class="statistic">
+          <div class="statistic_title">
+            Статистика
+          </div>
+          <div class="statistic_blocks">
+            <div v-for="(stat, index) in statistics" :key="index" class="statistic_block">
+              <div class="statistic_block-title">{{ stat.title }}</div>
+              <div class="statistic_block-description">{{ stat.description }}</div>
+            </div>
+          </div>
+        </div>
+        <div class="homework">
+          <div class="homework__title">Домашні Завдання</div>
+          <div class="homework__items">
+            <div v-for="(homework, index) in homeworks" :key="index" class="homework__item" :class="{ 'homework__item--overdue': homework.isOverdue }">
+              <div class="name-student">{{ homework.studentName }}</div>
+              <div class="name-trainer">{{ homework.trainerName }}</div>
+              <div class="homework-date">{{ homework.date }}</div>
+            </div>
+          </div>
+        </div>
+        <router-link to="homework" class="button btn-watch-all">Дивитися Всi</router-link>
+      </div>
+      <div class="content-right">
+        <div class="upcoming-classes">
+          <div class="upcoming-classes__title">Найближчі заняття</div>
+          <div class="upcoming-classes__items">
+            <div v-for="(item, index) in upcomingClasses" :key="index" class="upcoming-classes__item">
+              <div class="upcoming-classes__item-name">{{ item.name }}</div>
+              <div class="upcoming-classes__item-date">{{ item.date }}</div>
+              <div class="upcoming-classes__item-icon"></div>
+            </div>
+          </div>
+        </div>
+        <router-link to="schedule" class="button btn-watch-all">Дивитися Всi</router-link>
+      </div>
     </div>
   </div>
-</div>
 </template>
 
 <style scoped lang="scss">
@@ -21,26 +96,27 @@
   .header {
     display: flex;
     justify-content: space-between;
-    
+    align-items: center;
+
     .welcome-message {
-      font-family: "Onest" sans-serif;
+      font-family: "Onest", sans-serif;
       font-weight: 500;
       font-size: 50px;
-      line-height: 114.99999999999999%;
+      line-height: 115%;
       letter-spacing: -2%;
-      color: #FFFFFF;
+      color: #ffffff;
     }
-    
+
     .profile {
       display: flex;
       align-items: center;
       gap: 20px;
-      
+
       .notification-wrapper {
-        background-color: #FFFFFF;
+        background-color: #ffffff;
         padding: 18px;
         border-radius: 18px;
-        
+
         .notification {
           width: 32px;
           height: 32px;
@@ -50,7 +126,7 @@
           background-repeat: no-repeat;
         }
       }
-      
+
       .profile-image {
         width: 80px;
         height: 80px;
@@ -58,6 +134,212 @@
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
+      }
+    }
+  }
+
+  .main {
+    display: flex;
+    gap: 20px;
+    margin-top: 60px;
+
+    .content-left {
+      flex: 2;
+      min-height: 400px;
+      border-radius: 12px;
+
+      .statistic {
+        border-radius: 12px;
+
+        .statistic_title {
+          font-family: "Onest", sans-serif;
+          font-weight: 500;
+          font-size: 20px;
+          line-height: 100%;
+          letter-spacing: 0%;
+          color: #a4b9d4;
+        }
+
+        .statistic_blocks {
+          margin-top: 24px;
+          display: flex;
+          gap: 16px;
+        }
+
+        .statistic_block {
+          background-color: #ffffff;
+          padding: 24px;
+          border-radius: 24px;
+          display: flex;
+          flex-direction: column;
+          gap: 18px;
+          width: 224px;
+
+          .statistic_block-title {
+            font-family: "Onest", sans-serif;
+            font-weight: 500;
+            font-size: 60px;
+            line-height: 100%;
+            letter-spacing: -2%;
+            color: #0066ff;
+          }
+
+          .statistic_block-description {
+            font-family: "Onest", sans-serif;
+            font-weight: 500;
+            font-size: 18px;
+            line-height: 100%;
+            letter-spacing: 0%;
+            color: #30303d;
+          }
+        }
+      }
+
+      .homework {
+        margin-top: 60px;
+        border-radius: 12px;
+
+        .homework__title {
+          font-family: "Onest", sans-serif;
+          font-weight: 500;
+          font-size: 20px;
+          line-height: 100%;
+          letter-spacing: 0%;
+          color: #a4b9d4;
+          margin-bottom: 24px;
+        }
+
+        .homework__items {
+          display: flex;
+          gap: 16px;
+          flex-direction: column;
+          margin-top: 24px;
+          padding: 22px 24px 30px;
+          background-color: #f5f5f5;
+          border-radius: 24px;
+        }
+
+        .homework__item {
+          display: flex;
+          align-items: center;
+          gap: 16px;
+          border-radius: 12px;
+
+          .name-student {
+            flex: 1;
+            font-family: "Onest", sans-serif;
+            font-weight: 400;
+            font-size: 18px;
+            line-height: 100%;
+            letter-spacing: 0%;
+            color: #30303d;
+          }
+
+          .name-trainer {
+            flex: 1;
+            font-family: "Onest", sans-serif;
+            font-weight: 400;
+            font-size: 18px;
+            line-height: 100%;
+            letter-spacing: 0%;
+            text-align: center;
+            color: #30303d;
+          }
+
+          .homework-date {
+            flex: 1;
+            font-family: "Onest", sans-serif;
+            font-weight: 500;
+            font-size: 18px;
+            line-height: 121%;
+            letter-spacing: 0%;
+            color: #0066ff;
+            text-align: right;
+          }
+
+          &--overdue {
+            .name-student,
+            .name-trainer,
+            .homework-date {
+              color: #ff7b7b;
+            }
+          }
+        }
+      }
+      
+      .btn-watch-all {
+        margin-top: 32px;
+      }
+    }
+
+    .content-right {
+      flex: 1;
+      min-height: 400px;
+      border-radius: 12px;
+
+      .upcoming-classes {
+        border-radius: 12px;
+
+        .upcoming-classes__title {
+          font-family: "Onest", sans-serif;
+          font-weight: 500;
+          font-size: 20px;
+          line-height: 100%;
+          letter-spacing: 0%;
+          color: #a4b9d4;
+          margin-bottom: 24px;
+        }
+
+        .upcoming-classes__items {
+          display: flex;
+          flex-direction: column;
+          gap: 16px;
+        }
+
+        .upcoming-classes__item {
+          border-radius: 24px;
+          background-color: #ffffff;
+          padding: 16px;
+          display: flex;
+          align-items: center;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+
+          .upcoming-classes__item-name {
+            flex: 1;
+            font-family: "Onest", sans-serif;
+            font-weight: 400;
+            font-size: 18px;
+            line-height: 100%;
+            letter-spacing: 0%;
+            color: #30303d;
+          }
+
+          .upcoming-classes__item-date {
+            flex: 1;
+            font-family: "Onest", sans-serif;
+            font-weight: 500;
+            font-size: 18px;
+            line-height: 121%;
+            letter-spacing: 0%;
+            color: #0066ff;
+            text-align: center;
+          }
+
+          .upcoming-classes__item-icon {
+            cursor: pointer;
+            width: 24px;
+            height: 24px;
+            margin-left: 12px;
+            background-image: url('@/assets/images/icons/external-link.png');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+          }
+        }
+      }
+
+      .btn-watch-all {
+        margin-top: 32px;
       }
     }
   }
