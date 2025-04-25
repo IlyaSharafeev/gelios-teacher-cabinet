@@ -41,7 +41,12 @@ const homeworks: Homework[] = [
 <template>
   <div class="dashboard">
     <div class="header">
-      <div class="welcome-message">Добридень, Оксана</div>
+      <div class="welcome-message">
+        <div class="text">
+          Добридень, Оксана
+        </div>
+        <div class="pencil-background"></div>
+      </div>
       <div class="profile">
         <div class="notification-wrapper cursor-pointer">
           <div class="notification"></div>
@@ -99,12 +104,30 @@ const homeworks: Homework[] = [
     align-items: center;
 
     .welcome-message {
-      font-family: "Onest", sans-serif;
-      font-weight: 500;
-      font-size: 50px;
-      line-height: 115%;
-      letter-spacing: -2%;
-      color: #ffffff;
+      display: flex;
+      gap: 23px;
+      position: relative;
+      
+      .text {
+        font-family: "Onest", sans-serif;
+        font-weight: 500;
+        font-size: 50px;
+        line-height: 115%;
+        letter-spacing: -2%;
+        color: #ffffff;
+      }
+
+      .pencil-background {
+        position: absolute;
+        top: -133px;
+        right: -350px;
+        background-image: url("@/assets/backgrounds/pencil.svg");
+        background-size: contain;
+        background-position: center;
+        background-repeat: no-repeat;
+        width: 284px;
+        height: 243px;
+      }
     }
 
     .profile {
