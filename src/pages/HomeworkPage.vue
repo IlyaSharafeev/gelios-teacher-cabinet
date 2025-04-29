@@ -2,7 +2,7 @@
 import { ref, computed } from 'vue';
 import { VDataTable, VBtn } from 'vuetify/components';
 import { RouterLink } from 'vue-router';
-import { students, Student } from '@/data/homework-page/students';
+import { students } from '@/data/homework-page/students';
 
 // Interface for directions
 interface Direction {
