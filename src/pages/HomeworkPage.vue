@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
-import { VDataTable, VBtn } from 'vuetify/components';
+import { VDataTable, VBtn, VBtnToggle } from 'vuetify/components';
 import { RouterLink } from 'vue-router';
 import { students } from '@/data/homework-page/students';
 
@@ -99,31 +99,40 @@ const filteredItems = computed(() => {
 
     <!-- Filters -->
     <div class="homework__filters">
-      <!-- Completed/Incomplete Switch -->
-      <v-switch
+      <!-- Completed/Incomplete Toggle Button -->
+      <v-btn-toggle
           v-model="isCompleted"
-          :label="isCompleted ? 'Виконані' : 'Не виконані'"
-          class="homework__filter-switch"
+          mandatory
+          class="homework__filter-toggle"
           color="primary"
-      ></v-switch>
+      >
+        <v-btn :value="false">Не виконані</v-btn>
+        <v-btn :value="true">Виконані</v-btn>
+      </v-btn-toggle>
 
       <!-- Student Dropdown -->
       <v-select
           v-model="selectedStudent"
           :items="students.map((s) => ({ title: s.name, value: s.name === 'Всі учні' ? 'all' : s.name }))"
-          label="Учень"
           class="homework__filter-select"
           variant="outlined"
-      ></v-select>
+      >
+        <template v-slot:append-inner="{ isActive }">
+          <v-icon :class="{ 'rotate-icon': isActive }">mdi-chevron-down</v-icon>
+        </template>
+      </v-select>
 
       <!-- Direction Dropdown -->
       <v-select
           v-model="selectedDirection"
           :items="directions.map((d) => ({ title: d.name, value: d.name === 'Всі напрямки' ? 'all' : d.name }))"
-          label="Напрямок"
           class="homework__filter-select"
           variant="outlined"
-      ></v-select>
+      >
+        <template v-slot:append-inner="{ isActive }">
+          <v-icon :class="{ 'rotate-icon': isActive }">mdi-chevron-down</v-icon>
+        </template>
+      </v-select>
 
       <!-- Date Range Picker -->
       <div class="homework__date-picker-wrapper">
@@ -165,6 +174,9 @@ const filteredItems = computed(() => {
         :items="filteredItems"
         class="homework__table"
         :items-per-page="10"
+        :disable-sort="true"
+        :hide-default-footer="true"
+        :hide-default-header="true"
     >
       <!-- Custom slot for direction column to apply blue uppercase styling -->
       <template v-slot:item.direction="{ item }">
@@ -185,11 +197,17 @@ const filteredItems = computed(() => {
 
 <style scoped lang="scss">
 .homework {
-  padding: 20px;
+  padding: 40px 48px;
+  border-radius: 32px;
+  background-color: #FFFFFF;
 
   &__title {
-    font-size: 24px;
-    margin-bottom: 20px;
+    margin-bottom: 40px;
+    font-family: "Onest" sans-serif;
+    font-weight: 500;
+    font-size: 48px;
+    line-height: 130%;
+    letter-spacing: -2%;
   }
 
   &__filters {
@@ -200,35 +218,110 @@ const filteredItems = computed(() => {
     align-items: flex-start;
   }
 
-  &__filter-switch {
-    max-width: 200px;
+  &__filter-toggle {
+    :deep(.v-btn) {
+      height: 44px !important;
+      min-height: 44px !important;
+    }
   }
 
   &__filter-select {
-    max-width: 250px;
+    max-width: 232px;
+
+    :deep(.v-field) {
+      height: 44px !important;
+      border-radius: 12px;
+      border: 1.5px solid #30303D26;
+      outline: none;
+    }
+
+    :deep(.v-field__input) {
+      height: 44px !important;
+      padding: 0 12px !important;
+      display: flex;
+      align-items: center;
+    }
+
+    :deep(.v-field--focused) {
+      border: none !important;
+      outline: none !important;
+      box-shadow: none !important;
+    }
+
+    /* Скрываем стандартную иконку */
+    :deep(.v-field__append) {
+      display: none !important; /* Скрываем весь контейнер дефолтной иконки */
+    }
+
+    /* Стили для новой иконки внутри инпута */
+    :deep(.v-field__append-inner) {
+      display: flex;
+      align-items: center;
+      padding-right: 12px;
+    }
+
+    :deep(.v-icon) {
+      font-size: 20px;
+      color: #30303D;
+      transition: transform 0.2s ease; /* Плавная анимация вращения */
+    }
+
+    /* Переворот иконки при открытии селекта */
+    :deep(.rotate-icon) {
+      transform: rotate(180deg);
+    }
   }
 
   &__filter-date {
-    max-width: 300px;
+    :deep(.v-field) {
+      height: 44px !important;
+    }
+
+    :deep(.v-field__input) {
+      height: 44px !important;
+      padding: 0 12px !important;
+      display: flex;
+      align-items: center;
+    }
+
+    :deep(.v-field--focused) {
+      border: none !important;
+      outline: none !important;
+      box-shadow: none !important;
+    }
   }
 
   &__date-picker-wrapper {
     display: flex;
     gap: 10px;
     align-items: flex-start;
+    width: 286px;
   }
 
   &__clear-date-btn {
+    height: 44px !important;
     margin-top: 8px;
   }
 
   &__table {
-    border: 1px solid #e0e0e0;
-    border-radius: 4px;
+    background-color: transparent;
+  }
+
+  :deep(.v-data-table-header) {
+    display: none;
+  }
+
+  :deep(.v-data-table__tr:not(:first-child):not(:last-child)) {
+    border-bottom: 1px solid #e0e0e0;
+  }
+
+  :deep(.v-data-table__td) {
+    vertical-align: middle;
+    padding: 20px 0;
   }
 
   &__direction-abbr {
-    color: #1976d2; /* Vuetify primary blue */
+    color: #1976d2;
     text-transform: uppercase;
     font-weight: 500;
   }
@@ -236,7 +329,7 @@ const filteredItems = computed(() => {
   &__progress-link {
     display: inline-flex;
     align-items: center;
-    color: #1976d2; /* Vuetify primary blue */
+    color: #1976d2;
     text-decoration: none;
     font-weight: 500;
 
