@@ -92,26 +92,27 @@ const headers = [
 const filteredItems = computed(() => {
   return students
       .filter((item) => {
-        // Skip 'Всі учні' for table display
         if (item.name === 'Всі учні') return false;
 
         const matchesCompleted = isCompleted.value ? item.completed : !item.completed;
         const matchesStudent = selectedStudent.value === 'all' || item.name === selectedStudent.value;
         const matchesDirection = selectedDirection.value === 'all' || item.direction === selectedDirection.value;
 
-        // Normalize item date to YYYY-MM-DD for filtering
         const itemDate = item.date ? normalizeDate(new Date(item.date)) : '';
 
-        // Normalize date range for comparison
-        const startDate = dateRange.value[0] ? normalizeDate(new Date(dateRange.value[0])) : '';
-        const endDate = dateRange.value[1] ? normalizeDate(new Date(dateRange.value[1])) : '';
+        // ✅ Захист від помилки, якщо dateRange.value не масив
+        const startDate = Array.isArray(dateRange.value) && dateRange.value[0]
+            ? normalizeDate(new Date(dateRange.value[0]))
+            : '';
+        const endDate = Array.isArray(dateRange.value) && dateRange.value[1]
+            ? normalizeDate(new Date(dateRange.value[1]))
+            : '';
 
-        // Date filter: include if no date range or within range
         const matchesDate =
-            (!startDate && !endDate) || // No date range selected
+            (!startDate && !endDate) ||
             (itemDate &&
-                (!startDate || itemDate >= startDate) && // Start date filter
-                (!endDate || itemDate <= endDate)); // End date filter
+                (!startDate || itemDate >= startDate) &&
+                (!endDate || itemDate <= endDate));
 
         return matchesCompleted && matchesStudent && matchesDirection && matchesDate;
       })
