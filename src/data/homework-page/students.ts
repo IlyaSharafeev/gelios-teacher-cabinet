@@ -5,12 +5,13 @@ export interface Student {
     task: string;
     date: string;
     completed: boolean;
+    isUpcoming?: boolean;
 }
 
 export const students: Student[] = [
-    { id: 1, name: 'Всі учні', direction: 'Всі напрямки', task: '', date: '', completed: false },
-    { id: 2, name: 'Іван Петров', direction: 'Швидкочитання', task: 'Прочитати текст', date: '2024-09-30T12:30:00', completed: false },
-    { id: 3, name: 'Марія Сидорова', direction: 'IT', task: 'Написати код', date: '2024-12-04T14:00:00', completed: true },
+    { id: 1, name: 'Всі учні', direction: 'Всі напрямки', task: '', date: '', completed: false, isUpcoming: true },
+    { id: 2, name: 'Іван Петров', direction: 'Швидкочитання', task: 'Прочитати текст', date: '2024-09-30T12:30:00', completed: false, isUpcoming: true },
+    { id: 3, name: 'Марія Сидорова', direction: 'IT', task: 'Написати код', date: '2024-12-04T14:00:00', completed: true, isUpcoming: true },
     { id: 4, name: 'Олег Коваль', direction: 'Ментальна Арифметика', task: 'Виконати 50 вправ', date: '2024-10-15T10:00:00', completed: false },
     { id: 5, name: 'Софія Левицька', direction: 'Швидкочитання', task: 'Тренування швидкості', date: '2024-09-25T09:30:00', completed: true },
     { id: 6, name: 'Дмитро Шевченко', direction: 'IT', task: 'Створити API', date: '2024-10-10T11:45:00', completed: true },

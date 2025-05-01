@@ -2,7 +2,9 @@
 import { ref, computed } from 'vue';
 import { VDataTable, VBtn, VBtnToggle } from 'vuetify/components';
 import { RouterLink } from 'vue-router';
-import { students } from '@/data/homework-page/students';
+import VueDatePicker from '@vuepic/vue-datepicker';
+import {students} from "@/data/homework-page/students.ts";
+import '@vuepic/vue-datepicker/dist/main.css';
 
 // Interface for directions
 interface Direction {
@@ -25,6 +27,14 @@ const directions: Direction[] = [
   { id: 4, name: 'IT', abbreviation: 'IT' },
 ];
 
+// Normalize date to remove time (returns YYYY-MM-DD)
+const normalizeDate = (date: Date | string): string => {
+  if (!date) return '';
+  const d = typeof date === 'string' ? new Date(date) : date;
+  if (isNaN(d.getTime())) return '';
+  return d.toISOString().split('T')[0]; // Returns YYYY-MM-DD
+};
+
 // Format date for display in DD/MM/YYYY
 const formatDisplayDate = (dateStr: string): string => {
   if (!dateStr) return '';
@@ -38,13 +48,19 @@ const formatDisplayDate = (dateStr: string): string => {
 
 // Ukrainian date formatter for table
 const formatDate = (dateStr: string): string => {
-  if (!dateStr) return ''; // Handle empty date for 'Всі учні'
+  if (!dateStr) return ''; // Handle empty date
   const date = new Date(dateStr);
   if (isNaN(date.getTime())) return ''; // Handle invalid dates
   const day = date.getDate();
   const month = new Intl.DateTimeFormat('uk-UA', { month: 'long' }).format(date);
-  const time = date.toLocaleTimeString('uk-UA', { hour: '2-digit', minute: '2-digit' });
-  return `${day} ${month} ${time}`;
+
+  // Check if the string contains time (e.g., includes "T")
+  if (dateStr.includes('T')) {
+    const hours = date.getHours().toString().padStart(2, '0');
+    const minutes = date.getMinutes().toString().padStart(2, '0');
+    return `${day} ${month} ${hours}:${minutes}`;
+  }
+  return `${day} ${month}`; // Only date if no time is present
 };
 
 // Clear date range
@@ -74,29 +90,43 @@ const headers = [
 
 // Computed filtered items
 const filteredItems = computed(() => {
-  return students.filter((item) => {
-    // Skip 'Всі учні' for table display
-    if (item.name === 'Всі учні') return false;
-    const matchesCompleted = isCompleted.value ? item.completed : !item.completed;
-    const matchesStudent = selectedStudent.value === 'all' || item.name === selectedStudent.value;
-    const matchesDirection = selectedDirection.value === 'all' || item.direction === selectedDirection.value;
-    const itemDate = item.date ? new Date(item.date) : null;
-    const matchesDate =
-        dateRange.value[0] === '' ||
-        (itemDate &&
-            !isNaN(itemDate.getTime()) &&
-            dateRange.value[1] !== '' &&
-            new Date(dateRange.value[0]) <= itemDate &&
-            itemDate <= new Date(dateRange.value[1]));
-    return matchesCompleted && matchesStudent && matchesDirection && matchesDate;
-  });
+  return students
+      .filter((item) => {
+        // Skip 'Всі учні' for table display
+        if (item.name === 'Всі учні') return false;
+
+        const matchesCompleted = isCompleted.value ? item.completed : !item.completed;
+        const matchesStudent = selectedStudent.value === 'all' || item.name === selectedStudent.value;
+        const matchesDirection = selectedDirection.value === 'all' || item.direction === selectedDirection.value;
+
+        // Normalize item date to YYYY-MM-DD for filtering
+        const itemDate = item.date ? normalizeDate(new Date(item.date)) : '';
+
+        // Normalize date range for comparison
+        const startDate = dateRange.value[0] ? normalizeDate(new Date(dateRange.value[0])) : '';
+        const endDate = dateRange.value[1] ? normalizeDate(new Date(dateRange.value[1])) : '';
+
+        // Date filter: include if no date range or within range
+        const matchesDate =
+            (!startDate && !endDate) || // No date range selected
+            (itemDate &&
+                (!startDate || itemDate >= startDate) && // Start date filter
+                (!endDate || itemDate <= endDate)); // End date filter
+
+        return matchesCompleted && matchesStudent && matchesDirection && matchesDate;
+      })
+      .map((item) => ({
+        ...item,
+        date: formatDate(item.date),
+        rawDate: item.date,
+      }));
 });
 </script>
 
 <template>
   <div class="homework">
     <h1 class="homework__title">Домашня робота</h1>
-
+    <div class="book-float"></div>
     <!-- Filters -->
     <div class="homework__filters">
       <!-- Completed/Incomplete Toggle Button -->
@@ -115,11 +145,9 @@ const filteredItems = computed(() => {
           v-model="selectedStudent"
           :items="students.map((s) => ({ title: s.name, value: s.name === 'Всі учні' ? 'all' : s.name }))"
           class="homework__filter-select"
-          variant="outlined"
+          variant="plain"
+          append-icon=""
       >
-        <template v-slot:append-inner="{ isActive }">
-          <v-icon :class="{ 'rotate-icon': isActive }">mdi-chevron-down</v-icon>
-        </template>
       </v-select>
 
       <!-- Direction Dropdown -->
@@ -127,44 +155,22 @@ const filteredItems = computed(() => {
           v-model="selectedDirection"
           :items="directions.map((d) => ({ title: d.name, value: d.name === 'Всі напрямки' ? 'all' : d.name }))"
           class="homework__filter-select"
-          variant="outlined"
+          variant="plain"
       >
-        <template v-slot:append-inner="{ isActive }">
-          <v-icon :class="{ 'rotate-icon': isActive }">mdi-chevron-down</v-icon>
-        </template>
       </v-select>
 
       <!-- Date Range Picker -->
       <div class="homework__date-picker-wrapper">
-        <v-menu>
-          <template v-slot:activator="{ props }">
-            <v-text-field
-                v-bind="props"
-                :model-value="dateRange[0] && dateRange[1] ? `${formatDisplayDate(dateRange[0])} - ${formatDisplayDate(dateRange[1])}` : ''"
-                label="Період"
-                class="homework__filter-date"
-                variant="outlined"
-                readonly
-                placeholder="Оберіть період"
-                :error-messages="dateRange[0] && !dateRange[1] ? ['Оберіть кінцеву дату'] : []"
-            ></v-text-field>
-          </template>
-          <v-date-picker
-              v-model="dateRange"
-              range
-              title="Оберіть період"
-              class="homework__date-picker"
-              :max="new Date().toISOString().split('T')[0]"
-          ></v-date-picker>
-        </v-menu>
-        <v-btn
-            v-if="dateRange[0] || dateRange[1]"
-            color="primary"
-            class="homework__clear-date-btn"
-            @click="clearDateRange"
-        >
-          Очистити
-        </v-btn>
+        <div class="date-picker-container">
+          <VueDatePicker v-model="dateRange" range>
+            <template #input-icon>
+              <img class="calendar-icon" src="@/assets/images/pages/dashboard/calendar.svg" alt="calendar" />
+            </template>
+            <template #calendar-icon>
+              <img class="slot-icon" src="@/assets/images/pages/dashboard/calendar.svg" alt="calendar" />
+            </template>
+          </VueDatePicker>
+        </div>
       </div>
     </div>
 
@@ -175,7 +181,7 @@ const filteredItems = computed(() => {
         class="homework__table"
         :items-per-page="10"
         :disable-sort="true"
-        :hide-default-footer="true"
+        :hide-default-footer="false"
         :hide-default-header="true"
     >
       <!-- Custom slot for direction column to apply blue uppercase styling -->
@@ -184,10 +190,16 @@ const filteredItems = computed(() => {
           {{ directions.find((d) => d.name === item.direction)?.abbreviation || item.direction }}
         </span>
       </template>
+      <!-- Custom slot for date column to apply conditional coloring -->
+      <template v-slot:item.date="{ item }">
+        <span :class="item.isUpcoming ? 'homework__date-upcoming' : 'homework__date-default'">
+          {{ item.date }}
+        </span>
+      </template>
       <!-- Custom slot for progress column with router-link and icon -->
       <template v-slot:item.progress="{ item }">
         <router-link :to="`/homework/${item.id}`" class="homework__progress-link">
-          Переглянути
+          Прогрес
           <v-icon class="homework__progress-icon">mdi-arrow-right</v-icon>
         </router-link>
       </template>
@@ -197,9 +209,22 @@ const filteredItems = computed(() => {
 
 <style scoped lang="scss">
 .homework {
+  position: relative;
   padding: 40px 48px;
   border-radius: 32px;
   background-color: #FFFFFF;
+
+  .book-float {
+    position: absolute;
+    top: -50px;
+    right: 48px;
+    background-image: url("@/assets/images/pages/dashboard/book.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    width: 136px;
+    height: 120px;
+  }
 
   &__title {
     margin-bottom: 40px;
@@ -222,17 +247,34 @@ const filteredItems = computed(() => {
     :deep(.v-btn) {
       height: 44px !important;
       min-height: 44px !important;
+      text-transform: none;
+      font-weight: 600;
+      font-size: 16px;
+      line-height: 24px;
+      padding: 10px 17px;
+    }
+
+    :deep(.v-btn--active) {
+      background-color: #0066ff !important;
+      color: #ffffff !important;
+      border-radius: 16px;
+    }
+
+    :deep(.v-btn:not(.v-btn--active)) {
+      border-radius: 16px;
     }
   }
 
   &__filter-select {
+    width: 232px;
     max-width: 232px;
-
+    
     :deep(.v-field) {
       height: 44px !important;
-      border-radius: 12px;
-      border: 1.5px solid #30303D26;
-      outline: none;
+      border-radius: 12px !important;
+      border: 1.5px solid #30303D26 !important;
+      box-shadow: none !important;
+      outline: none !important;
     }
 
     :deep(.v-field__input) {
@@ -243,64 +285,21 @@ const filteredItems = computed(() => {
     }
 
     :deep(.v-field--focused) {
-      border: none !important;
       outline: none !important;
       box-shadow: none !important;
     }
 
-    /* Скрываем стандартную иконку */
     :deep(.v-field__append) {
-      display: none !important; /* Скрываем весь контейнер дефолтной иконки */
-    }
-
-    /* Стили для новой иконки внутри инпута */
-    :deep(.v-field__append-inner) {
-      display: flex;
-      align-items: center;
-      padding-right: 12px;
-    }
-
-    :deep(.v-icon) {
-      font-size: 20px;
-      color: #30303D;
-      transition: transform 0.2s ease; /* Плавная анимация вращения */
-    }
-
-    /* Переворот иконки при открытии селекта */
-    :deep(.rotate-icon) {
-      transform: rotate(180deg);
-    }
-  }
-
-  &__filter-date {
-    :deep(.v-field) {
-      height: 44px !important;
-    }
-
-    :deep(.v-field__input) {
-      height: 44px !important;
-      padding: 0 12px !important;
-      display: flex;
-      align-items: center;
-    }
-
-    :deep(.v-field--focused) {
-      border: none !important;
-      outline: none !important;
-      box-shadow: none !important;
+      display: none !important;
     }
   }
 
   &__date-picker-wrapper {
-    display: flex;
-    gap: 10px;
-    align-items: flex-start;
     width: 286px;
-  }
-
-  &__clear-date-btn {
-    height: 44px !important;
-    margin-top: 8px;
+    
+    .calendar-icon {
+      margin-left: 10px;
+    }
   }
 
   &__table {
@@ -323,6 +322,16 @@ const filteredItems = computed(() => {
   &__direction-abbr {
     color: #1976d2;
     text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  &__date-default {
+    color: #1976d2;
+    font-weight: 500;
+  }
+
+  &__date-upcoming {
+    color: #d32f2f;
     font-weight: 500;
   }
 
