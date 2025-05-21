@@ -213,7 +213,7 @@ const toggleDirection = (directionId: number) => {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-template-rows: repeat(2, 1fr);
-  grid-column-gap: 0px;
+  grid-column-gap: 116px;
   grid-row-gap: 20px;
 
   &__my-students {
