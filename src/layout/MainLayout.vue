@@ -132,7 +132,7 @@
 
 .content {
   margin-left: 214px;
-  margin-top: 71px;
+  margin-top: 65px;
   width: calc(100% - 270px);
 }
 
