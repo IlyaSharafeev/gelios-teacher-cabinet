@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue';
+import Multiselect from 'vue-multiselect'
 
 // Пример данных учеников
 const students = ref([
@@ -121,6 +122,43 @@ const toggleDirection = (directionId: number) => {
     selectedDirections.value.push(directionId);
   }
 };
+
+const trainers = ref([
+  { id: 1, name: 'Тренажер 1' },
+  { id: 2, name: 'Тренажер 2' },
+  { id: 3, name: 'Тренажер 3' },
+  { id: 4, name: 'Тренажер 4' },
+  { id: 5, name: 'Тренажер 5' },
+  { id: 6, name: 'Тренажер 6' },
+  { id: 7, name: 'Тренажер 7' },
+]);
+
+const selectedTrainers = ref<number[]>([]);
+
+const selectAllTrainers = () => {
+  if (selectedTrainers.value.length === trainers.value.length) {
+    selectedTrainers.value = [];
+  } else {
+    selectedTrainers.value = trainers.value.map(trainer => trainer.id);
+  }
+};
+
+const toggleTrainer = (trainerId: number) => {
+  if (selectedTrainers.value.includes(trainerId)) {
+    selectedTrainers.value = selectedTrainers.value.filter(id => id !== trainerId);
+  } else {
+    selectedTrainers.value.push(trainerId);
+  }
+};
+
+const selectTrainer = ref(null);
+const options = ref([
+  { value: '1', label: 'Тренажер 1' },
+  { value: '2', label: 'Тренажер 2' },
+  { value: '3', label: 'Тренажер 3' },
+  { value: '4', label: 'Тренажер 4' },
+  { value: '5', label: 'Тренажер 5' },
+]);
 </script>
 
 <template>
@@ -172,6 +210,21 @@ const toggleDirection = (directionId: number) => {
     </div>
     <div class="homework-form__trainers">
       <div class="homework-form__title">Тренажери</div>
+      <multiselect
+          v-model="selectTrainer"
+          :options="options"
+          :multiple="false"
+          placeholder="Выберите тренажер"
+          track-by="value"
+          label="value"
+      >
+        <template #option="{ option }">
+          <div class="multiselect-option" :class="{ 'multiselect-option--selected': selectTrainer === option }">
+            {{ option }}
+            <span v-if="selectTrainer === option" class="homework-form__checkmark"></span>
+          </div>
+        </template>
+      </multiselect>
     </div>
     <div class="homework-form__direction">
       <div class="homework-form__title">Напрямок</div>
@@ -226,6 +279,28 @@ const toggleDirection = (directionId: number) => {
       line-height: 24px;
       letter-spacing: -2%;
       margin-bottom: 32px;
+    }
+
+    .multiselect-option {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 14px;
+      font-family: 'Onest', sans-serif;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+      font-weight: 500;
+      line-height: 24px;
+      letter-spacing: 0%;
+
+      &:hover {
+        background-color: #f0f0f0;
+      }
+
+      &--selected {
+        background-color: #e6f0ff;
+      }
     }
 
     .homework-form__search-container {
@@ -312,6 +387,30 @@ const toggleDirection = (directionId: number) => {
       line-height: 24px;
       letter-spacing: -2%;
       margin-bottom: 32px;
+    }
+
+    .homework-form__trainers-select {
+      .homework-form__select-input {
+        width: 100%;
+        padding: 12px 42px;
+        border: 1.5px solid #30303d26;
+        border-radius: 12px;
+        font-family: 'Onest', sans-serif;
+        font-size: 16px;
+        appearance: none;
+        background: url("@/assets/images/icons/check.svg") no-repeat right 12px center;
+        background-color: #fff;
+        cursor: pointer;
+
+        &:focus {
+          outline: none;
+          border-color: #0066ff;
+        }
+
+        option {
+          padding: 8px;
+        }
+      }
     }
   }
 
