@@ -30,15 +30,20 @@ export const useAuthStore = defineStore('auth', {
                 this.token = response.data.token;
                 this.user = response.data.user;
                 this.isAuthenticated = true;
-                localStorage.setItem('token', this.token);
+                if (this.token) {
+                    localStorage.setItem('token', this.token);
+                }
                 this.error = null;
                 return { success: true };
             } catch (error) {
+                // @ts-ignore
                 this.error = error.response?.data?.message || 'Ошибка регистрации';
-                notify({
-                    title: this.error,
-                    type: "error"
-                });
+                if (this.error !== null) {
+                    notify({
+                        title: this.error,
+                        type: "error"
+                    });
+                }
                 return { success: false, error: this.error };
             }
         },
@@ -53,10 +58,13 @@ export const useAuthStore = defineStore('auth', {
                 this.token = response.data.access_token;
                 this.user = response.data.user;
                 this.isAuthenticated = true;
-                localStorage.setItem('token', this.token);
+                if (this.token) {
+                    localStorage.setItem('token', this.token);
+                }
                 this.error = null;
                 return {success: true};
             } catch (error) {
+                // @ts-ignore
                 this.error = error.response?.data?.message || 'Ошибка входа';
                 return {success: false, error: this.error};
             }
@@ -68,11 +76,14 @@ export const useAuthStore = defineStore('auth', {
                 this.error = null;
                 return {success: true};
             } catch (error) {
+                // @ts-ignore
                 this.error = error.response?.data?.message || 'Ошибка восстановления пароля';
-                notify({
-                    title: this.error,
-                    type: "error"
-                });
+                if (this.error !== null) {
+                    notify({
+                        title: this.error,
+                        type: "error"
+                    });
+                }
                 return {success: false, error: this.error};
             }
         },
@@ -86,11 +97,14 @@ export const useAuthStore = defineStore('auth', {
                 this.error = null;
                 return {success: true};
             } catch (error) {
+                // @ts-ignore
                 this.error = error.response?.data?.message || 'Ошибка восстановления пароля'
-                notify({
-                    title: this.error,
-                    type: "error"
-                });
+                if (this.error !== null) {
+                    notify({
+                        title: this.error,
+                        type: "error"
+                    });
+                }
                 return {success: false, error: this.error};
             }
         },
