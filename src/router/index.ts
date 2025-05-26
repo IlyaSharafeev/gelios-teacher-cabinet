@@ -70,42 +70,47 @@ const router = createRouter({
       },
     },
     {
+      path: '/reset-password',
+      name: 'reset-password',
+      component: () => import('@/pages/LoginPage.vue'),
+      beforeEnter: (to, from, next) => {
+        if (localStorage.token) {
+          next('/');
+        } else if (!to.query.token) {
+          next('/login');
+        } else {
+          next();
+        }
+      },
+    },
+    {
       path: '/:catchAll(.*)',
-      redirect: { name: 'login' }, // Redirect unknown routes to login
+      redirect: { name: 'login' },
     },
   ],
 });
 
-// Global navigation guard for authentication
 router.beforeEach((to, from, next) => {
   const token = localStorage.token;
 
-  // Check if the route requires authentication
   if (to.meta.requiresAuth) {
     if (!token) {
-      // No token, redirect to login
       next({ name: 'login' });
     } else {
-      // Optionally, validate token (e.g., check if it's expired or invalid)
-      // This is a placeholder for token validation logic
       try {
-        // Example: Add your token validation logic here (e.g., decode JWT, check expiry)
-        // If token is invalid, clear it and redirect to login
-        // For now, assuming token is a simple string check
-        if (token === 'invalid' || !token) { // Replace with actual validation
+        if (token === 'invalid' || !token) {
           localStorage.removeItem('token');
           next({ name: 'login' });
         } else {
-          next(); // Valid token, proceed
+          next();
         }
       } catch (error) {
-        // Handle token validation error
         localStorage.removeItem('token');
         next({ name: 'login' });
       }
     }
   } else {
-    next(); // Route doesn't require auth, proceed
+    next();
   }
 });
 

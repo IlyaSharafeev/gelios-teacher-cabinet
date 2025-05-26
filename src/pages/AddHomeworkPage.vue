@@ -76,7 +76,7 @@ button.active {
   color: white;
 }
 
-sbutton.active:hover {
+button.active:hover {
   background: #0056b3;
 }
 

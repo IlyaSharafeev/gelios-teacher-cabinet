@@ -1,6 +1,7 @@
-import { defineStore } from 'pinia';
+import {defineStore} from 'pinia';
 import axios from 'axios';
 import * as process from "node:process";
+
 const baseURL = import.meta.env.VITE_API_BASE_URL;
 
 export const useAuthStore = defineStore('auth', {
@@ -13,12 +14,16 @@ export const useAuthStore = defineStore('auth', {
 
     actions: {
         async register({ email, username, contactNumber, password }) {
+            console.log({ email, username, contactNumber, password });
             try {
                 const response = await axios.post('/api/teacher', {
-                    email,
-                    username,
-                    contactNumber,
-                    password,
+                    teacher: {
+                        email,
+                        firstName: username,
+                        lastName: username,
+                        phone: Array.isArray(contactNumber) ? contactNumber : [contactNumber],
+                        password,
+                    }
                 });
                 this.token = response.data.token;
                 this.user = response.data.user;
@@ -32,7 +37,7 @@ export const useAuthStore = defineStore('auth', {
             }
         },
 
-        async login({ email, password }) {
+        async login({email, password}) {
             try {
                 const response = await axios.post(`${baseURL}/api/auth/sign-in`, {
                     email,
@@ -44,22 +49,35 @@ export const useAuthStore = defineStore('auth', {
                 this.isAuthenticated = true;
                 localStorage.setItem('token', this.token);
                 this.error = null;
-                return { success: true };
+                return {success: true};
             } catch (error) {
                 this.error = error.response?.data?.message || 'Ошибка входа';
-                return { success: false, error: this.error };
+                return {success: false, error: this.error};
             }
         },
 
-        async recoverPassword(password) {
-            const token = this.token;
+        async recoverPassword(email) {
             try {
-                await axios.post(`${baseURL}/api/auth/reset-password`, { teacher: {token, password} });
+                await axios.post(`${baseURL}/api/auth/forgot-password`, {email});
                 this.error = null;
-                return { success: true };
+                return {success: true};
             } catch (error) {
                 this.error = error.response?.data?.message || 'Ошибка восстановления пароля';
-                return { success: false, error: this.error };
+                return {success: false, error: this.error};
+            }
+        },
+
+        async resetPassword({token,password}) {
+            try {
+                await axios.post(`${baseURL}/api/auth/reset-password`, {
+                    token,
+                    password
+                });
+                this.error = null;
+                return {success: true};
+            } catch (error) {
+                this.error = error.response?.data?.message || 'Ошибка восстановления пароля';
+                return {success: false, error: this.error};
             }
         },
 

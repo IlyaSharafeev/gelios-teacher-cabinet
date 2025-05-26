@@ -4,12 +4,13 @@ import ukrainianLanguageIcon from "@/assets/images/language-icons/UA.svg";
 import englishLanguageIcon from "@/assets/images/language-icons/GB.svg";
 import { ref, watch, computed } from "vue";
 import { useVuelidate } from "@vuelidate/core";
-import { required, email, minLength } from "@vuelidate/validators";
+import { required, email, minLength, sameAs } from "@vuelidate/validators";
 import { useAuthStore } from "@/stores/auth";
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 
 const authStore = useAuthStore();
 const router = useRouter();
+const route = useRoute();
 
 const selectOptions = [
   { value: "ua", label: "Українська", icon: ukrainianLanguageIcon },
@@ -22,6 +23,7 @@ const selectedValueLanguage = ref<string>(
 
 const isPasswordRecoveryVisible = ref<boolean>(false);
 const isRecoverySuccess = ref<boolean>(false);
+const isResetPasswordVisible = ref<boolean>(route.path === '/reset-password' && !!route.query.token);
 const errorMessage = ref<string | null>(null);
 
 const loginForm = ref({
@@ -74,8 +76,40 @@ const onRecoverySubmit = async () => {
   }
 };
 
+
+const resetForm = ref({
+  password: "",
+  confirmPassword: "",
+});
+
+const resetRules = computed(() => ({
+  password: { required, minLength: minLength(6) },
+  confirmPassword: { required, sameAs: sameAs(resetForm.value.password) },
+}));
+
+const vReset = useVuelidate(resetRules, resetForm);
+
+
+const onResetSubmit = async () => {
+  const isValid = await vReset.value.$validate();
+  if (isValid) {
+    const { success, error } = await authStore.resetPassword({
+      token: route.query.token as string,
+      password: resetForm.value.password,
+    });
+    if (success) {
+      router.push("/login");
+    } else {
+      errorMessage.value = error || "Помилка при скиданні пароля";
+    }
+  } else {
+    errorMessage.value = "Пожалуйста, проверьте введенные данные";
+  }
+};
+
 const showPasswordRecovery = () => {
   isPasswordRecoveryVisible.value = true;
+  isResetPasswordVisible.value = false;
   isRecoverySuccess.value = false;
   recoveryForm.value.email = "";
   vLogin.value.$reset();
@@ -85,6 +119,7 @@ const showPasswordRecovery = () => {
 
 const showLoginForm = () => {
   isPasswordRecoveryVisible.value = false;
+  isResetPasswordVisible.value = false;
   isRecoverySuccess.value = false;
   recoveryForm.value.email = "";
   vRecovery.value.$reset();
@@ -94,6 +129,12 @@ const showLoginForm = () => {
 watch(selectedValueLanguage, (newValue) => {
   localStorage.setItem("selectedLanguage", newValue);
 });
+
+watch(route, () => {
+  isResetPasswordVisible.value = route.path === '/reset-password' && !!route.query.token;
+  isPasswordRecoveryVisible.value = false;
+  isRecoverySuccess.value = false;
+}); 
 </script>
 
 <template>
@@ -119,7 +160,7 @@ watch(selectedValueLanguage, (newValue) => {
       </div>
     </div>
 
-    <div class="login-form-wrapper" v-if="!isPasswordRecoveryVisible">
+    <div class="login-form-wrapper" v-if="!isPasswordRecoveryVisible && !isResetPasswordVisible">
       <div class="login-form">
         <div class="title">Увiйти</div>
         <div class="description">
@@ -167,6 +208,50 @@ watch(selectedValueLanguage, (newValue) => {
         </div>
       </div>
       <router-link to="/register" class="registration-button">Реєстрація</router-link>
+    </div>
+
+    <div class="password-reset" v-else-if="isResetPasswordVisible">
+      <div class="title">Відновлення пароля</div>
+      <div class="form">
+        <div class="description">
+          Введіть новий пароль
+        </div>
+        <div class="error-message" v-if="errorMessage">{{ errorMessage }}</div>
+        <div class="form-password">
+          <div class="label">Введіть новий пароль</div>
+          <div class="field-password">
+            <input
+                class="input"
+                :class="{ 'input-error': vReset.password.$error }"
+                type="password"
+                placeholder="Новий пароль"
+                v-model="resetForm.password"
+                @blur="vReset.password.$touch"
+            />
+            <div class="error-message" v-if="vReset.password.$error">
+              {{ vReset.password.$errors[0].$message || 'Пароль має бути не менше 6 символів' }}
+            </div>
+          </div>
+        </div>
+        <div class="form-password">
+          <div class="label">Повторіть пароль</div>
+          <div class="field-password">
+            <input
+                class="input"
+                :class="{ 'input-error': vReset.confirmPassword.$error }"
+                type="password"
+                placeholder="Повторіть пароль"
+                v-model="resetForm.confirmPassword"
+                @blur="vReset.confirmPassword.$touch"
+            />
+            <div class="error-message" v-if="vReset.confirmPassword.$error">
+              {{ vReset.confirmPassword.$errors[0].$message || 'Паролі не співпадають' }}
+            </div>
+          </div>
+        </div>
+        <div class="button reset-button" @click="onResetSubmit">Зберегти</div>
+        <div class="back-to-login" @click="showLoginForm">Увiйти</div>
+      </div>
     </div>
 
     <div class="password-recovery" v-else>
@@ -458,7 +543,8 @@ watch(selectedValueLanguage, (newValue) => {
     }
   }
 
-  .password-recovery {
+  .password-recovery,
+  .password-reset {
     width: 539px;
     position: absolute;
     right: 69px;
@@ -510,7 +596,8 @@ watch(selectedValueLanguage, (newValue) => {
       flex-direction: column;
       gap: 22px;
 
-      .form-email {
+      .form-email,
+      .form-password {
         .label {
           font-family: Onest;
           font-weight: 400;
@@ -520,7 +607,8 @@ watch(selectedValueLanguage, (newValue) => {
           margin-bottom: 17px;
         }
 
-        .field-email {
+        .field-email,
+        .field-password {
           .input {
             width: 100%;
             padding: 12px 16px;
@@ -563,7 +651,8 @@ watch(selectedValueLanguage, (newValue) => {
       }
     }
 
-    .recovery-button {
+    .recovery-button,
+    .reset-button {
       margin-top: 35px;
       background-color: #0066ff;
       color: #ffffff;

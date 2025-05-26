@@ -44,7 +44,7 @@ const authStore = useAuthStore();
 const onRegisterSubmit = async () => {
   const isValid = await vRegister.value.$validate();
   if (isValid) {
-    const { success, error } = await authStore.login(registerForm.value);
+    const { success, error } = await authStore.register(registerForm.value);
     if (success) {
       router.push("/dashboard");
     } else {
