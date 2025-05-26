@@ -1,6 +1,8 @@
 import {defineStore} from 'pinia';
 import axios from 'axios';
-import * as process from "node:process";
+import { useNotification } from "@kyvg/vue3-notification";
+
+const { notify }  = useNotification()
 
 const baseURL = import.meta.env.VITE_API_BASE_URL;
 
@@ -33,6 +35,10 @@ export const useAuthStore = defineStore('auth', {
                 return { success: true };
             } catch (error) {
                 this.error = error.response?.data?.message || 'Ошибка регистрации';
+                notify({
+                    title: this.error,
+                    type: "error"
+                });
                 return { success: false, error: this.error };
             }
         },
@@ -63,6 +69,10 @@ export const useAuthStore = defineStore('auth', {
                 return {success: true};
             } catch (error) {
                 this.error = error.response?.data?.message || 'Ошибка восстановления пароля';
+                notify({
+                    title: this.error,
+                    type: "error"
+                });
                 return {success: false, error: this.error};
             }
         },
@@ -76,7 +86,11 @@ export const useAuthStore = defineStore('auth', {
                 this.error = null;
                 return {success: true};
             } catch (error) {
-                this.error = error.response?.data?.message || 'Ошибка восстановления пароля';
+                this.error = error.response?.data?.message || 'Ошибка восстановления пароля'
+                notify({
+                    title: this.error,
+                    type: "error"
+                });
                 return {success: false, error: this.error};
             }
         },

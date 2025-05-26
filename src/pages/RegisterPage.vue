@@ -7,6 +7,9 @@ import { useVuelidate } from "@vuelidate/core";
 import { required, email, minLength, sameAs, helpers } from "@vuelidate/validators";
 import {useAuthStore} from "@/stores/auth.ts";
 import {useRouter} from "vue-router";
+import { useNotification } from "@kyvg/vue3-notification";
+
+const { notify }  = useNotification()
 
 const phoneNumber = helpers.regex(/^\+?[1-9]\d{1,14}$/); // Simple phone number regex (e.g., +380123456789)
 const router = useRouter();
@@ -48,10 +51,15 @@ const onRegisterSubmit = async () => {
     if (success) {
       router.push("/dashboard");
     } else {
+      console.log(error);
       errorMessage.value = error;
     }
   } else {
-    console.log("Registration form validation failed");
+    notify({
+      title: "Registration form validation failed",
+      text: errorMessage.value,
+      type: "error",
+    });
   }
 };
 
@@ -177,6 +185,8 @@ watch(selectedValueLanguage, (newValue) => {
       </div>
     </div>
 
+    <notifications />
+    
     <SelectInput
         class="select-language"
         v-model="selectedValueLanguage"
