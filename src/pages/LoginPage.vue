@@ -24,7 +24,7 @@ const selectedValueLanguage = ref<string>(
 const isPasswordRecoveryVisible = ref<boolean>(false);
 const isRecoverySuccess = ref<boolean>(false);
 const isResetPasswordVisible = ref<boolean>(route.path === '/reset-password' && !!route.query.token);
-const errorMessage = ref<string | null>(null);
+const errorMessage = ref<any>(null);
 
 const loginForm = ref({
   email: "",
