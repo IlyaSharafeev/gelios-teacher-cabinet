@@ -5,6 +5,11 @@ import englishLanguageIcon from "@/assets/images/language-icons/GB.svg";
 import { ref, watch, computed } from "vue";
 import { useVuelidate } from "@vuelidate/core";
 import { required, email, minLength } from "@vuelidate/validators";
+import { useAuthStore } from "@/stores/auth";
+import { useRouter } from "vue-router";
+
+const authStore = useAuthStore();
+const router = useRouter();
 
 const selectOptions = [
   { value: "ua", label: "Українська", icon: ukrainianLanguageIcon },
@@ -17,6 +22,7 @@ const selectedValueLanguage = ref<string>(
 
 const isPasswordRecoveryVisible = ref<boolean>(false);
 const isRecoverySuccess = ref<boolean>(false);
+const errorMessage = ref<string | null>(null);
 
 const loginForm = ref({
   email: "",
@@ -43,19 +49,28 @@ const vRecovery = useVuelidate(recoveryRules, recoveryForm);
 const onLoginSubmit = async () => {
   const isValid = await vLogin.value.$validate();
   if (isValid) {
-    console.log("Login form submitted:", loginForm.value);
+    const { success, error } = await authStore.login(loginForm.value);
+    if (success) {
+      router.push("/dashboard"); // Перенаправление после успешного логина
+    } else {
+      errorMessage.value = error;
+    }
   } else {
-    console.log("Login form validation failed");
+    errorMessage.value = "Пожалуйста, проверьте введенные данные";
   }
 };
 
 const onRecoverySubmit = async () => {
   const isValid = await vRecovery.value.$validate();
   if (isValid) {
-    console.log("Recovery form submitted:", recoveryForm.value);
-    isRecoverySuccess.value = true;
+    const { success, error } = await authStore.recoverPassword(recoveryForm.value.email);
+    if (success) {
+      isRecoverySuccess.value = true;
+    } else {
+      errorMessage.value = error;
+    }
   } else {
-    console.log("Recovery form validation failed");
+    errorMessage.value = "Пожалуйста, введите корректный email";
   }
 };
 
@@ -65,6 +80,7 @@ const showPasswordRecovery = () => {
   recoveryForm.value.email = "";
   vLogin.value.$reset();
   vRecovery.value.$reset();
+  errorMessage.value = null;
 };
 
 const showLoginForm = () => {
@@ -72,6 +88,7 @@ const showLoginForm = () => {
   isRecoverySuccess.value = false;
   recoveryForm.value.email = "";
   vRecovery.value.$reset();
+  errorMessage.value = null;
 };
 
 watch(selectedValueLanguage, (newValue) => {
@@ -108,6 +125,7 @@ watch(selectedValueLanguage, (newValue) => {
         <div class="description">
           Ласкаво просимо до <span class="name-company cursor-pointer">Gelios School</span>
         </div>
+        <div class="error-message" v-if="errorMessage">{{ errorMessage }}</div>
         <div class="form">
           <div class="form-email">
             <div class="label">Адрес електронний пошти</div>
@@ -158,6 +176,7 @@ watch(selectedValueLanguage, (newValue) => {
           <div class="description">
             <span class="second-description">Введіть пошту,</span> прив'язану до вашого профілю
           </div>
+          <div class="error-message" v-if="errorMessage">{{ errorMessage }}</div>
           <div class="form-email">
             <div class="label">Адрес електронний пошти</div>
             <div class="field-email">

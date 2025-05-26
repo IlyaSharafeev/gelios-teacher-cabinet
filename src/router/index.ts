@@ -1,6 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
 
-
 const router = createRouter({
   history: createWebHistory(),
   routes: [
@@ -17,6 +16,7 @@ const router = createRouter({
           path: 'dashboard',
           name: 'dashboard',
           component: () => import('@/pages/DashboardPage.vue'),
+          meta: { requiresAuth: true },
         },
         {
           path: 'schedule',
@@ -50,11 +50,11 @@ const router = createRouter({
       name: 'login',
       component: () => import('@/pages/LoginPage.vue'),
       beforeEnter: (to, from, next) => {
-        // if (localStorage.token) {
-        //   next('/');
-        // } else {
-        //   next();
-        // }
+        if (localStorage.token) {
+          next('/');
+        } else {
+          next();
+        }
       },
     },
     {
@@ -62,23 +62,51 @@ const router = createRouter({
       name: 'register',
       component: () => import('@/pages/RegisterPage.vue'),
       beforeEnter: (to, from, next) => {
-        // if (localStorage.token) {
-        //   next('/');
-        // } else {
-        //   next();
-        // }
+        if (localStorage.token) {
+          next('/');
+        } else {
+          next();
+        }
       },
     },
-    // {
-    //   path: '/callback',
-    //   name: 'callback',
-    //   component: () => import('@/components/AuthenticationCallback.vue'),
-    // },
     {
       path: '/:catchAll(.*)',
-      redirect: { name: 'dashboard' },
+      redirect: { name: 'login' }, // Redirect unknown routes to login
     },
   ],
+});
+
+// Global navigation guard for authentication
+router.beforeEach((to, from, next) => {
+  const token = localStorage.token;
+
+  // Check if the route requires authentication
+  if (to.meta.requiresAuth) {
+    if (!token) {
+      // No token, redirect to login
+      next({ name: 'login' });
+    } else {
+      // Optionally, validate token (e.g., check if it's expired or invalid)
+      // This is a placeholder for token validation logic
+      try {
+        // Example: Add your token validation logic here (e.g., decode JWT, check expiry)
+        // If token is invalid, clear it and redirect to login
+        // For now, assuming token is a simple string check
+        if (token === 'invalid' || !token) { // Replace with actual validation
+          localStorage.removeItem('token');
+          next({ name: 'login' });
+        } else {
+          next(); // Valid token, proceed
+        }
+      } catch (error) {
+        // Handle token validation error
+        localStorage.removeItem('token');
+        next({ name: 'login' });
+      }
+    }
+  } else {
+    next(); // Route doesn't require auth, proceed
+  }
 });
 
 export default router;

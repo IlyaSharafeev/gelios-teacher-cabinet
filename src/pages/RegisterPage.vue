@@ -5,8 +5,12 @@ import englishLanguageIcon from "@/assets/images/language-icons/GB.svg";
 import { ref, watch, computed } from "vue";
 import { useVuelidate } from "@vuelidate/core";
 import { required, email, minLength, sameAs, helpers } from "@vuelidate/validators";
+import {useAuthStore} from "@/stores/auth.ts";
+import {useRouter} from "vue-router";
 
 const phoneNumber = helpers.regex(/^\+?[1-9]\d{1,14}$/); // Simple phone number regex (e.g., +380123456789)
+const router = useRouter();
+const errorMessage = ref<string | null>(null);
 
 const selectOptions = [
   { value: "ua", label: "Українська", icon: ukrainianLanguageIcon },
@@ -22,7 +26,7 @@ const registerForm = ref({
   username: "",
   contactNumber: "",
   password: "",
-  confirmPassword: "",
+  // confirmPassword: "",
 });
 
 const registerRules = computed(() => ({
@@ -30,15 +34,22 @@ const registerRules = computed(() => ({
   username: { required, minLength: minLength(3) },
   contactNumber: { required, phoneNumber },
   password: { required, minLength: minLength(6) },
-  confirmPassword: { required, sameAs: sameAs(registerForm.value.password) },
+  // confirmPassword: { required, sameAs: sameAs(registerForm.value.password) },
 }));
 
 const vRegister = useVuelidate(registerRules, registerForm);
 
+const authStore = useAuthStore();
+
 const onRegisterSubmit = async () => {
   const isValid = await vRegister.value.$validate();
   if (isValid) {
-    console.log("Registration form submitted:", registerForm.value);
+    const { success, error } = await authStore.login(registerForm.value);
+    if (success) {
+      router.push("/dashboard");
+    } else {
+      errorMessage.value = error;
+    }
   } else {
     console.log("Registration form validation failed");
   }
