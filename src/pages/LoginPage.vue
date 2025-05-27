@@ -7,6 +7,9 @@ import { useVuelidate } from "@vuelidate/core";
 import { required, email, minLength, sameAs } from "@vuelidate/validators";
 import { useAuthStore } from "@/stores/auth";
 import { useRouter, useRoute } from "vue-router";
+import {Notifications, useNotification} from "@kyvg/vue3-notification";
+
+const { notify }  = useNotification()
 
 const authStore = useAuthStore();
 const router = useRouter();
@@ -53,12 +56,22 @@ const onLoginSubmit = async () => {
   if (isValid) {
     const { success, error } = await authStore.login(loginForm.value);
     if (success) {
-      router.push("/dashboard"); // Перенаправление после успешного логина
+      router.push("/dashboard");
     } else {
       errorMessage.value = error;
+      notify({
+        title: "Registration form validation failed",
+        text: errorMessage.value,
+        type: "error",
+      });
     }
   } else {
     errorMessage.value = "Пожалуйста, проверьте введенные данные";
+    notify({
+      title: "Registration form validation failed",
+      text: errorMessage.value,
+      type: "error",
+    });
   }
 };
 
@@ -73,6 +86,11 @@ const onRecoverySubmit = async () => {
     }
   } else {
     errorMessage.value = "Пожалуйста, введите корректный email";
+    notify({
+      title: "Registration form validation failed",
+      text: errorMessage.value,
+      type: "error",
+    });
   }
 };
 
@@ -101,9 +119,19 @@ const onResetSubmit = async () => {
       router.push("/login");
     } else {
       errorMessage.value = error || "Помилка при скиданні пароля";
+      notify({
+        title: "Registration form validation failed",
+        text: errorMessage.value,
+        type: "error",
+      });
     }
   } else {
     errorMessage.value = "Пожалуйста, проверьте введенные данные";
+    notify({
+      title: "Registration form validation failed",
+      text: errorMessage.value,
+      type: "error",
+    });
   }
 };
 
@@ -207,7 +235,7 @@ watch(route, () => {
           <div class="refresh" @click="showPasswordRecovery">Відновити</div>
         </div>
       </div>
-      <router-link to="/register" class="registration-button">Реєстрація</router-link>
+<!--      <router-link to="/register" class="registration-button">Реєстрація</router-link>-->
     </div>
 
     <div class="password-reset" v-else-if="isResetPasswordVisible">
@@ -250,7 +278,7 @@ watch(route, () => {
           </div>
         </div>
         <div class="button reset-button" @click="onResetSubmit">Зберегти</div>
-        <div class="back-to-login" @click="showLoginForm">Увiйти</div>
+        <div class="back-to-login" @click="showLoginForm">Назад</div>
       </div>
     </div>
 
@@ -279,7 +307,7 @@ watch(route, () => {
             </div>
           </div>
           <div class="button recovery-button" @click="onRecoverySubmit">Відновити</div>
-          <div class="back-to-login" @click="showLoginForm">Увiйти</div>
+          <div class="back-to-login" @click="showLoginForm">Назад</div>
         </template>
         <template v-else>
           <div class="success-message">
@@ -289,6 +317,8 @@ watch(route, () => {
         </template>
       </div>
     </div>
+    
+    <notifications/>
 
     <SelectInput
         class="select-language"
@@ -673,5 +703,12 @@ watch(route, () => {
   .select-language {
     margin: 60px;
   }
+}
+
+.error-message {
+  color: #ff0000;
+  font-family: Onest;
+  font-size: 14px;
+  margin-top: 8px;
 }
 </style>
