@@ -15,6 +15,8 @@ const authStore = useAuthStore();
 const router = useRouter();
 const route = useRoute();
 
+console.log("login page")
+
 const selectOptions = [
   { value: "ua", label: "Українська", icon: ukrainianLanguageIcon },
   { value: "en", label: "English", icon: englishLanguageIcon },
