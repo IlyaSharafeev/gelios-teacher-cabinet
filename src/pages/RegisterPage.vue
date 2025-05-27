@@ -57,8 +57,6 @@ const onRegisterSubmit = async () => {
   } else {
     notify({
       title: "Registration form validation failed",
-      text: errorMessage.value,
-      type: "error",
     });
   }
 };
