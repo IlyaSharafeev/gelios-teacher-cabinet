@@ -69,7 +69,7 @@ defineEmits<{
 .step {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start;
   position: relative;
   flex: 1;
 }
@@ -78,8 +78,8 @@ defineEmits<{
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  background-color: #fff;
-  border: 4px solid #FFE5E5;
+  background-color: #FFE5E5;
+  border: 4px solid #FFFFFF;
   z-index: 1;
 }
 
@@ -88,14 +88,13 @@ defineEmits<{
 }
 
 .step.completed .step-circle {
-  background-color: #4CAF50;
-  border-color: #4CAF50;
+  background-color: #FF7B7B;
+  border-color: #FF7B7B;
 }
 
 .step-line {
   position: absolute;
   top: 12px;
-  left: 50%;
   width: 100%;
   height: 4px;
   background-color: #FFE5E5;
@@ -103,7 +102,7 @@ defineEmits<{
 }
 
 .step.completed .step-line {
-  background-color: #4CAF50;
+  background-color: #FF7B7B;
 }
 
 .step-name {
@@ -115,8 +114,13 @@ defineEmits<{
   text-align: center;
 }
 
-.step.active .step-name,
 .step.completed .step-name {
+  color: #101828;
+  font-weight: 600;
+  opacity: 60%;
+}
+
+.step.active .step-name {
   color: #0066FF;
   font-weight: 600;
 }

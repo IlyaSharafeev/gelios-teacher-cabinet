@@ -29,7 +29,7 @@ const removeStudent = (studentId: number) => {
         >
           <span class="selected-students__remove-icon" @click="removeStudent(student.id)">
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M15 5L5 15M5 5L15 15" stroke="#FF0000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <path d="M15 5L5 15M5 5L15 15" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
           </span>
           <span class="selected-students__name">{{ student.name }}</span>
@@ -67,14 +67,17 @@ const removeStudent = (studentId: number) => {
       align-items: center;
       padding: 12px;
       margin-bottom: 8px;
-      background-color: #f8f0ff;
+      background-color: #30303D0D;
       border-radius: 8px;
       font-family: 'Onest', sans-serif;
       font-size: 16px;
       font-weight: 500;
+      transition: transform 0.1s linear;
+      cursor: pointer;
 
       &:hover {
         background-color: #f0f0f0;
+        transform: scale(1.01);
       }
     }
 
