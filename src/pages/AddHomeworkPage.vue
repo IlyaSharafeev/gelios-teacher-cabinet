@@ -3,8 +3,8 @@ import { ref } from 'vue';
 
 const activeTab = ref('homework');
 
-import HomeworkForm from '@/components/AddHomeWorkForm.vue'; // Предполагаемый компонент для формы домашнего задания
-import CertificateForm from '@/components/AddSertificateForm.vue'; // Предполагаемый компонент для формы сертификата
+import HomeworkForm from '@/components/homework/AddHomeWorkForm.vue';
+import CertificateForm from '@/components/AddSertificateForm.vue';
 
 const setActiveTab = (tab: string) => {
   activeTab.value = tab;
