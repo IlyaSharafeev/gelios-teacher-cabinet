@@ -45,7 +45,6 @@ const removeStudent = (studentId: number) => {
 <style lang="scss" scoped>
 .selected-students {
   grid-column: 1 / -1;
-  margin-bottom: 32px;
 
   .selected-students__title {
     font-family: 'Onest', sans-serif;
