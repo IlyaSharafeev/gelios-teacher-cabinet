@@ -2,6 +2,13 @@
 import { ref, computed } from 'vue';
 import type { Item } from '@/types';
 
+// Update Item type to include image (if not already defined in @/types)
+interface Item {
+  id: number;
+  name: string;
+  image?: string; // Add image as an optional property
+}
+
 const props = defineProps<{
   items: Item[];
   title: string;
@@ -53,7 +60,9 @@ const selectItem = (item: Item) => {
             :class="{ 'selector__item--selected': selected && selected.id === item.id }"
             @click="selectItem(item)"
         >
-          {{ item.name }}
+          <slot name="option" :item="item">
+            <span>{{ item.name }}</span>
+          </slot>
           <span v-if="selected && selected.id === item.id" class="selector__checkmark"></span>
         </div>
       </template>

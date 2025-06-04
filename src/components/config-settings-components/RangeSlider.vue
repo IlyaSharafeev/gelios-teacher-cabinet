@@ -2,41 +2,59 @@
 import { computed } from 'vue';
 
 const props = defineProps({
-  value: Number,
-  min: Number,
-  max: Number,
-  step: Number,
-  disabled: Boolean,
-  displayAggregator: Function,
-  parentClass: String,
-  isAlternativeColors: Boolean,
+  value: {
+    type: [Number, null],
+    default: null,
+  },
+  min: {
+    type: Number,
+    required: true,
+  },
+  max: {
+    type: Number,
+    required: true,
+  },
+  step: {
+    type: Number,
+    default: 1,
+  },
+  disabled: {
+    type: Boolean,
+    default: false,
+  },
+  displayAggregator: {
+    type: Function,
+    default: null,
+  },
+  parentClass: {
+    type: String,
+    default: '',
+  },
+  isAlternativeColors: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const emit = defineEmits(['update:value']);
 
-const handleSliderChange = (event) => {
-  const newValue = Number(event.target.value);
-  console.log('Slider changed:', { newValue, min: props.min, max: props.max }); // Отладка
-  emit('update:value', newValue);
-};
-
-const displayValue = computed(() => {
-  const value = props.value ?? props.min;
-  const validValue = Math.max(props.min, Math.min(props.max, value));
-  console.log('Display value computed:', { value, validValue }); // Отладка
-  return props.displayAggregator ? props.displayAggregator(validValue) : validValue;
-});
-
 const sliderValue = computed({
   get() {
-    const value = props.value ?? props.min;
-    console.log('Slider value get:', value); // Отладка
-    return value;
+    const value = props.value !== null && props.value !== undefined ? props.value : props.min;
+    console.log('RangeSlider: get value', { value, min: props.min, max: props.max });
+    return Math.max(props.min, Math.min(props.max, value));
   },
   set(newValue) {
-    console.log('Slider value set:', newValue); // Отладка
-    emit('update:value', newValue);
-  }
+    const validatedValue = Math.max(props.min, Math.min(props.max, Number(newValue)));
+    console.log('RangeSlider: set value', { newValue, validatedValue });
+    emit('update:value', validatedValue);
+  },
+});
+
+const displayValue = computed(() => {
+  const value = sliderValue.value;
+  console.log('RangeSlider: display value', { value, formatted: props.displayAggregator ? props.displayAggregator(value) : value });
+  return props.displayAggregator ? props.displayAggregator(value) : value;
 });
 
 const styles = computed(() => ({
