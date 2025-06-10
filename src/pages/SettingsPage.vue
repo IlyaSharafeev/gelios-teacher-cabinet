@@ -8,7 +8,7 @@ const authStore = useAuthStore();
 const router = useRouter();
 
 import HomeworkForm from '@/components/homework/AddHomeWorkForm.vue';
-import CertificateForm from '@/components/AddSertificateForm.vue';
+import CertificateForm from '@/components/sertificate/AddSertificateForm.vue';
 
 const setActiveTab = (tab: string) => {
   activeTab.value = tab;

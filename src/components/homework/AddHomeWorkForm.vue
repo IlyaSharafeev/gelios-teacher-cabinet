@@ -1,14 +1,15 @@
-<script setup>
+<script setup lang="ts">
 import { reactive, computed, watch, ref } from 'vue';
 import StepNavigator from './StepNavigator.vue';
 import StudentSelector from './StudentSelector.vue';
 import TrainerSelector from './TrainerSelector.vue';
 import SelectedStudents from './SelectedStudents.vue';
 import DeadlinePicker from './DeadlinePicker.vue';
-import Dropdown from '@/components/config-settings-components/Dropdown.vue';
-import RangeSlider from '@/components/config-settings-components/RangeSlider.vue';
-import CheckboxGroup from '@/components/config-settings-components/CheckboxGroup.vue';
-import DoubleRangeSlider from '@/components/config-settings-components/DoubleRangeSlider.vue';
+import Dropdown from '../config-settings-components/Dropdown.vue';
+import RangeSlider from '../config-settings-components/RangeSlider.vue';
+import CheckboxGroup from '../config-settings-components/CheckboxGroup.vue';
+import DoubleRangeSlider from '../config-settings-components/DoubleRangeSlider.vue';
+import successImage from '@/assets/backgrounds/certification/success.png'; // Placeholder path
 
 // Import images for trainers
 import trainer1 from '@/assets/backgrounds/trainers/1.png';
@@ -33,6 +34,7 @@ const steps = [
   { id: 1, name: 'Мої учні, тренажери' },
   { id: 2, name: 'Налаштування' },
   { id: 3, name: 'Термін виконання' },
+  { id: 4, name: 'Завдання додане' },
 ];
 
 const students = [
@@ -52,7 +54,7 @@ const students = [
   { id: 14, name: 'Наталія Козак' },
   { id: 15, name: 'Сергій Романенко' },
   { id: 16, name: 'Аліна Шевчук' },
-  { id: 17, name: 'Олександр Кравченко' },
+  { id: 17, name: 'Олександр Кравець' },
   { id: 18, name: 'Вікторія Дубровська' },
   { id: 19, name: 'Максим Гончар' },
   { id: 20, name: 'Тетяна Литвин' },
@@ -74,7 +76,7 @@ const students = [
   { id: 36, name: 'Назар Вовк' },
   { id: 37, name: 'Дарина Пономаренко' },
   { id: 38, name: 'Орест Клименко' },
-  { id: 39, name: 'Мирослава Гаврилюк' },
+  { id: 39, name: 'Мирослава Гаврилюk' },
   { id: 40, name: 'Тарас Довгаль' },
   { id: 41, name: 'Лілія Сеньків' },
   { id: 42, name: 'Ігор Яворський' },
@@ -133,29 +135,39 @@ const directions = [
 
 const trainers = [
   { id: 1, name: 'Знайди пару', image: trainer1 },
-  { id: 2, name: 'Текс швидкості читання', image: trainer2 },
-  { id: 3, name: 'Таблиця шульте', image: trainer3 },
+  { id: 2, name: 'Техніка швидкості читання', image: trainer2 },
+  { id: 3, name: 'Таблиця Шульте', image: trainer3 },
   { id: 4, name: 'Splitz', image: trainer4 },
   { id: 5, name: 'Ментальний рахунок', image: trainer5 },
   { id: 6, name: 'Філворди', image: trainer6 },
-  { id: 7, name: 'Тест струпа', image: trainer7 },
+  { id: 7, name: 'Тест Струпа', image: trainer7 },
   { id: 8, name: 'Алфавіт', image: trainer8 },
   { id: 9, name: 'Знайди слово', image: trainer9 },
   { id: 10, name: 'Тексти', image: trainer10 },
   { id: 11, name: 'Кіберкішка', image: trainer11 },
-  { id: 12, name: 'Флешкарти', image: trainer12 },
+  { id: 12, name: 'Флешкартки', image: trainer12 },
   { id: 13, name: 'Абакус', image: trainer13 },
-  { id: 14, name: 'Знайди кіберкішку', image: trainer14 },
+  { id: 14, name: 'Знайди кіберкішка', image: trainer14 },
   { id: 15, name: 'Мнемотехніка', image: trainer15 },
-  { id: 16, name: 'Стовпці', image: trainer16 },
+  { id: 16, name: 'Стовпчики', image: trainer16 },
 ];
 
-const selectedStudents = reactive({ value: [] });
-const selectedDirections = reactive({ value: [] });
-const selectedTrainer = reactive({ value: null });
+const selectedStudents = reactive({ value: [] as number[] });
+const selectedDirections = reactive({ value: [] as number[] });
+const selectedTrainer = reactive({ value: null as { id: number; name: string; image?: string } | null });
 const deadline = reactive({ value: '' });
+const trainerSettings = reactive({ value: {} as Record<string, any> });
 
-const trainerSettings = ref({});
+const emit = defineEmits(['has-unsaved-changes']);
+
+// Сохраняем начальное состояние
+const initialState = ref({
+  students: [] as number[],
+  directions: [] as number[],
+  trainer: null as { id: number; name: string; image?: string } | null,
+  settings: {} as Record<string, any>,
+  deadline: ''
+});
 
 const gameConfigMap = {
   1: [
@@ -182,7 +194,7 @@ const gameConfigMap = {
       min: 30,
       max: 90,
       step: 5,
-      disableKey: 'IS_TIMER_DISABLED',
+      disableKey: 'IS_TIMER_ENABLED',
       disableValue: true,
     },
     {
@@ -191,7 +203,7 @@ const gameConfigMap = {
       inputType: 'CHECKBOX_GROUP',
       checkboxes: [
         {
-          key: 'IS_TIMER_DISABLED',
+          key: 'IS_TIMER_ENABLED',
           title: 'Без таймера',
           inputType: 'CHECKBOX',
         },
@@ -215,12 +227,74 @@ const gameConfigMap = {
   ],
   3: [
     {
-      key: 'LEVELS',
-      title: 'Рівень складності',
+      key: 'MODE',
+      title: 'Режим',
+      inputType: 'SELECT',
+      options: [
+        { label: 'Цифри', value: 'NUMBERS' },
+        { label: 'Букви', value: 'LETTERS' },
+      ],
+    },
+    {
+      key: 'SIZE',
+      title: 'Розмір',
       inputType: 'RANGE_SLIDER',
-      min: 1,
-      max: 5,
+      min: 3,
+      max: 8,
       step: 1,
+      displayAggregator: (val: number) => `${val}x${val}`,
+    },
+    {
+      key: 'ORDER',
+      title: 'Порядок',
+      inputType: 'SELECT',
+      options: [
+        { label: 'Прямий', value: 'DIRECT' },
+        { label: 'Зворотній', value: 'REVERSE' },
+        { label: 'Випадковий', value: 'RANDOM' },
+      ],
+    },
+    {
+      key: 'ROTATION',
+      title: 'Обертання',
+      inputType: 'RANGE_SLIDER',
+      min: 0,
+      max: 180,
+      step: 1,
+    },
+    {
+      key: 'CHECKBOXES',
+      title: 'Додаткові налаштування',
+      inputType: 'CHECKBOX_GROUP',
+      checkboxes: [
+        {
+          key: 'SHUFFLE_WHEN_CLICKED',
+          title: 'Перемішувати при кліку',
+          inputType: 'CHECKBOX',
+        },
+        {
+          key: 'HIDE_TOOLTIPS',
+          title: 'Сховати підказки',
+          inputType: 'CHECKBOX',
+          disableKey: 'ORDER',
+          disableValue: 'RANDOM',
+        },
+      ],
+    },
+    {
+      key: 'TIMER_DURATION',
+      title: 'Таймер',
+      inputType: 'RANGE_SLIDER',
+      min: 0,
+      max: 240,
+      step: 10,
+      displayAggregator: (val: number) => {
+        const min = Math.floor(val / 60);
+        const sec = val % 60;
+        return `${min}:${sec.toString().padStart(2, '0')}`;
+      },
+      disableKey: 'IS_TIMER_ENABLED',
+      disableValue: true,
     },
   ],
   default: [
@@ -236,35 +310,41 @@ const gameConfigMap = {
 };
 
 watch(() => selectedTrainer.value, (newTrainer) => {
-  console.log('Selected trainer changed:', newTrainer); // Отладка
-  // Очищаем старые настройки
-  Object.keys(trainerSettings.value).forEach(key => delete trainerSettings.value[key]);
+  console.log('Selected trainer changed:', newTrainer);
+  trainerSettings.value = {};
 
   if (newTrainer) {
     const config = gameConfigMap[newTrainer.id] || gameConfigMap.default;
-    const defaultSettings = {};
+    const defaultSettings: Record<string, any> = {};
 
-    // Устанавливаем значения по умолчанию для тренажера с id: 1
     if (newTrainer.id === 1) {
       defaultSettings['HINT_TIME'] = 3;
       defaultSettings['CARDS_AMOUNT'] = 8;
       defaultSettings['TIMER_DURATION'] = 30;
-      defaultSettings['IS_TIMER_DISABLED'] = false;
+      defaultSettings['IS_TIMER_ENABLED'] = false;
       defaultSettings['IS_SOUND_ENABLED'] = true;
+    } else if (newTrainer.id === 3) {
+      defaultSettings['MODE'] = 'NUMBERS';
+      defaultSettings['SIZE'] = 3;
+      defaultSettings['ORDER'] = 'DIRECT';
+      defaultSettings['ROTATION'] = 0;
+      defaultSettings['SHUFFLE_WHEN_CLICKED'] = false;
+      defaultSettings['HIDE_TOOLTIPS'] = false;
+      defaultSettings['TIMER_DURATION'] = 0;
+      defaultSettings['IS_TIMER_ENABLED'] = false;
     } else {
-      // Для других тренажеров используем минимальные значения
       config.forEach((unit) => {
         if (unit.inputType === 'CHECKBOX_GROUP') {
           unit.checkboxes.forEach((checkbox) => {
             defaultSettings[checkbox.key] = false;
           });
         } else if (unit.inputType === 'DOUBLE_RANGE_SLIDER') {
-          defaultSettings[unit.minKey] = unit.min;
-          defaultSettings[unit.maxKey] = unit.max;
+          defaultSettings[unit.minKey!] = unit.min;
+          defaultSettings[unit.maxKey!] = unit.max;
         } else if (unit.inputType === 'RANGE_SLIDER') {
           defaultSettings[unit.key] = unit.min;
-        } else {
-          defaultSettings[unit.key] = unit.options ? unit.options[0].value : unit.min || 0;
+        } else if (unit.inputType === 'SELECT') {
+          defaultSettings[unit.key] = unit.options[0].value;
         }
       });
     }
@@ -273,31 +353,23 @@ watch(() => selectedTrainer.value, (newTrainer) => {
     if (savedSettings) {
       try {
         const parsed = JSON.parse(savedSettings);
-        config.forEach((unit) => {
-          if (unit.inputType === 'RANGE_SLIDER' && parsed[unit.key] === undefined) {
-            parsed[unit.key] = defaultSettings[unit.key] || unit.min;
-          }
-        });
-        // Реактивно обновляем свойства
-        Object.entries({ ...defaultSettings, ...parsed }).forEach(([key, value]) => {
-          trainerSettings.value[key] = value;
-        });
+        Object.assign(trainerSettings.value, defaultSettings, parsed);
       } catch (e) {
         console.error('Failed to load trainer settings:', e);
-        Object.entries(defaultSettings).forEach(([key, value]) => {
-          trainerSettings.value[key] = value;
-        });
+        Object.assign(trainerSettings.value, defaultSettings);
       }
     } else {
-      Object.entries(defaultSettings).forEach(([key, value]) => {
-        trainerSettings[key] = value;
-      });
+      Object.assign(trainerSettings.value, defaultSettings);
     }
+
+    initialState.value.settings = { ...defaultSettings };
+    console.log('Trainer settings initialized:', trainerSettings.value);
+    console.log('Step 2 validation:', isStep2Valid.value);
   }
 });
 
-watch(trainerSettings.value, (newSettings) => {
-  console.log('TrainerSettings updated:', newSettings); // Отладка
+watch(() => trainerSettings.value, (newSettings) => {
+  console.log('TrainerSettings updated:', newSettings);
   if (selectedTrainer.value) {
     localStorage.setItem(`trainer_${selectedTrainer.value.id}_settings`, JSON.stringify(newSettings));
   }
@@ -310,20 +382,85 @@ const isStep1Valid = computed(() => {
 const isStep2Valid = computed(() => {
   if (!selectedTrainer.value) return false;
   const config = gameConfigMap[selectedTrainer.value.id] || gameConfigMap.default;
-  return config.every((unit) => {
+  const isValid = config.every((unit) => {
     if (unit.inputType === 'CHECKBOX_GROUP') {
       return unit.checkboxes.every((checkbox) => checkbox.key in trainerSettings.value);
     } else if (unit.inputType === 'DOUBLE_RANGE_SLIDER') {
-      return unit.minKey in trainerSettings.value && unit.maxKey in trainerSettings.value;
+      return unit.minKey! in trainerSettings.value && unit.maxKey! in trainerSettings.value;
     }
     return unit.key in trainerSettings.value;
   });
+  console.log('Step 2 validation:', { isValid, settings: trainerSettings.value });
+  return isValid;
 });
 
+const isStep3Valid = computed(() => {
+  return deadline.value !== '';
+});
+
+const hasUnsavedChanges = computed(() => {
+  return (
+      JSON.stringify(selectedStudents.value) !== JSON.stringify(initialState.value.students) ||
+      JSON.stringify(selectedDirections.value) !== JSON.stringify(initialState.value.directions) ||
+      JSON.stringify(selectedTrainer.value) !== JSON.stringify(initialState.value.trainer) ||
+      JSON.stringify(trainerSettings.value) !== JSON.stringify(initialState.value.settings) ||
+      deadline.value !== initialState.value.deadline
+  );
+});
+
+watch(hasUnsavedChanges, (value) => {
+  emit('has-unsaved-changes', value);
+});
+
+const resetForm = () => {
+  selectedStudents.value = [];
+  selectedDirections.value = [];
+  selectedTrainer.value = null;
+  trainerSettings.value = {};
+  deadline.value = '';
+  currentStep.value = 1;
+  initialState.value = {
+    students: [],
+    directions: [],
+    trainer: null,
+    settings: {},
+    deadline: ''
+  };
+};
+
+const addHomework = () => {
+  if (isStep3Valid.value) {
+    currentStep.value = 4;
+    console.log('Homework added:', {
+      students: selectedStudents.value,
+      directions: selectedDirections.value,
+      trainer: selectedTrainer.value,
+      settings: trainerSettings.value,
+      deadline: deadline.value
+    });
+    resetForm();
+  }
+};
+
+const addMoreHomework = () => {
+  resetForm();
+};
+
 const nextStep = () => {
+  console.log('Next step triggered:', {
+    currentStep: currentStep.value,
+    step1Valid: isStep1Valid.value,
+    step2Valid: isStep2Valid.value,
+    step3Valid: isStep3Valid.value,
+    students: selectedStudents.value,
+    trainer: selectedTrainer.value,
+    settings: trainerSettings.value,
+    deadline: deadline.value
+  });
   if (currentStep.value === 1 && !isStep1Valid.value) return;
   if (currentStep.value === 2 && !isStep2Valid.value) return;
-  if (currentStep.value < steps.length) {
+  if (currentStep.value === 3 && !isStep3Valid.value) return;
+  if (currentStep.value < steps.length - 1) {
     currentStep.value++;
   }
 };
@@ -387,42 +524,42 @@ const prevStep = () => {
           <div v-for="config in (gameConfigMap[selectedTrainer.value.id] || gameConfigMap.default)" :key="config.key" class="setting-item">
             <label>{{ config.title }}</label>
             <Dropdown
-                v-if="config.inputType === 'SELECT'"
+                v-if="config.inputType === 'SELECT' && trainerSettings.value[config.key] !== undefined"
                 v-model="trainerSettings.value[config.key]"
                 :options="config.options"
             />
             <RangeSlider
                 v-if="config.inputType === 'RANGE_SLIDER'"
-                v-model="trainerSettings[config.key]"
+                v-model="trainerSettings.value[config.key]"
                 :min="config.min"
                 :max="config.max"
                 :step="config.step"
                 :display-aggregator="config.displayAggregator"
-                :disabled="config.disableKey && trainerSettings[config.disableKey] === config.disableValue"
+                :disabled="config.disableKey && trainerSettings.value[config.disableKey]"
             />
             <DoubleRangeSlider
                 v-if="config.inputType === 'DOUBLE_RANGE_SLIDER'"
-                v-model:minVal="trainerSettings[config.minKey]"
-                v-model:maxVal="trainerSettings[config.maxKey]"
+                v-model:min="trainerSettings.value[config.minKey!]"
+                v-model:max="trainerSettings.value[config.maxKey!]"
                 :min="config.min"
                 :max="config.max"
                 :step="config.step"
-                :disabled="config.disableKey && trainerSettings.value[config.disableKey] === config.disableValue"
+                :disabled="config.disableKey && trainerSettings.value[config.disableKey]"
             />
             <CheckboxGroup
                 v-if="config.inputType === 'CHECKBOX_GROUP'"
                 :checkboxes="config.checkboxes.map((checkbox) => ({
-                unit: checkbox,
-                value: trainerSettings[checkbox.key] || false,
-                disabled: config.disableKey && trainerSettings[config.disableKey] === config.disableValue
-              }))"
-                @update:checkboxes="config.checkboxes.forEach((checkbox, index) => { trainerSettings[checkbox.key] = $event[index].value })"
+                  unit: checkbox,
+                  value: trainerSettings.value[checkbox.key] || false,
+                  disabled: checkbox.disableKey && trainerSettings.value[checkbox.disableKey] === checkbox.disableValue
+                }))"
+                @update:checkboxes="(value) => config.checkboxes.forEach((checkbox, index) => { trainerSettings.value[checkbox.key] = value[index].value })"
             />
           </div>
         </div>
         <div class="saved-config">
           <h3>Збережена конфігурація</h3>
-          <pre>{{ JSON.stringify(trainerSettings, null, 2) }}</pre>
+          <pre>{{ JSON.stringify({ ...trainerSettings.value }, null, 2) }}</pre>
         </div>
       </div>
     </div>
@@ -431,17 +568,28 @@ const prevStep = () => {
       <DeadlinePicker v-model="deadline.value" />
     </div>
 
+    <div v-if="currentStep.value === 4" class="step-content step-success">
+      <div class="success-step">
+        <img :src="successImage" alt="Success" class="success-image" />
+        <h2>Завдання успішно додане!</h2>
+        <button class="add-more-button" @click="addMoreHomework">
+          Додати ще більше
+        </button>
+      </div>
+    </div>
+
     <StepNavigator
         :steps="steps"
         :current-step="currentStep.value"
-        :is-next-disabled="currentStep.value === steps.length || (currentStep.value === 1 && !isStep1Valid) || (currentStep.value === 2 && !isStep2Valid)"
+        :is-next-disabled="currentStep.value === 1 ? !isStep1Valid.value : currentStep.value === 2 ? !isStep2Valid.value : currentStep.value === 3 ? !isStep3Valid.value : true"
+        :is-button-visible="currentStep.value < steps.length - 1"
         @next="nextStep"
         @prev="prevStep"
     />
   </div>
 </template>
 
-<style lang="scss" scoped>
+<style scoped>
 .homework-form {
   display: flex;
   flex-direction: column;
@@ -451,32 +599,40 @@ const prevStep = () => {
 .homework-form__header {
   display: flex;
   align-items: center;
-  margin-bottom: 32px;
+  margin-bottom: 2px;
 }
 
 .homework-form__back-arrow {
   cursor: pointer;
-  margin-right: 12px;
+  margin-right: 10px;
 }
 
 .homework-form__header-title {
   font-family: 'Onest', sans-serif;
-  font-weight: 500;
+  font-weight: bold 500;
   font-size: 32px;
-  color: #000;
+  color: #333;
 }
 
 .step-content {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  grid-column-gap: 116px;
-  margin-bottom: 20px;
+  grid-template-columns: repeat(2, 2fr);
+  grid-column-gap: 20px;
+  margin-bottom: 32px;
 }
 
 .step-settings {
   display: flex;
   flex-direction: column;
   gap: 48px;
+}
+
+.step-success {
+  grid-column: 1 / 4;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 .trainer-settings {
@@ -490,7 +646,7 @@ const prevStep = () => {
   font-family: 'Onest', sans-serif;
   font-weight: 500;
   font-size: 24px;
-  color: #000;
+  color: #333;
 }
 
 .settings-container {
@@ -505,7 +661,7 @@ const prevStep = () => {
   flex-direction: column;
   gap: 8px;
   background-color: #e3ecf5;
-  padding: 30px;
+  padding: 10px;
   border-radius: 26px;
 }
 
@@ -517,16 +673,16 @@ const prevStep = () => {
 }
 
 .saved-config {
-  margin-top: 16px;
+  margin-top: 32px;
   padding: 16px;
-  background: #f5f5f5;
-  border-radius: 6px;
+  background: #fff;
+  border-radius: 8px;
 }
 
 .saved-config h3 {
   font-family: 'Onest', sans-serif;
+  font-weight: 600;
   font-size: 18px;
-  font-weight: bold;
   margin-bottom: 8px;
   color: #333;
 }
@@ -537,17 +693,17 @@ const prevStep = () => {
   background: #fff;
   padding: 12px;
   border-radius: 6px;
-  border: 1px solid #eee;
+  border: 1px solid #ddd;
 }
 
 .trainer-option {
   display: flex;
   align-items: center;
-  gap: 13px;
-  font-family: "Onest" sans-serif;
+  gap: 10px;
+  font-family: 'Onest', sans-serif;
   font-weight: 500;
   font-size: 16px;
-  line-height: 24px;
+  line-height: 20px;
 }
 
 .trainer-image {
@@ -555,5 +711,46 @@ const prevStep = () => {
   height: 40px;
   object-fit: contain;
   border-radius: 4px;
+}
+
+.success-image {
+  width: 633px;
+  height: 350px;
+  object-fit: contain;
+  margin-bottom: 16px;
+}
+
+.success-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+}
+
+.success-step h2 {
+  font-family: 'Onest', sans-serif;
+  font-weight: 500;
+  font-size: 24px;
+  color: #333;
+  text-align: center;
+}
+
+.add-more-button {
+  background: #0066FF;
+  color: white;
+  border: none;
+  padding: 14px 28px;
+  border-radius: 16px;
+  cursor: pointer;
+  font-family: 'Onest', sans-serif;
+  font-weight: 600;
+  font-size: 16px;
+  line-height: 24px;
+  margin-top: 16px;
+}
+
+.add-more-button:hover {
+  background: #0056b3;
 }
 </style>
