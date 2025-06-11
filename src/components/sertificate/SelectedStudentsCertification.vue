@@ -58,7 +58,7 @@ const removeStudent = (studentId: number) => {
   .selected-students__list {
     display: flex;
     flex-wrap: wrap;
-    gap: 16px;
+    gap: 12px;
     border-radius: 4px;
 
     .selected-students__item {

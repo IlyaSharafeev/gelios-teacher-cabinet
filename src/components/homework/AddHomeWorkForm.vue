@@ -3,7 +3,7 @@ import { reactive, computed, watch, ref } from 'vue';
 import StepNavigator from './StepNavigator.vue';
 import StudentSelector from './StudentSelector.vue';
 import TrainerSelector from './TrainerSelector.vue';
-import SelectedStudents from './SelectedStudents.vue';
+import SelectedStudentsCertification from '../sertificate/SelectedStudentsCertification.vue';
 import DeadlinePicker from './DeadlinePicker.vue';
 import Dropdown from '../config-settings-components/Dropdown.vue';
 import RangeSlider from '../config-settings-components/RangeSlider.vue';
@@ -514,7 +514,7 @@ const prevStep = () => {
     </div>
 
     <div v-if="currentStep.value === 2" class="step-content step-settings">
-      <SelectedStudents
+      <SelectedStudentsCertification
           :students="students"
           v-model="selectedStudents.value"
       />

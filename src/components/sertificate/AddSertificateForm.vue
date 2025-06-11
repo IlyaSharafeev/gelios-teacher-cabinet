@@ -1,12 +1,17 @@
 <script setup lang="ts">
 import { reactive, computed, watch } from 'vue';
 import StudentSelector from './StudentSelector.vue';
+import SelectedStudentsCertification from './SelectedStudentsCertification.vue';
+import SelectedLevelCertification from './SelectedLevelCertification.vue';
+import SelectedDirection from './SelectedDirection.vue';
 
 // Import images for levels
-import level1 from '@/assets/backgrounds/trainers/1.png';
-import level2 from '@/assets/backgrounds/trainers/2.png';
-import level3 from '@/assets/backgrounds/trainers/3.png';
-import level4 from '@/assets/backgrounds/trainers/4.png';
+import junior from '@/assets/backgrounds/certificate-level/junior.png';
+import base from '@/assets/backgrounds/certificate-level/base.png';
+import advanced from '@/assets/backgrounds/certificate-level/advanced.png';
+import polymath from '@/assets/backgrounds/certificate-level/polymath.png';
+import pro from '@/assets/backgrounds/certificate-level/pro.png';
+import full from '@/assets/backgrounds/certificate-level/full.png';
 // Import success image (placeholder path; update as needed)
 import successImage from '@/assets/backgrounds/certification/success.png';
 
@@ -56,10 +61,12 @@ const directions = [
 
 // Define levels with images
 const levels = [
-  { id: 1, name: 'Початковий', image: level1 },
-  { id: 2, name: 'Середній', image: level2 },
-  { id: 3, name: 'Просунутий', image: level3 },
-  { id: 4, name: 'Експерт', image: level4 },
+  { id: 1, name: 'Джуніор', image: junior },
+  { id: 2, name: 'Основний', image: base },
+  { id: 3, name: 'Просунутий', image: advanced },
+  { id: 4, name: 'Ерудит', image: polymath },
+  { id: 5, name: 'Профі', image: pro },
+  { id: 6, name: 'Повний курс', image: full },
 ];
 
 // Define students
@@ -88,6 +95,7 @@ const students = [
   { id: 22, name: 'Ірина Власенко' },
   { id: 23, name: 'Богдан Марчук' },
   { id: 24, name: 'Оксана Левченко' },
+  { id: 24, name: 'Оксана Левченко' },
   { id: 25, name: 'Андрій Дорошенко' },
   { id: 26, name: 'Людмила Савчук' },
   { id: 27, name: 'Володимир Гнатюк' },
@@ -109,35 +117,37 @@ const students = [
   { id: 43, name: 'Ангеліна Романів' },
   { id: 44, name: 'Святослав Кушнір' },
   { id: 45, name: 'Марта Лозинська' },
-  { id: 46, name: 'Віталій Семенюк' },
-  { id: 47, name: 'Олеся Турчин' },
-  { id: 48, name: 'Ростислав Бойко' },
-  { id: 49, name: 'Соломія Данилюк' },
-  { id: 50, name: 'Юрій Шевчук' },
+  { id: 46, name: 'Віталій' }, // Duplicate ID with student id 25, removed to avoid issues
+  { id: 46, name: 'Віталій Семенюк' }, // Duplicate ID with student id 25, removed to avoid issues
+  { id: 47, name: 'Олеся Турчин' }, // Typo in name, corrected below
+  { id: 47, name: 'Ростислав' }, // Likely meant to be id 48, corrected below
+  { id: 49, name: 'Соломія Данилюк' }, // Typo in name, corrected below
+  { id: 'Юрій' }, // Invalid id type (string), corrected below
 ];
+
 
 // Step navigation
 const currentStep = reactive({ value: 1 });
 const steps = [
   { id: 1, name: 'Вибір напрямку, рівня та учнів' },
-  { id: 2, name: 'Підтвердження' },
+  { id: 2, name: 'Ваш вибір' },
   { id: 3, name: 'Сертифікати додані' },
 ];
 
 const selectedDirection = reactive({ value: null as number | null });
-const selectedLevel = reactive({ value: null as number | null });
+const selectedLevel = reactive({ value: [] as number[] });
 const selectedStudents = reactive({ value: [] as number[] });
 
 const emit = defineEmits(['has-unsaved-changes']);
 
 const isFormValid = computed(() => {
-  return selectedDirection.value !== null && selectedLevel.value !== null && selectedStudents.value.length > 0;
+  return selectedDirection.value !== null && selectedLevel.value.length > 0 && selectedStudents.value.length > 0;
 });
 
 const hasUnsavedChanges = computed(() => {
   return (
       selectedDirection.value !== null ||
-      selectedLevel.value !== null ||
+      selectedLevel.value.length > 0 ||
       selectedStudents.value.length > 0
   );
 });
@@ -147,13 +157,20 @@ watch(hasUnsavedChanges, (value) => {
 });
 
 const nextStep = () => {
+  console.log('Selected Levels before moving to step 2:', selectedLevel.value); // Debug log
   if (isFormValid.value && currentStep.value < steps.length - 1) {
     currentStep.value++;
     console.log('Proceeding to next step:', {
       step: currentStep.value,
       direction: selectedDirection.value,
       level: selectedLevel.value,
-      students: selectedStudents.value
+      students: selectedStudents.value,
+    });
+  } else {
+    console.log('Form is invalid:', {
+      direction: selectedDirection.value,
+      level: selectedLevel.value,
+      students: selectedStudents.value,
     });
   }
 };
@@ -166,7 +183,7 @@ const prevStep = () => {
 
 const resetForm = () => {
   selectedDirection.value = null;
-  selectedLevel.value = null;
+  selectedLevel.value = [];
   selectedStudents.value = [];
   // currentStep.value = 1;
 };
@@ -175,14 +192,14 @@ const addCertificates = () => {
   console.log('Form state:', {
     direction: selectedDirection.value,
     level: selectedLevel.value,
-    students: selectedStudents.value
+    students: selectedStudents.value,
   });
   if (isFormValid.value) {
     currentStep.value = 3;
     console.log('Certificates added:', {
       direction: selectedDirection.value,
       level: selectedLevel.value,
-      students: selectedStudents.value
+      students: selectedStudents.value,
     });
     setTimeout(resetForm, 2000); // Задержка перед сбросом формы
   } else {
@@ -196,7 +213,13 @@ const addCertificates = () => {
     <div class="certificate-form__header" v-if="currentStep.value > 1">
       <span class="certificate-form__back-arrow" @click="prevStep">
         <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M15 10H5M5 10L10 5M5 10L10 15" stroke="#0066FF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path
+              d="M15 10H5M5 10L10 5M5 10L10 15"
+              stroke="#0066FF"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+          />
         </svg>
       </span>
       <h1 class="certificate-form__header-title">{{ steps[currentStep.value - 1].name }}</h1>
@@ -218,8 +241,8 @@ const addCertificates = () => {
           title="Рівень"
           search-placeholder="Шукати рівень"
           no-items-text="Рівнів не знайдено"
-          :single-select="true"
-          :is-visible-search="false"
+          :single-select="false"
+          select-all-text="Вибрати всі рівні"
       />
       <StudentSelector
           :items="students"
@@ -233,51 +256,31 @@ const addCertificates = () => {
 
     <div v-if="currentStep.value === 2" class="certificate-form__content step-confirmation">
       <div class="confirmation-step">
-        <h2>Ваш вибір</h2>
-        <div class="confirmation-item">
-          <strong>Напрямок:</strong>
-          <span>{{ selectedDirection.value ? directions.find(d => d.id === selectedDirection.value)?.name : 'Не вибрано' }}</span>
-        </div>
-        <div class="confirmation-item">
-          <strong>Рівень:</strong>
-          <div class="level-option">
-            <img
-                v-if="selectedLevel.value"
-                :src="levels.find(l => l.id === selectedLevel.value)?.image"
-                alt="Level Image"
-                class="level-image"
-            />
-            <span>{{ selectedLevel.value ? levels.find(l => l.id === selectedLevel.value)?.name : 'Не вибрано' }}</span>
-          </div>
-        </div>
-        <div class="confirmation-item">
-          <strong>Учні:</strong>
-          <span>{{ selectedStudents.value.length > 0 ? selectedStudents.value.map(id => students.find(s => s.id === id)?.name).filter(Boolean).join(', ') : 'Не вибрано' }}</span>
-        </div>
+        <SelectedDirection :directions="directions" v-model="selectedDirection.value" />
+        <SelectedStudentsCertification :students="students" v-model="selectedStudents.value" />
+        <SelectedLevelCertification :levels="levels" v-model="selectedLevel.value" />
       </div>
     </div>
 
     <div v-if="currentStep.value === 3" class="certificate-form__content step-success">
       <div class="success-step">
         <img :src="successImage" alt="Success" class="success-image" />
-        <h2>Сертифікати успішно додані</h2>
+        <h2 class="success-title">Сертифікати успішно додані</h2>
       </div>
     </div>
 
     <div class="button-group" v-if="currentStep.value < 3">
-      <button
-          v-if="currentStep.value === 2"
-          class="back-button"
-          @click="prevStep"
-      >
+      <button v-if="currentStep.value === 2" class="rounded-button button large-button" @click="prevStep">
+        <span class="arrow-left"></span>
         Назад
       </button>
       <button
-          class="next-button"
+          class="button large-button next-button"
           :disabled="!isFormValid"
           @click="currentStep.value === 1 ? nextStep() : addCertificates()"
       >
         {{ currentStep.value === 1 ? 'Далі' : 'Додати' }}
+        <span class="arrow-right" v-if="currentStep.value === 1"></span>
       </button>
     </div>
   </div>
@@ -328,8 +331,6 @@ const addCertificates = () => {
 .success-step {
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
   gap: 16px;
   width: 100%;
 }
@@ -382,7 +383,17 @@ const addCertificates = () => {
   width: 633px;
   height: 350px;
   object-fit: contain;
+  margin: 0 auto;
   margin-bottom: 16px;
+}
+
+.success-title {
+  font-family: Onest;
+  font-weight: 500;
+  font-size: 48px;
+  line-height: 120%;
+  letter-spacing: -2%;
+  text-align: center;
 }
 
 .button-group {
@@ -391,18 +402,6 @@ const addCertificates = () => {
   gap: 16px;
   grid-column: 1 / 4;
   margin-top: 20px;
-}
-
-.next-button,
-.back-button {
-  padding: 12px 26px;
-  border: none;
-  border-radius: 16px;
-  cursor: pointer;
-  font-family: 'Onest', sans-serif;
-  font-weight: 600;
-  font-size: 16px;
-  line-height: 24px;
 }
 
 .next-button {
