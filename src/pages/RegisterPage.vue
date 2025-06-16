@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import SelectInput from "@/components/SelectInput.vue";
+import SelectInput from "@/components/inputs/SelectInput.vue";
 import ukrainianLanguageIcon from "@/assets/images/language-icons/UA.svg";
 import englishLanguageIcon from "@/assets/images/language-icons/GB.svg";
 import { ref, watch, computed } from "vue";

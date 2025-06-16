@@ -1,14 +1,14 @@
 <script setup lang="ts">
 import { ref } from 'vue';
-import { useAuthStore } from '@/stores/auth'; // Assuming the store is in '@/stores/auth'
+import { useAuthStore } from '@/stores/auth';
 import { useRouter } from 'vue-router';
 
-const activeTab = ref('homework');
+const activeTab = ref('general');
 const authStore = useAuthStore();
 const router = useRouter();
 
-import HomeworkForm from '@/components/homework/AddHomeWorkForm.vue';
-import CertificateForm from '@/components/sertificate/AddSertificateForm.vue';
+import GeneralForm from "@/components/settings/general/GeneralForm.vue";
+import PasswordForm from "@/components/settings/password/PasswordForm.vue";
 
 const setActiveTab = (tab: string) => {
   activeTab.value = tab;
@@ -16,7 +16,7 @@ const setActiveTab = (tab: string) => {
 
 const handleLogout = () => {
   authStore.logout();
-  router.push('/login'); // Redirect to login page after logout
+  router.push('/login');
 };
 </script>
 
@@ -25,14 +25,14 @@ const handleLogout = () => {
     <div class="tabs-wrapper">
       <div class="tabs">
         <button
-            :class="{ active: activeTab === 'homework' }"
-            @click="setActiveTab('homework')"
+            :class="{ active: activeTab === 'general' }"
+            @click="setActiveTab('general')"
         >
           Загальні
         </button>
         <button
-            :class="{ active: activeTab === 'certificate' }"
-            @click="setActiveTab('certificate')"
+            :class="{ active: activeTab === 'password' }"
+            @click="setActiveTab('password')"
         >
           Пароль
         </button>
@@ -45,8 +45,8 @@ const handleLogout = () => {
     </div>
 
     <div class="content">
-      <!-- <HomeworkForm v-if="activeTab === 'homework'" /> -->
-      <!-- <CertificateForm v-if="activeTab === 'certificate'" /> -->
+       <GeneralForm v-if="activeTab === 'general'" /> 
+       <PasswordForm v-if="activeTab === 'password'" /> 
     </div>
   </div>
 </template>
