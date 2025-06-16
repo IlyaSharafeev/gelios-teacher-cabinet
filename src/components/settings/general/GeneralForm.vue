@@ -6,10 +6,11 @@ import { notify } from '@kyvg/vue3-notification';
 import CustomCheckbox from '@/components/inputs/CustomCheckbox.vue';
 import EditIcon from '@/assets/images/inputs/edit.svg';
 import SaveIcon from '@/assets/images/inputs/save.svg';
+import LanguageSelect from "@/components/inputs/LanguageSelect.vue";
 
 // Данные формы с начальными значениями
 const form = ref({
-  language: 'uk',
+  language: { label: 'Українська', value: 'uk' },
   email: 'example@domain.com',
   phone: '1234567890',
   notifications: {
@@ -255,18 +256,7 @@ const phoneErrors = computed(() => {
     <div class="title">Общие параметры</div>
     <div class="settings-section">
       <div class="form-group">
-        <label for="language">Язык</label>
-        <select
-            v-model="form.language"
-            id="language"
-            @focus="handleSelectFocus"
-            @blur="handleSelectBlur"
-            @change="handleSelectChange"
-        >
-          <option value="uk">Українська</option>
-          <option value="en">English</option>
-          <option value="ru">Русский</option>
-        </select>
+        <LanguageSelect v-model="form.language"/>
       </div>
 
       <div class="form-group">
