@@ -5,19 +5,20 @@ import englishLanguageIcon from "@/assets/images/language-icons/GB.svg";
 import { ref, watch, computed } from "vue";
 import { useVuelidate } from "@vuelidate/core";
 import { required, email, minLength, sameAs, helpers } from "@vuelidate/validators";
-import {useAuthStore} from "@/stores/auth.ts";
-import {useRouter} from "vue-router";
+import { useAuthStore } from "@/stores/auth.ts";
+import { useRouter } from "vue-router";
 import { useNotification } from "@kyvg/vue3-notification";
+import { useI18n } from "vue-i18n";
 
-const { notify }  = useNotification()
-
+const { t } = useI18n();
+const { notify } = useNotification();
 const phoneNumber = helpers.regex(/^\+?[1-9]\d{1,14}$/); // Simple phone number regex (e.g., +380123456789)
 const router = useRouter();
 const errorMessage = ref<string | null>(null);
 
 const selectOptions = [
-  { value: "ua", label: "Українська", icon: ukrainianLanguageIcon },
-  { value: "en", label: "English", icon: englishLanguageIcon },
+  { value: "ua", label: t("language.uk"), icon: ukrainianLanguageIcon },
+  { value: "en", label: t("language.en"), icon: englishLanguageIcon },
 ];
 
 const selectedValueLanguage = ref<string>(
@@ -56,7 +57,7 @@ const onRegisterSubmit = async () => {
     }
   } else {
     notify({
-      title: "Registration form validation failed",
+      title: t("register.validation.form_error"),
     });
   }
 };
@@ -73,12 +74,12 @@ watch(selectedValueLanguage, (newValue) => {
         <div class="logo"></div>
         <div class="text">
           <div class="title">
-            Вітаємо вас<br /> на платформі школи!
+            {{ t("register.welcome.title") }}
           </div>
           <div class="description">
-            Тут чекають цікаві відкриття, захоплюючі<br /> навчальні матеріали та можливість<br /> розвиватися разом з нами.<br />
+            {{ t("register.welcome.description") }}
             <div class="second-description">
-              Готові до пригод? Рушаймо разом!
+              {{ t("register.welcome.second_description") }}
             </div>
           </div>
         </div>
@@ -90,101 +91,104 @@ watch(selectedValueLanguage, (newValue) => {
 
     <div class="register-form-wrapper">
       <div class="register-form">
-        <div class="title">Зареєструватися</div>
+        <div class="title">{{ t("register.form.title") }}</div>
         <div class="description">
-          Ласкаво просимо до <span class="name-company cursor-pointer">Gelios School</span>
+          {{ t("register.form.description") }} <span class="name-company cursor-pointer">Gelios School</span>
         </div>
         <div class="form">
           <div class="form-email">
-            <div class="label">Адрес електронний пошти</div>
+            <div class="label">{{ t("register.form.email.label") }}</div>
             <div class="field-email">
               <input
                   class="input"
                   :class="{ 'input-error': vRegister.email.$error }"
                   type="email"
-                  placeholder="Електронний адрес"
+                  :placeholder="t('register.form.email.placeholder')"
                   v-model="registerForm.email"
                   @blur="vRegister.email.$touch"
               />
               <div class="error-message" v-if="vRegister.email.$error">
-                {{ vRegister.email.$errors[0].$message || 'Це поле обов’язкове або некоректний email' }}
+                {{ vRegister.email.$errors[0].$message || t("register.validation.email") }}
               </div>
             </div>
           </div>
           <div class="form-row">
             <div class="form-username">
-              <div class="label">Ім'я користувача</div>
+              <div class="label">{{ t("register.form.username.label") }}</div>
               <div class="field-username">
                 <input
                     class="input"
                     :class="{ 'input-error': vRegister.username.$error }"
                     type="text"
-                    placeholder="Ім'я користувача"
+                    :placeholder="t('register.form.username.placeholder')"
                     v-model="registerForm.username"
                     @blur="vRegister.username.$touch"
                 />
                 <div class="error-message" v-if="vRegister.username.$error">
-                  {{ vRegister.username.$errors[0].$message || 'Ім’я має бути не менше 3 символів' }}
+                  {{ vRegister.username.$errors[0].$message || t("register.validation.username") }}
                 </div>
               </div>
             </div>
             <div class="form-contact-number">
-              <div class="label">Контактний номер</div>
+              <div class="label">{{ t("register.form.contact_number.label") }}</div>
               <div class="field-contact-number">
                 <input
                     class="input"
                     :class="{ 'input-error': vRegister.contactNumber.$error }"
                     type="tel"
-                    placeholder="+380123456789"
+                    :placeholder="t('register.form.contact_number.placeholder')"
                     v-model="registerForm.contactNumber"
                     @blur="vRegister.contactNumber.$touch"
                 />
                 <div class="error-message" v-if="vRegister.contactNumber.$error">
-                  {{ vRegister.contactNumber.$errors[0].$message || 'Введіть коректний номер телефону' }}
+                  {{ vRegister.contactNumber.$errors[0].$message || t("register.validation.contact_number") }}
                 </div>
               </div>
             </div>
           </div>
           <div class="form-password">
-            <div class="label">Введіть ваш пароль</div>
+            <div class="label">{{ t("register.form.password.label") }}</div>
             <div class="field-password">
               <input
                   class="input"
                   :class="{ 'input-error': vRegister.password.$error }"
                   type="password"
-                  placeholder="Пароль"
+                  :placeholder="t('register.form.password.placeholder')"
                   v-model="registerForm.password"
                   @blur="vRegister.password.$touch"
               />
               <div class="error-message" v-if="vRegister.password.$error">
-                {{ vRegister.password.$errors[0].$message || 'Пароль має бути не менше 6 символів' }}
+                {{ vRegister.password.$errors[0].$message || t("register.validation.password") }}
               </div>
             </div>
           </div>
-<!--          <div class="form-confirm-password">-->
-<!--            <div class="label">Підтвердіть пароль</div>-->
-<!--            <div class="field-confirm-password">-->
-<!--              <input-->
-<!--                  class="input"-->
-<!--                  :class="{ 'input-error': vRegister.confirmPassword.$error }"-->
-<!--                  type="password"-->
-<!--                  placeholder="Підтвердіть пароль"-->
-<!--                  v-model="registerForm.confirmPassword"-->
-<!--                  @blur="vRegister.confirmPassword.$touch"-->
-<!--              />-->
-<!--              <div class="error-message" v-if="vRegister.confirmPassword.$error">-->
-<!--                {{ vRegister.confirmPassword.$errors[0].$message || 'Паролі не збігаються' }}-->
-<!--              </div>-->
-<!--            </div>-->
-<!--          </div>-->
+          <!-- <div class="form-confirm-password">
+            <div class="label">{{ t("register.form.confirm_password.label") }}</div>
+            <div class="field-confirm-password">
+              <input
+                  class="input"
+                  :class="{ 'input-error': vRegister.confirmPassword.$error }"
+                  type="password"
+                  :placeholder="t('register.form.confirm_password.placeholder')"
+                  v-model="registerForm.confirmPassword"
+                  @blur="vRegister.confirmPassword.$touch"
+              />
+              <div class="error-message" v-if="vRegister.confirmPassword.$error">
+                {{ vRegister.confirmPassword.$errors[0].$message || t("register.validation.confirm_password") }}
+              </div>
+            </div>
+          </div> -->
         </div>
-        <div class="button register-button" @click="onRegisterSubmit">Зареєструватися</div>
-        <div class="do-you-have-account">Маєш аккаунт? <router-link class="back-to-login" to="/login">Увiйти</router-link></div>
+        <div class="button register-button" @click="onRegisterSubmit">{{ t("register.form.submit") }}</div>
+        <div class="do-you-have-account">
+          {{ t("register.form.have_account") }}
+          <router-link class="back-to-login" to="/login">{{ t("register.form.login_link") }}</router-link>
+        </div>
       </div>
     </div>
 
     <notifications />
-    
+
     <SelectInput
         class="select-language"
         v-model="selectedValueLanguage"
@@ -407,7 +411,7 @@ watch(selectedValueLanguage, (newValue) => {
           background-color: #0055cc;
         }
       }
-      
+
       .do-you-have-account {
         display: flex;
         justify-content: center;

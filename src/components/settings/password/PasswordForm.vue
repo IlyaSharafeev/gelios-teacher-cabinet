@@ -5,7 +5,9 @@ import { required, minLength, sameAs } from "@vuelidate/validators";
 import { useAuthStore } from "@/stores/auth";
 import { useRouter } from "vue-router";
 import { useNotification } from "@kyvg/vue3-notification";
+import { useI18n } from "vue-i18n";
 
+const { t } = useI18n();
 const { notify } = useNotification();
 const authStore = useAuthStore();
 const router = useRouter();
@@ -32,23 +34,23 @@ const onChangePasswordSubmit = async () => {
     const { success, error } = await authStore.changePassword(changePasswordForm.value);
     if (success) {
       notify({
-        title: "Пароль успішно змінено",
-        text: "Ваш пароль був оновлений.",
+        title: t("change_password.notifications.success.title"),
+        text: t("change_password.notifications.success.text"),
         type: "success",
       });
       router.push("/dashboard");
     } else {
-      errorMessage.value = error || "Помилка при зміні пароля";
+      errorMessage.value = error || t("change_password.notifications.error.text");
       notify({
-        title: "Помилка зміни пароля",
+        title: t("change_password.notifications.error.title"),
         text: errorMessage.value,
         type: "error",
       });
     }
   } else {
-    errorMessage.value = "Будь ласка, перевірте введені дані";
+    errorMessage.value = t("change_password.notifications.validation.text");
     notify({
-      title: "Помилка валідації форми",
+      title: t("change_password.notifications.validation.title"),
       text: errorMessage.value,
       type: "error",
     });
@@ -59,59 +61,59 @@ const onChangePasswordSubmit = async () => {
 <template>
   <div class="change-password-page">
     <div class="change-password-form">
-      <h2 class="title">Змінити пароль</h2>
+      <h2 class="title">{{ t("change_password.form.title") }}</h2>
       <div class="error-message" v-if="errorMessage">{{ errorMessage }}</div>
       <div class="form">
         <div class="form-old-password">
-          <div class="label">Старий пароль</div>
+          <div class="label">{{ t("change_password.form.old_password.label") }}</div>
           <div class="field-old-password">
             <input
                 class="input"
                 :class="{ 'input-error': vChangePassword.oldPassword.$error }"
                 type="password"
-                placeholder="Старий пароль"
+                :placeholder="t('change_password.form.old_password.placeholder')"
                 v-model="changePasswordForm.oldPassword"
                 @blur="vChangePassword.oldPassword.$touch"
             />
             <div class="error-message" v-if="vChangePassword.oldPassword.$error">
-              {{ vChangePassword.oldPassword.$errors[0].$message || 'Пароль має бути не менше 6 символів' }}
+              {{ vChangePassword.oldPassword.$errors[0].$message || t("change_password.validation.password") }}
             </div>
           </div>
         </div>
         <div class="form-new-password">
-          <div class="label">Новий пароль</div>
+          <div class="label">{{ t("change_password.form.new_password.label") }}</div>
           <div class="field-new-password">
             <input
                 class="input"
                 :class="{ 'input-error': vChangePassword.newPassword.$error }"
                 type="password"
-                placeholder="Новий пароль"
+                :placeholder="t('change_password.form.new_password.placeholder')"
                 v-model="changePasswordForm.newPassword"
                 @blur="vChangePassword.newPassword.$touch"
             />
             <div class="error-message" v-if="vChangePassword.newPassword.$error">
-              {{ vChangePassword.newPassword.$errors[0].$message || 'Пароль має бути не менше 6 символів' }}
+              {{ vChangePassword.newPassword.$errors[0].$message || t("change_password.validation.password") }}
             </div>
           </div>
         </div>
         <div class="form-confirm-new-password">
-          <div class="label">Повторіть новий пароль</div>
+          <div class="label">{{ t("change_password.form.confirm_new_password.label") }}</div>
           <div class="field-confirm-new-password">
             <input
                 class="input"
                 :class="{ 'input-error': vChangePassword.confirmNewPassword.$error }"
                 type="password"
-                placeholder="Повторіть новий пароль"
+                :placeholder="t('change_password.form.confirm_new_password.placeholder')"
                 v-model="changePasswordForm.confirmNewPassword"
-                @blur="vChangePassword.confirmNewPassword.$touch"
+                @blur="vChangePassword.newPassword.$touch"
             />
             <div class="error-message" v-if="vChangePassword.confirmNewPassword.$error">
-              {{ vChangePassword.confirmNewPassword.$errors[0].$message || 'Паролі не збігаються' }}
+              {{ vChangePassword.confirmNewPassword.$errors[0].$message || t("change_password.validation.confirm_password") }}
             </div>
           </div>
         </div>
       </div>
-      <div class="button change-password-button" @click="onChangePasswordSubmit">Зберегти</div>
+      <div class="button change-password-button" @click="onChangePasswordSubmit">{{ t("change_password.form.submit") }}</div>
     </div>
 
     <notifications />

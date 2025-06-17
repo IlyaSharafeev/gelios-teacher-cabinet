@@ -1,14 +1,17 @@
 <script setup lang="ts">
 import { ref } from 'vue';
+import { useI18n } from 'vue-i18n'
 import { useAuthStore } from '@/stores/auth';
 import { useRouter } from 'vue-router';
+
+const { t } = useI18n();
 
 const activeTab = ref('general');
 const authStore = useAuthStore();
 const router = useRouter();
 
-import GeneralForm from "@/components/settings/general/GeneralForm.vue";
-import PasswordForm from "@/components/settings/password/PasswordForm.vue";
+import GeneralForm from '@/components/settings/general/GeneralForm.vue';
+import PasswordForm from '@/components/settings/password/PasswordForm.vue';
 
 const setActiveTab = (tab: string) => {
   activeTab.value = tab;
@@ -28,25 +31,25 @@ const handleLogout = () => {
             :class="{ active: activeTab === 'general' }"
             @click="setActiveTab('general')"
         >
-          Загальні
+          {{ t('general') }}
         </button>
         <button
             :class="{ active: activeTab === 'password' }"
             @click="setActiveTab('password')"
         >
-          Пароль
+          {{ t('password') }}
         </button>
       </div>
 
       <div class="logout-button" @click="handleLogout">
         <div class="logout-icon"></div>
-        <div>Вийти</div>
+        <div>{{ t('logout') }}</div>
       </div>
     </div>
 
     <div class="content">
-       <GeneralForm v-if="activeTab === 'general'" /> 
-       <PasswordForm v-if="activeTab === 'password'" /> 
+      <GeneralForm v-if="activeTab === 'general'" />
+      <PasswordForm v-if="activeTab === 'password'" />
     </div>
   </div>
 </template>
@@ -83,7 +86,7 @@ const handleLogout = () => {
     cursor: pointer;
 
     .logout-icon {
-      background-image: url("@/assets/images/icons/log-out.svg");
+      background-image: url('@/assets/images/icons/log-out.svg');
       background-size: contain;
       background-position: center;
       background-repeat: no-repeat;
@@ -100,9 +103,8 @@ button {
   cursor: pointer;
   border-radius: 16px;
   font-size: 16px;
-  font-family: "Onest" sans-serif;
+  font-family: 'Onest' sans-serif;
   font-weight: 600;
-  font-size: 16px;
   line-height: 24px;
   letter-spacing: 0%;
 }
@@ -111,7 +113,7 @@ button.active {
   background: #0066FF;
   border-radius: 16px;
   padding: 12px 26px;
-  font-family: "Onest" sans-serif;
+  font-family: 'Onest' sans-serif;
   font-weight: 600;
   font-size: 16px;
   line-height: 24px;

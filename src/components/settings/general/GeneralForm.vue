@@ -1,16 +1,20 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue';
+import { ref, computed, onMounted, onUnmounted, nextTick, watch } from 'vue';
 import { useVuelidate } from '@vuelidate/core';
 import { email, required, numeric } from '@vuelidate/validators';
 import { notify } from '@kyvg/vue3-notification';
+import { useI18n } from 'vue-i18n'; // Импортируем useI18n
 import CustomCheckbox from '@/components/inputs/CustomCheckbox.vue';
 import EditIcon from '@/assets/images/inputs/edit.svg';
 import SaveIcon from '@/assets/images/inputs/save.svg';
-import LanguageSelect from "@/components/inputs/LanguageSelect.vue";
+import LanguageSelect from '@/components/inputs/LanguageSelect.vue';
+
+// Подключаем i18n
+const { t, locale } = useI18n();
 
 // Данные формы с начальными значениями
 const form = ref({
-  language: { label: 'Українська', value: 'uk' },
+  language: { label: t('language.uk'), value: 'uk' }, // Начальный язык
   email: 'example@domain.com',
   phone: '1234567890',
   notifications: {
@@ -19,6 +23,12 @@ const form = ref({
     lessonFeedback: false,
     homeworkNotDone: false,
   },
+});
+
+// Синхронизация языка с i18n
+watch(() => form.value.language.value, (newLang) => {
+  console.log(newLang);
+  locale.value = newLang; // Обновляем язык при изменении выбора
 });
 
 // Флаг для состояния уведомлений
@@ -61,8 +71,8 @@ const toggleEdit = async (field: 'email' | 'phone', inputRef: string, isSave: bo
       v$.value.email.$touch();
       if (!v$.value.email.$errors.length) {
         notify({
-          title: 'Успех',
-          text: 'Почта успешно сохранена!',
+          title: t('success'),
+          text: t('email_saved'),
           type: 'success',
         });
       }
@@ -77,8 +87,8 @@ const toggleEdit = async (field: 'email' | 'phone', inputRef: string, isSave: bo
       } else {
         console.error(`Элемент ${inputRef} не найден`);
         notify({
-          title: 'Ошибка',
-          text: 'Не удалось отредактировать поле почты',
+          title: t('error'),
+          text: t('email_edit_error'),
           type: 'error',
         });
       }
@@ -89,8 +99,8 @@ const toggleEdit = async (field: 'email' | 'phone', inputRef: string, isSave: bo
       v$.value.phone.$touch();
       if (!v$.value.phone.$errors.length) {
         notify({
-          title: 'Успех',
-          text: 'Телефон успешно сохранен!',
+          title: t('success'),
+          text: t('phone_saved'),
           type: 'success',
         });
       }
@@ -105,8 +115,8 @@ const toggleEdit = async (field: 'email' | 'phone', inputRef: string, isSave: bo
       } else {
         console.error(`Элемент ${inputRef} не найден`);
         notify({
-          title: 'Ошибка',
-          text: 'Не удалось отредактировать поле телефона',
+          title: t('error'),
+          text: t('phone_edit_error'),
           type: 'error',
         });
       }
@@ -124,8 +134,8 @@ const handleBlur = (field: 'email' | 'phone') => {
     v$.value.email.$touch();
     if (!v$.value.email.$errors.length) {
       notify({
-        title: 'Успех',
-        text: 'Почта успешно сохранена!',
+        title: t('success'),
+        text: t('email_saved'),
         type: 'success',
       });
     }
@@ -134,8 +144,8 @@ const handleBlur = (field: 'email' | 'phone') => {
     v$.value.phone.$touch();
     if (!v$.value.phone.$errors.length) {
       notify({
-        title: 'Успех',
-        text: 'Телефон успешно сохранен!',
+        title: t('success'),
+        text: t('phone_saved'),
         type: 'success',
       });
     }
@@ -156,8 +166,8 @@ const toggleNotifications = (duration?: '15 хв' | '30 хв' | '1 год' | '2 
     if (duration) {
       console.log(`Уведомления отключены на ${duration}`);
       notify({
-        title: 'Уведомления',
-        text: `Все уведомления отключены на ${duration}`,
+        title: t('notifications'),
+        text: t('notifications_disabled', { duration }),
         type: 'info',
       });
 
@@ -171,8 +181,8 @@ const toggleNotifications = (duration?: '15 хв' | '30 хв' | '1 год' | '2 
       setTimeout(() => {
         toggleNotifications();
         notify({
-          title: 'Уведомления',
-          text: 'Все уведомления снова включены!',
+          title: t('notifications'),
+          text: t('notifications_enabled'),
           type: 'success',
         });
       }, timeoutMs);
@@ -186,8 +196,8 @@ const toggleNotifications = (duration?: '15 хв' | '30 хв' | '1 год' | '2 
     localStorage.setItem('notificationsEnabled', 'true');
     selectedDuration.value = undefined;
     notify({
-      title: 'Уведомления',
-      text: 'Все уведомления включены!',
+      title: t('notifications'),
+      text: t('notifications_enabled'),
       type: 'success',
     });
   }
@@ -231,8 +241,8 @@ onMounted(() => {
 const emailErrors = computed(() => {
   if (v$.value.email.$dirty && v$.value.email.$errors.length) {
     return v$.value.email.$errors.map(error => {
-      if (error.$validator === 'required') return 'Поле почты обязательно';
-      if (error.$validator === 'email') return 'Неверный формат почты';
+      if (error.$validator === 'required') return t('email_required');
+      if (error.$validator === 'email') return t('email_invalid');
       return '';
     });
   }
@@ -242,8 +252,8 @@ const emailErrors = computed(() => {
 const phoneErrors = computed(() => {
   if (v$.value.phone.$dirty && v$.value.phone.$errors.length) {
     return v$.value.phone.$errors.map(error => {
-      if (error.$validator === 'required') return 'Поле телефона обязательно';
-      if (error.$validator === 'numeric') return 'Телефон должен содержать только цифры';
+      if (error.$validator === 'required') return t('phone_required');
+      if (error.$validator === 'numeric') return t('phone_numeric');
       return '';
     });
   }
@@ -253,14 +263,14 @@ const phoneErrors = computed(() => {
 
 <template>
   <div class="general-settings">
-    <div class="title">Общие параметры</div>
+    <div class="title">{{ t('general_settings') }}</div>
     <div class="settings-section">
       <div class="form-group">
         <LanguageSelect v-model="form.language"/>
       </div>
 
       <div class="form-group">
-        <label for="email">Почта</label>
+        <label for="email">{{ t('email') }}</label>
         <div class="input-wrapper">
           <input
               id="email-input"
@@ -272,7 +282,7 @@ const phoneErrors = computed(() => {
           <span class="edit-button" @click="toggleEdit('email', 'email-input', isEditingEmail)">
             <img
                 :src="isEditingEmail ? SaveIcon : EditIcon"
-                :alt="isEditingEmail ? 'Save' : 'Edit'"
+                :alt="isEditingEmail ? t('save') : t('edit')"
                 class="edit-icon"
             />
           </span>
@@ -283,7 +293,7 @@ const phoneErrors = computed(() => {
       </div>
 
       <div class="form-group">
-        <label for="phone">Телефон</label>
+        <label for="phone">{{ t('phone') }}</label>
         <div class="input-wrapper">
           <input
               id="phone-input"
@@ -295,7 +305,7 @@ const phoneErrors = computed(() => {
           <span class="edit-button" @click="toggleEdit('phone', 'phone-input', isEditingPhone)">
             <img
                 :src="isEditingPhone ? SaveIcon : EditIcon"
-                :alt="isEditingPhone ? 'Save' : 'Edit'"
+                :alt="isEditingPhone ? t('save') : t('edit')"
                 class="edit-icon"
             />
           </span>
@@ -306,31 +316,31 @@ const phoneErrors = computed(() => {
       </div>
     </div>
 
-    <div class="title">Уведомления</div>
+    <div class="title">{{ t('notifications') }}</div>
     <div class="notifications-section">
       <div class="notifications-section-left">
         <CustomCheckbox
             id="lesson-cancel"
             v-model="form.notifications.lessonCancel"
-            label="Скасування уроку"
+            :label="t('lesson_cancel')"
             :disabled="!areNotificationsEnabled"
         />
         <CustomCheckbox
             id="lesson-reschedule"
             v-model="form.notifications.lessonReschedule"
-            label="Перенесення уроку"
+            :label="t('lesson_reschedule')"
             :disabled="!areNotificationsEnabled"
         />
         <CustomCheckbox
             id="lesson-feedback"
             v-model="form.notifications.lessonFeedback"
-            label="Зворотний зв'язок про урок"
+            :label="t('lesson_feedback')"
             :disabled="!areNotificationsEnabled"
         />
         <CustomCheckbox
             id="homework-not-done"
             v-model="form.notifications.homeworkNotDone"
-            label="Домашнє завдання не виконане"
+            :label="t('homework_not_done')"
             :disabled="!areNotificationsEnabled"
         />
       </div>
@@ -342,19 +352,19 @@ const phoneErrors = computed(() => {
               @click="toggleDropdown"
               :aria-expanded="showDropdown"
               aria-controls="notifications-dropdown"
-              :aria-label="areNotificationsEnabled ? 'Призупинити всі повідомлення' : 'Увімкнути всі повідомлення'"
+              :aria-label="areNotificationsEnabled ? t('pause_notifications') : t('enable_notifications')"
           >
-            {{ areNotificationsEnabled ? 'Призупинити всі повідомлення' : 'Увімкнути всі повідомлення' }}
+            {{ areNotificationsEnabled ? t('pause_notifications') : t('enable_notifications') }}
           </button>
           <div v-if="showDropdown" class="dropdown" id="notifications-dropdown">
             <div
-                v-for="duration in areNotificationsEnabled ? ['15 хв', '30 хв', '1 год', '2 год', '4 год'] : ['Увімкнути зараз']"
+                v-for="duration in areNotificationsEnabled ? ['15 хв', '30 хв', '1 год', '2 год', '4 год'] : [t('enable_now')]"
                 :key="duration"
                 class="dropdown-item"
-                :class="{ 'selected': duration === selectedDuration || (!areNotificationsEnabled && duration === 'Увімкнути зараз') }"
-                @click="toggleNotifications(duration === 'Увімкнути зараз' ? undefined : duration as '15 хв' | '30 хв' | '1 год' | '2 год' | '4 год')"
+                :class="{ 'selected': duration === selectedDuration || (!areNotificationsEnabled && duration === t('enable_now')) }"
+                @click="toggleNotifications(duration === t('enable_now') ? undefined : duration as '15 хв' | '30 хв' | '1 год' | '2 год' | '4 год')"
                 tabindex="0"
-                @keydown.enter="toggleNotifications(duration === 'Увімкнути зараз' ? undefined : duration as '15 хв' | '30 хв' | '1 год' | '2 год' | '4 год')"
+                @keydown.enter="toggleNotifications(duration === t('enable_now') ? undefined : duration as '15 хв' | '30 хв' | '1 год' | '2 год' | '4 год')"
             >
               {{ duration }}
             </div>
