@@ -10,7 +10,6 @@
     "build:with-types": "vue-tsc -b && vite build"
   },
   "dependencies": {
-    "@intlify/unplugin-vue-i18n": "^6.0.8",
     "@kyvg/vue3-notification": "^3.4.1",
     "@mdi/font": "^7.4.47",
     "@vuelidate/core": "^2.0.3",
