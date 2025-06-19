@@ -1,9 +1,9 @@
 import { createI18n } from 'vue-i18n';
 
 // Загрузка переводов
-import ru from './languages/ru.json';
-import en from './languages/en.json';
-import uk from './languages/uk.json';
+import ru from './languages/ru.js';
+import en from './languages/en.js';
+import uk from './languages/uk.js';
 
 // Получение сохраненного языка из localStorage
 const savedLang = localStorage.getItem('selectedLanguage') || 'en';
