@@ -3,47 +3,55 @@ import { ref, computed, onMounted, onUnmounted, nextTick, watch } from 'vue';
 import { useVuelidate } from '@vuelidate/core';
 import { email, required, numeric } from '@vuelidate/validators';
 import { notify } from '@kyvg/vue3-notification';
-import { useI18n } from 'vue-i18n'; // Импортируем useI18n
+import { useI18n } from 'vue-i18n';
 import CustomCheckbox from '@/components/inputs/CustomCheckbox.vue';
 import EditIcon from '@/assets/images/inputs/edit.svg';
 import SaveIcon from '@/assets/images/inputs/save.svg';
 import LanguageSelect from '@/components/inputs/LanguageSelect.vue';
 
-// Подключаем i18n
 const { t, locale } = useI18n();
 
-// Данные формы с начальными значениями
+const languages = [
+  { label: 'Українська', value: 'uk' },
+  { label: 'English', value: 'en' },
+  { label: 'Русский', value: 'ru' },
+];
+
+// Initialize form.language based on localStorage or default
 const form = ref({
-  language: { label: t('language.uk'), value: 'uk' }, // Начальный язык
+  language: (() => {
+    const savedLang = localStorage.getItem('selectedLanguage');
+    return savedLang
+        ? languages.find(l => l.value === savedLang) || languages[0]
+        : languages[0];
+  })(),
   email: 'example@domain.com',
   phone: '1234567890',
   notifications: {
-    lessonCancel: false,
-    lessonReschedule: false,
-    lessonFeedback: false,
-    homeworkNotDone: false,
+    lessonCancel: true,
+    lessonReschedule: true,
+    lessonFeedback: true,
+    homeworkNotDone: true,
   },
 });
 
-// Синхронизация языка с i18n
-watch(() => form.value.language.value, (newLang) => {
-  console.log(newLang);
-  locale.value = newLang; // Обновляем язык при изменении выбора
+// Sync initial locale with i18n
+locale.value = form.value.language.value;
+
+// Watch for language changes
+watch(() => form.value.language, (newLang) => {
+  locale.value = newLang.value;
 });
 
-// Флаг для состояния уведомлений
 const areNotificationsEnabled = ref(localStorage.getItem('notificationsEnabled') !== 'false');
 
-// Состояние выпадающего меню
 const showDropdown = ref(false);
 
-// Текущий выбранный период отключения уведомлений
 const selectedDuration = ref<string | undefined>(undefined);
 
-// Состояние фокуса для select
 const isSelectFocused = ref(false);
 
-// Правила валидации
+// Validation rules
 const rules = {
   email: { required, email },
   phone: { required, numeric },
@@ -51,19 +59,15 @@ const rules = {
 
 const v$ = useVuelidate(rules, form);
 
-// Состояния редактирования
 const isEditingEmail = ref(false);
 const isEditingPhone = ref(false);
 
-// Флаг для предотвращения повторных кликов
 const isProcessing = ref(false);
 
-// Переключение режима редактирования
+// Toggle edit
 const toggleEdit = async (field: 'email' | 'phone', inputRef: string, isSave: boolean) => {
   if (isProcessing.value) return;
   isProcessing.value = true;
-
-  console.log(`Переключение редактирования для ${field}, isSave: ${isSave}`);
 
   if (field === 'email') {
     if (isSave) {
@@ -83,9 +87,8 @@ const toggleEdit = async (field: 'email' | 'phone', inputRef: string, isSave: bo
       if (input) {
         input.focus();
         input.select();
-        console.log(`Фокус на ${inputRef}`);
       } else {
-        console.error(`Элемент ${inputRef} не найден`);
+        console.error(`Element ${inputRef} not found`);
         notify({
           title: t('error'),
           text: t('email_edit_error'),
@@ -111,9 +114,8 @@ const toggleEdit = async (field: 'email' | 'phone', inputRef: string, isSave: bo
       if (input) {
         input.focus();
         input.select();
-        console.log(`Фокус на ${inputRef}`);
       } else {
-        console.error(`Элемент ${inputRef} не найден`);
+        console.error(`Element ${inputRef} not found`);
         notify({
           title: t('error'),
           text: t('phone_edit_error'),
@@ -126,9 +128,8 @@ const toggleEdit = async (field: 'email' | 'phone', inputRef: string, isSave: bo
   isProcessing.value = false;
 };
 
-// Обработка потери фокуса
+// Handle blur
 const handleBlur = (field: 'email' | 'phone') => {
-  console.log(`Событие потери фокуса для ${field}`);
   if (field === 'email') {
     isEditingEmail.value = false;
     v$.value.email.$touch();
@@ -152,7 +153,7 @@ const handleBlur = (field: 'email' | 'phone') => {
   }
 };
 
-// Переключение уведомлений
+// Toggle notifications
 const toggleNotifications = (duration?: '15 хв' | '30 хв' | '1 год' | '2 год' | '4 год') => {
   if (areNotificationsEnabled.value) {
     form.value.notifications.lessonCancel = false;
@@ -164,7 +165,6 @@ const toggleNotifications = (duration?: '15 хв' | '30 хв' | '1 год' | '2 
     selectedDuration.value = duration;
 
     if (duration) {
-      console.log(`Уведомления отключены на ${duration}`);
       notify({
         title: t('notifications'),
         text: t('notifications_disabled', { duration }),
@@ -204,12 +204,12 @@ const toggleNotifications = (duration?: '15 хв' | '30 хв' | '1 год' | '2 
   showDropdown.value = false;
 };
 
-// Показать/скрыть выпадашку
+// Toggle dropdown
 const toggleDropdown = () => {
   showDropdown.value = !showDropdown.value;
 };
 
-// Обработка фокуса select
+// Handle select focus
 const handleSelectFocus = () => {
   isSelectFocused.value = true;
 };
@@ -222,7 +222,7 @@ const handleSelectChange = () => {
   isSelectFocused.value = false;
 };
 
-// Закрытие выпадашки при клике вне
+// Close dropdown on click outside
 onMounted(() => {
   const handleClickOutside = (event: MouseEvent) => {
     const dropdown = document.querySelector('.dropdown');
@@ -237,7 +237,7 @@ onMounted(() => {
   });
 });
 
-// Вычисляемые свойства для ошибок валидации
+// Validation errors
 const emailErrors = computed(() => {
   if (v$.value.email.$dirty && v$.value.email.$errors.length) {
     return v$.value.email.$errors.map(error => {
@@ -266,7 +266,7 @@ const phoneErrors = computed(() => {
     <div class="title">{{ t('general_settings') }}</div>
     <div class="settings-section">
       <div class="form-group">
-        <LanguageSelect v-model="form.language"/>
+        <LanguageSelect v-model="form.language" />
       </div>
 
       <div class="form-group">
@@ -514,7 +514,7 @@ const phoneErrors = computed(() => {
 
       &:disabled {
         background-color: #ccc;
-        cursor: not-allowed;
+        cursor: not allowed;
       }
     }
 
@@ -534,7 +534,7 @@ const phoneErrors = computed(() => {
       left: 0;
       background-color: #fff;
       border-radius: 4px 4px 12px 12px;
-      border: 1px solid #ddd;
+      border: 1.5px solid #30303D26;
       box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
       z-index: 100;
       min-width: 320px;

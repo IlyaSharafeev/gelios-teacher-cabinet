@@ -7,7 +7,7 @@
         @click="toggleDropdown"
     >
       <div class="selected-value">
-        {{ selectedLanguage.label }}
+        {{ props.modelValue.label }}
         <svg class="chevron" viewBox="0 0 24 24">
           <path d="M7 10l5 5 5-5z" />
         </svg>
@@ -54,20 +54,18 @@ const languages = [
   { label: 'Русский', value: 'ru' },
 ]
 
-// Initialize selectedLanguage with value from localStorage or prop
 const selectedLanguage = computed({
   get: () => {
     const savedLang = localStorage.getItem('selectedLanguage')
-    if (savedLang) {
-      const lang = languages.find(l => l.value === savedLang)
-      if (lang) return lang
-    }
-    return props.modelValue
+    const lang = savedLang
+        ? languages.find(l => l.value === savedLang)
+        : props.modelValue
+    return lang || languages[0] // Fallback to default language
   },
   set: (value) => {
     emit('update:modelValue', value)
     localStorage.setItem('selectedLanguage', value.value)
-    i18n.global.locale = value.value // Update i18n locale
+    i18n.global.locale.value = value.value // Use reactive locale
   },
 })
 
