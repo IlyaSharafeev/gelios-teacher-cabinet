@@ -36,6 +36,7 @@
 
 <script setup>
 import { ref, computed } from 'vue'
+import i18n from '@/locales/vue-i18n'
 
 const props = defineProps({
   modelValue: {
@@ -53,9 +54,21 @@ const languages = [
   { label: 'Русский', value: 'ru' },
 ]
 
+// Initialize selectedLanguage with value from localStorage or prop
 const selectedLanguage = computed({
-  get: () => props.modelValue,
-  set: (value) => emit('update:modelValue', value),
+  get: () => {
+    const savedLang = localStorage.getItem('selectedLanguage')
+    if (savedLang) {
+      const lang = languages.find(l => l.value === savedLang)
+      if (lang) return lang
+    }
+    return props.modelValue
+  },
+  set: (value) => {
+    emit('update:modelValue', value)
+    localStorage.setItem('selectedLanguage', value.value)
+    i18n.global.locale = value.value // Update i18n locale
+  },
 })
 
 const toggleDropdown = () => {

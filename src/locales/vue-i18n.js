@@ -5,9 +5,12 @@ import ru from './languages/ru.js';
 import en from './languages/en.js';
 import uk from './languages/uk.js';
 
+// Получение сохраненного языка из localStorage
+const savedLang = localStorage.getItem('selectedLanguage') || 'en';
+
 // Настройка i18n
 const i18n = createI18n({
-    locale: 'en', // Язык по умолчанию
+    locale: savedLang, // Установить язык из localStorage или по умолчанию 'en'
     fallbackLocale: 'en', // Язык, если перевод отсутствует
     messages: {
         ru,
