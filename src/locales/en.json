@@ -1,0 +1,9 @@
+{
+  "dashboard": {
+    "greeting": "Good day, Oksana",
+    "statistics": "Statistics",
+    "homework": "Homework",
+    "seeAll": "See all",
+    "upcoming": "Upcoming classes"
+  }
+}

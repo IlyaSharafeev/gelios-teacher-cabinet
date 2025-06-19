@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { useI18n } from 'vue-i18n';
 interface Statistic {
   title: string;
   description: string;
@@ -36,6 +37,8 @@ const homeworks: Homework[] = [
   { studentName: "Кличко I.У.", trainerName: "Знайди слово", date: "1 Жовтня 14:30", isOverdue: false },
   { studentName: "Азарко А.Б.", trainerName: "Кіберкiшка", date: "3 Жовтня 12:30", isOverdue: false }
 ];
+
+const { t } = useI18n();
 </script>
 
 <template>
@@ -43,7 +46,7 @@ const homeworks: Homework[] = [
     <div class="header">
       <div class="welcome-message">
         <div class="text">
-          Добридень, Оксана
+          {{ t('dashboard.greeting') }}
         </div>
         <div class="pencil-background"></div>
       </div>
@@ -58,7 +61,7 @@ const homeworks: Homework[] = [
       <div class="content-left">
         <div class="statistic">
           <div class="statistic_title">
-            Статистика
+            {{ t('dashboard.statistics') }}
           </div>
           <div class="statistic_blocks">
             <div v-for="(stat, index) in statistics" :key="index" class="statistic_block">
@@ -68,7 +71,7 @@ const homeworks: Homework[] = [
           </div>
         </div>
         <div class="homework">
-          <div class="homework__title">Домашні Завдання</div>
+          <div class="homework__title">{{ t('dashboard.homework') }}</div>
           <div class="homework__items">
             <div v-for="(homework, index) in homeworks" :key="index" class="homework__item" :class="{ 'homework__item--overdue': homework.isOverdue }">
               <div class="name-student">{{ homework.studentName }}</div>
@@ -77,11 +80,11 @@ const homeworks: Homework[] = [
             </div>
           </div>
         </div>
-        <router-link to="homework" class="button btn-watch-all">Дивитися Всi</router-link>
+        <router-link to="homework" class="button btn-watch-all">{{ t('dashboard.seeAll') }}</router-link>
       </div>
       <div class="content-right">
         <div class="upcoming-classes">
-          <div class="upcoming-classes__title">Найближчі заняття</div>
+          <div class="upcoming-classes__title">{{ t('dashboard.upcoming') }}</div>
           <div class="upcoming-classes__items">
             <div v-for="(item, index) in upcomingClasses" :key="index" class="upcoming-classes__item">
               <div class="upcoming-classes__item-name">{{ item.name }}</div>
@@ -90,7 +93,7 @@ const homeworks: Homework[] = [
             </div>
           </div>
         </div>
-        <router-link to="schedule" class="button btn-watch-all">Дивитися Всi</router-link>
+        <router-link to="schedule" class="button btn-watch-all">{{ t('dashboard.seeAll') }}</router-link>
       </div>
     </div>
   </div>
