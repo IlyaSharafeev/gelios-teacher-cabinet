@@ -27,7 +27,7 @@
   "email_invalid": "Неправильний формат пошти",
   "phone_required": "Поле телефону обов’язкове",
   "phone_numeric": "Телефон має містити лише цифри",
-  "notifications_disabled": "Усі сповіщення відключено на {{duration}}",
+  "notifications_disabled": "Усі сповіщення відключено на",
   "notifications_enabled": "Усі сповіщення увімкнено!",
   "general": "Загальні",
   "password": "Пароль",

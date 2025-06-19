@@ -27,7 +27,7 @@
   "email_invalid": "Неверный формат почты",
   "phone_required": "Поле телефона обязательно",
   "phone_numeric": "Телефон должен содержать только цифры",
-  "notifications_disabled": "Все уведомления отключены на {{duration}}",
+  "notifications_disabled": "Все уведомления отключены на",
   "notifications_enabled": "Все уведомления включены!",
   "general": "Общие",
   "password": "Пароль",

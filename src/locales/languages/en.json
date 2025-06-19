@@ -27,7 +27,7 @@
   "email_invalid": "Invalid email format",
   "phone_required": "Phone field is required",
   "phone_numeric": "Phone must contain only digits",
-  "notifications_disabled": "All notifications disabled for {{duration}}",
+  "notifications_disabled": "All notifications disabled for",
   "notifications_enabled": "All notifications enabled!",
   "general": "General",
   "password": "Password",
