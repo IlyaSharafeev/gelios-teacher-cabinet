@@ -10,6 +10,8 @@ console.log('Imported translations:', { ru, en, uk });
 const savedLang = localStorage.getItem('selectedLanguage') || 'en';
 
 const i18n = createI18n({
+    legacy: false,
+    globalInjection: true,
     locale: savedLang,
     fallbackLocale: 'en',
     messages: {
