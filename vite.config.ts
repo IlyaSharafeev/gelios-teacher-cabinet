@@ -10,7 +10,7 @@ export default defineConfig({
       include: path.resolve(__dirname, './src/locales/languages/**'),
     }),
   ],
-  assetsInclude: ['src/languages/**'],
+  assetsInclude: ['src/locales/languages/**'],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
