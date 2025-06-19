@@ -2,14 +2,15 @@
 import { ref, computed } from 'vue';
 import { VDataTable, VBtn, VBtnToggle } from 'vuetify/components';
 import { RouterLink } from 'vue-router';
+import { useI18n } from 'vue-i18n';
 import VueDatePicker from '@vuepic/vue-datepicker';
-import {students} from "@/data/homework-page/students.ts";
+import { students } from "@/data/homework-page/students.ts";
 import '@vuepic/vue-datepicker/dist/main.css';
 
 // Interface for directions
 interface Direction {
   id: number;
-  name: string;
+  name_key: string;
   abbreviation: string;
 }
 
@@ -21,11 +22,13 @@ const dateRange = ref<string[]>(['', '']);
 
 // Directions data
 const directions: Direction[] = [
-  { id: 1, name: 'Всі напрямки', abbreviation: 'ВСІ' },
-  { id: 2, name: 'Швидкочитання', abbreviation: 'ШЧ' },
-  { id: 3, name: 'Ментальна Арифметика', abbreviation: 'МА' },
-  { id: 4, name: 'IT', abbreviation: 'IT' },
+  { id: 1, name_key: 'all', abbreviation: 'ВСІ' },
+  { id: 2, name_key: 'speed_reading', abbreviation: 'ШЧ' },
+  { id: 3, name_key: 'mental_arithmetic', abbreviation: 'МА' },
+  { id: 4, name_key: 'it', abbreviation: 'IT' },
 ];
+
+const { t } = useI18n();
 
 // Normalize date to remove time (returns YYYY-MM-DD)
 const normalizeDate = (date: Date | string): string => {
@@ -71,32 +74,32 @@ const clearDateRange = () => {
 // Table headers
 const headers = [
   {
-    title: 'Напрямок',
+    title: t('homework.table.direction'),
     key: 'direction',
     formatter: (value: string) => {
-      const direction = directions.find((d) => d.name === value);
+      const direction = directions.find((d) => t(`homework.directions.${d.name_key}`) === value);
       return direction ? direction.abbreviation : value;
     },
   },
-  { title: 'Учень', key: 'name' },
-  { title: 'Завдання', key: 'task' },
+  { title: t('homework.table.student'), key: 'name' },
+  { title: t('homework.table.task'), key: 'task' },
   {
-    title: 'Дата',
+    title: t('homework.table.date'),
     key: 'date',
     formatter: (value: string) => formatDate(value),
   },
-  { title: 'Прогрес', key: 'progress' },
+  { title: t('homework.table.progress'), key: 'progress' },
 ];
 
 // Computed filtered items
 const filteredItems = computed(() => {
   return students
       .filter((item) => {
-        if (item.name === 'Всі учні') return false;
+        if (item.name === t('homework.students.all')) return false;
 
         const matchesCompleted = isCompleted.value ? item.completed : !item.completed;
         const matchesStudent = selectedStudent.value === 'all' || item.name === selectedStudent.value;
-        const matchesDirection = selectedDirection.value === 'all' || item.direction === selectedDirection.value;
+        const matchesDirection = selectedDirection.value === 'all' || item.direction === t(`homework.directions.${selectedDirection.value}`);
 
         const itemDate = item.date ? normalizeDate(new Date(item.date)) : '';
 
@@ -126,7 +129,7 @@ const filteredItems = computed(() => {
 
 <template>
   <div class="homework">
-    <h1 class="homework__title">Домашня робота</h1>
+    <h1 class="homework__title">{{ t('homework.title') }}</h1>
     <div class="book-float"></div>
     <!-- Filters -->
     <div class="homework__filters">
@@ -137,14 +140,14 @@ const filteredItems = computed(() => {
           class="homework__filter-toggle"
           color="primary"
       >
-        <v-btn :value="false">Не виконані</v-btn>
-        <v-btn :value="true">Виконані</v-btn>
+        <v-btn :value="false">{{ t('homework.filters.not_completed') }}</v-btn>
+        <v-btn :value="true">{{ t('homework.filters.completed') }}</v-btn>
       </v-btn-toggle>
 
       <!-- Student Dropdown -->
       <v-select
           v-model="selectedStudent"
-          :items="students.map((s) => ({ title: s.name, value: s.name === 'Всі учні' ? 'all' : s.name }))"
+          :items="students.map((s) => ({ title: s.name, value: s.name === t('homework.students.all') ? 'all' : s.name }))"
           class="homework__filter-select"
           variant="plain"
           append-icon=""
@@ -154,7 +157,7 @@ const filteredItems = computed(() => {
       <!-- Direction Dropdown -->
       <v-select
           v-model="selectedDirection"
-          :items="directions.map((d) => ({ title: d.name, value: d.name === 'Всі напрямки' ? 'all' : d.name }))"
+          :items="directions.map((d) => ({ title: t(`homework.directions.${d.name_key}`), value: d.name_key === 'all' ? 'all' : d.name_key }))"
           class="homework__filter-select"
           variant="plain"
       >
@@ -188,7 +191,7 @@ const filteredItems = computed(() => {
       <!-- Custom slot for direction column to apply blue uppercase styling -->
       <template v-slot:item.direction="{ item }">
         <span class="homework__direction-abbr">
-          {{ directions.find((d) => d.name === item.direction)?.abbreviation || item.direction }}
+          {{ directions.find((d) => t(`homework.directions.${d.name_key}`) === item.direction)?.abbreviation || item.direction }}
         </span>
       </template>
       <!-- Custom slot for date column to apply conditional coloring -->
@@ -200,7 +203,7 @@ const filteredItems = computed(() => {
       <!-- Custom slot for progress column with router-link and icon -->
       <template v-slot:item.progress="{ item }">
         <router-link :to="`/homework/${item.id}`" class="homework__progress-link">
-          Прогрес
+          {{ t('homework.table.progress') }}
           <v-icon class="homework__progress-icon">mdi-arrow-right</v-icon>
         </router-link>
       </template>
@@ -269,7 +272,7 @@ const filteredItems = computed(() => {
   &__filter-select {
     width: 232px;
     max-width: 232px;
-    
+
     :deep(.v-field) {
       height: 44px !important;
       border-radius: 12px !important;
@@ -297,7 +300,7 @@ const filteredItems = computed(() => {
 
   &__date-picker-wrapper {
     width: 286px;
-    
+
     .calendar-icon {
       margin-left: 10px;
     }

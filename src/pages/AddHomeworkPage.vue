@@ -1,13 +1,51 @@
 <script setup lang="ts">
 import { ref } from 'vue';
+import { useI18n } from 'vue-i18n';
+import HomeworkForm from '@/components/homework/AddHomeWorkForm.vue';
+import CertificateForm from '@/components/sertificate/AddSertificateForm.vue';
+import ConfirmDialog from '@/components/dialog/ConfirmDialog.vue';
+
+const { t } = useI18n();
 
 const activeTab = ref('homework');
-
-import HomeworkForm from '@/components/homework/AddHomeWorkForm.vue';
-import CertificateForm from '@/components/AddSertificateForm.vue';
+const hasUnsavedHomeworkChanges = ref(false);
+const hasUnsavedCertificateChanges = ref(false);
+const showDialog = ref(false);
+const targetTab = ref<string | null>(null);
 
 const setActiveTab = (tab: string) => {
-  activeTab.value = tab;
+  if (activeTab.value === tab) return;
+
+  const hasUnsavedChanges = activeTab.value === 'homework' ? hasUnsavedHomeworkChanges.value : hasUnsavedCertificateChanges.value;
+
+  if (hasUnsavedChanges) {
+    targetTab.value = tab;
+    showDialog.value = true;
+  } else {
+    activeTab.value = tab;
+  }
+};
+
+const confirmTabSwitch = () => {
+  if (targetTab.value) {
+    activeTab.value = targetTab.value;
+    targetTab.value = null;
+  }
+  showDialog.value = false;
+};
+
+const cancelTabSwitch = () => {
+  targetTab.value = null;
+  showDialog.value = false;
+};
+
+// Update unsaved changes state from child components
+const updateHomeworkUnsavedChanges = (value: boolean) => {
+  hasUnsavedHomeworkChanges.value = value;
+};
+
+const updateCertificateUnsavedChanges = (value: boolean) => {
+  hasUnsavedCertificateChanges.value = value;
 };
 </script>
 
@@ -18,21 +56,28 @@ const setActiveTab = (tab: string) => {
           :class="{ active: activeTab === 'homework' }"
           @click="setActiveTab('homework')"
       >
-        Домашнє завдання
+        {{ t('add_homework.tabs.homework') }}
       </button>
       <button
           :class="{ active: activeTab === 'certificate' }"
           @click="setActiveTab('certificate')"
       >
-        Сертификат
+        {{ t('add_homework.tabs.certificate') }}
       </button>
     </div>
 
-    <!-- Условное отображение контента -->
     <div class="content">
-      <HomeworkForm v-if="activeTab === 'homework'" />
-      <CertificateForm v-if="activeTab === 'certificate'" />
+      <HomeworkForm v-if="activeTab === 'homework'" @has-unsaved-changes="updateHomeworkUnsavedChanges" />
+      <CertificateForm v-if="activeTab === 'certificate'" @has-unsaved-changes="updateCertificateUnsavedChanges" />
     </div>
+
+    <ConfirmDialog
+        :is-open="showDialog"
+        :title="t('add_homework.dialog.title')"
+        :description="t('add_homework.dialog.description')"
+        @confirm="confirmTabSwitch"
+        @cancel="cancelTabSwitch"
+    />
   </div>
 </template>
 
@@ -56,8 +101,7 @@ button {
   background: #FFFFFF;
   cursor: pointer;
   border-radius: 16px;
-  font-size: 16px;
-  font-family: "Onest" sans-serif;
+  font-family: "Onest", sans-serif;
   font-weight: 600;
   font-size: 16px;
   line-height: 24px;
@@ -68,7 +112,7 @@ button.active {
   background: #0066FF;
   border-radius: 16px;
   padding: 12px 26px;
-  font-family: "Onest" sans-serif;
+  font-family: "Onest", sans-serif;
   font-weight: 600;
   font-size: 16px;
   line-height: 24px;

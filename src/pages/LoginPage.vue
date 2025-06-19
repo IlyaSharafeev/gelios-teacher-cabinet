@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import SelectInput from "@/components/SelectInput.vue";
+import SelectInput from "@/components/inputs/SelectInput.vue";
 import ukrainianLanguageIcon from "@/assets/images/language-icons/UA.svg";
 import englishLanguageIcon from "@/assets/images/language-icons/GB.svg";
 import { ref, watch, computed } from "vue";
@@ -8,8 +8,10 @@ import { required, email, minLength, sameAs } from "@vuelidate/validators";
 import { useAuthStore } from "@/stores/auth";
 import { useRouter, useRoute } from "vue-router";
 import {Notifications, useNotification} from "@kyvg/vue3-notification";
+import { useI18n } from "vue-i18n";
 
-const { notify }  = useNotification()
+const { notify } = useNotification();
+const { t, locale } = useI18n();
 
 const authStore = useAuthStore();
 const router = useRouter();
@@ -18,13 +20,17 @@ const route = useRoute();
 console.log("login page")
 
 const selectOptions = [
-  { value: "ua", label: "Українська", icon: ukrainianLanguageIcon },
-  { value: "en", label: "English", icon: englishLanguageIcon },
+  { value: "uk", label: t("language.uk"), icon: ukrainianLanguageIcon },
+  { value: "en", label: t("language.en"), icon: englishLanguageIcon },
+  // { value: "ru", label: t("language.ru"), icon: englishLanguageIcon },
 ];
 
 const selectedValueLanguage = ref<string>(
-    localStorage.getItem("selectedLanguage") || "ua"
+    localStorage.getItem("selectedLanguage") || "uk"
 );
+
+// Sync initial locale with i18n
+locale.value = selectedValueLanguage.value;
 
 const isPasswordRecoveryVisible = ref<boolean>(false);
 const isRecoverySuccess = ref<boolean>(false);
@@ -60,17 +66,17 @@ const onLoginSubmit = async () => {
     if (success) {
       router.push("/dashboard");
     } else {
-      errorMessage.value = error;
+      errorMessage.value = error || t("login.validation.form_error");
       notify({
-        title: "Registration form validation failed",
+        title: t("error"),
         text: errorMessage.value,
         type: "error",
       });
     }
   } else {
-    errorMessage.value = "Пожалуйста, проверьте введенные данные";
+    errorMessage.value = t("login.validation.form_error");
     notify({
-      title: "Registration form validation failed",
+      title: t("error"),
       text: errorMessage.value,
       type: "error",
     });
@@ -84,18 +90,22 @@ const onRecoverySubmit = async () => {
     if (success) {
       isRecoverySuccess.value = true;
     } else {
-      errorMessage.value = error;
+      errorMessage.value = error || t("login.validation.email_invalid");
+      notify({
+        title: t("error"),
+        text: errorMessage.value,
+        type: "error",
+      });
     }
   } else {
-    errorMessage.value = "Пожалуйста, введите корректный email";
+    errorMessage.value = t("login.validation.email_invalid");
     notify({
-      title: "Registration form validation failed",
+      title: t("error"),
       text: errorMessage.value,
       type: "error",
     });
   }
 };
-
 
 const resetForm = ref({
   password: "",
@@ -109,7 +119,6 @@ const resetRules = computed(() => ({
 
 const vReset = useVuelidate(resetRules, resetForm);
 
-
 const onResetSubmit = async () => {
   const isValid = await vReset.value.$validate();
   if (isValid) {
@@ -120,17 +129,17 @@ const onResetSubmit = async () => {
     if (success) {
       router.push("/login");
     } else {
-      errorMessage.value = error || "Помилка при скиданні пароля";
+      errorMessage.value = error || t("login.validation.password_reset_error");
       notify({
-        title: "Registration form validation failed",
+        title: t("error"),
         text: errorMessage.value,
         type: "error",
       });
     }
   } else {
-    errorMessage.value = "Пожалуйста, проверьте введенные данные";
+    errorMessage.value = t("login.validation.form_error");
     notify({
-      title: "Registration form validation failed",
+      title: t("error"),
       text: errorMessage.value,
       type: "error",
     });
@@ -158,13 +167,14 @@ const showLoginForm = () => {
 
 watch(selectedValueLanguage, (newValue) => {
   localStorage.setItem("selectedLanguage", newValue);
+  locale.value = newValue;
 });
 
 watch(route, () => {
   isResetPasswordVisible.value = route.path === '/reset-password' && !!route.query.token;
   isPasswordRecoveryVisible.value = false;
   isRecoverySuccess.value = false;
-}); 
+});
 </script>
 
 <template>
@@ -173,14 +183,11 @@ watch(route, () => {
       <div class="content">
         <div class="logo"></div>
         <div class="text">
-          <div class="title">
-            Вітаємо ваc<br />у кабінеті вчителя!
-          </div>
+          <div class="title">{{ t("login.welcome.title") }}</div>
           <div class="description">
-            Тут ви зможете легко керувати навчальним<br />процесом: призначати домашні завдання,<br />видавати сертифікати
-            та стежити за прогресом учнів.<br />
+            {{ t("login.welcome.description") }}
             <div class="second-description">
-              Разом ми відкриваємо нові горизонти освіти — рушаймо вперед!
+              {{ t("login.welcome.second_description") }}
             </div>
           </div>
         </div>
@@ -192,135 +199,136 @@ watch(route, () => {
 
     <div class="login-form-wrapper" v-if="!isPasswordRecoveryVisible && !isResetPasswordVisible">
       <div class="login-form">
-        <div class="title">Увiйти</div>
+        <div class="title">{{ t("login.form.title") }}</div>
         <div class="description">
-          Ласкаво просимо до <span class="name-company cursor-pointer">Gelios School</span>
+          {{ t("login.form.description") }}
+          <span class="name-company cursor-pointer">Gelios School</span>
         </div>
         <div class="error-message" v-if="errorMessage">{{ errorMessage }}</div>
         <div class="form">
           <div class="form-email">
-            <div class="label">Адрес електронний пошти</div>
+            <div class="label">{{ t("login.form.email.label") }}</div>
             <div class="field-email">
               <input
                   class="input"
                   :class="{ 'input-error': vLogin.email.$error }"
                   type="email"
-                  placeholder="Електронний адрес"
+                  :placeholder="t('login.form.email.placeholder')"
                   v-model="loginForm.email"
                   @blur="vLogin.email.$touch"
               />
               <div class="error-message" v-if="vLogin.email.$error">
-                {{ vLogin.email.$errors[0].$message || 'Це поле обов’язкове або некоректний email' }}
+                {{ vLogin.email.$errors[0].$message || t("login.validation.email") }}
               </div>
             </div>
           </div>
           <div class="form-password">
-            <div class="label">Введіть ваш пароль</div>
+            <div class="label">{{ t("login.form.password.label") }}</div>
             <div class="field-password">
               <input
                   class="input"
                   :class="{ 'input-error': vLogin.password.$error }"
                   type="password"
-                  placeholder="Пароль"
+                  :placeholder="t('login.form.password.placeholder')"
                   v-model="loginForm.password"
                   @blur="vLogin.password.$touch"
               />
               <div class="error-message" v-if="vLogin.password.$error">
-                {{ vLogin.password.$errors[0].$message || 'Пароль має бути не менше 6 символів' }}
+                {{ vLogin.password.$errors[0].$message || t("login.validation.password") }}
               </div>
             </div>
           </div>
         </div>
-        <div class="button login-button" @click="onLoginSubmit">Увійти</div>
+        <div class="button login-button" @click="onLoginSubmit">{{ t("login.form.submit") }}</div>
         <div class="forgot-password">
-          Забули пароль?
-          <div class="refresh" @click="showPasswordRecovery">Відновити</div>
+          {{ t("login.form.forgot_password") }}
+          <div class="refresh" @click="showPasswordRecovery">{{ t("login.form.recover") }}</div>
         </div>
       </div>
-<!--      <router-link to="/register" class="registration-button">Реєстрація</router-link>-->
     </div>
 
     <div class="password-reset" v-else-if="isResetPasswordVisible">
-      <div class="title">Відновлення пароля</div>
+      <div class="title">{{ t("login.reset.title") }}</div>
       <div class="form">
         <div class="description">
-          Введіть новий пароль
+          {{ t("login.reset.description") }}
         </div>
         <div class="error-message" v-if="errorMessage">{{ errorMessage }}</div>
         <div class="form-password">
-          <div class="label">Введіть новий пароль</div>
+          <div class="label">{{ t("login.reset.password.label") }}</div>
           <div class="field-password">
             <input
                 class="input"
                 :class="{ 'input-error': vReset.password.$error }"
                 type="password"
-                placeholder="Новий пароль"
+                :placeholder="t('login.reset.password.placeholder')"
                 v-model="resetForm.password"
                 @blur="vReset.password.$touch"
             />
             <div class="error-message" v-if="vReset.password.$error">
-              {{ vReset.password.$errors[0].$message || 'Пароль має бути не менше 6 символів' }}
+              {{ vReset.password.$errors[0].$message || t("login.validation.password") }}
             </div>
           </div>
         </div>
         <div class="form-password">
-          <div class="label">Повторіть пароль</div>
+          <div class="label">{{ t("login.reset.confirm_password.label") }}</div>
           <div class="field-password">
             <input
                 class="input"
                 :class="{ 'input-error': vReset.confirmPassword.$error }"
                 type="password"
-                placeholder="Повторіть пароль"
+                :placeholder="t('login.reset.confirm_password.placeholder')"
                 v-model="resetForm.confirmPassword"
                 @blur="vReset.confirmPassword.$touch"
             />
             <div class="error-message" v-if="vReset.confirmPassword.$error">
-              {{ vReset.confirmPassword.$errors[0].$message || 'Паролі не співпадають' }}
+              {{ vReset.confirmPassword.$errors[0].$message || t("login.validation.confirm_password") }}
             </div>
           </div>
         </div>
-        <div class="button reset-button" @click="onResetSubmit">Зберегти</div>
-        <div class="back-to-login" @click="showLoginForm">Назад</div>
+        <div class="button reset-button" @click="onResetSubmit">{{ t("login.reset.submit") }}</div>
+        <div class="back-to-login" @click="showLoginForm">{{ t("login.reset.back") }}</div>
       </div>
     </div>
 
     <div class="password-recovery" v-else>
-      <div class="title">Відновлення пароля</div>
+      <div class="title">{{ t("login.recovery.title") }}</div>
       <div class="form">
         <template v-if="!isRecoverySuccess">
           <div class="description">
-            <span class="second-description">Введіть пошту,</span> прив'язану до вашого профілю
+            <span class="second-description">{{ t("login.recovery.description") }}</span>
+            {{ t("login.recovery.description_suffix") }}
           </div>
           <div class="error-message" v-if="errorMessage">{{ errorMessage }}</div>
           <div class="form-email">
-            <div class="label">Адрес електронний пошти</div>
+            <div class="label">{{ t("login.recovery.email.label") }}</div>
             <div class="field-email">
               <input
                   class="input"
                   :class="{ 'input-error': vRecovery.email.$error }"
                   type="email"
-                  placeholder="Електронний адрес"
+                  :placeholder="t('login.recovery.email.placeholder')"
                   v-model="recoveryForm.email"
                   @blur="vRecovery.email.$touch"
               />
               <div class="error-message" v-if="vRecovery.email.$error">
-                {{ vRecovery.email.$errors[0].$message || 'Це поле обов’язкове або некоректний email' }}
+                {{ vRecovery.email.$errors[0].$message || t("login.validation.email") }}
               </div>
             </div>
           </div>
-          <div class="button recovery-button" @click="onRecoverySubmit">Відновити</div>
-          <div class="back-to-login" @click="showLoginForm">Назад</div>
+          <div class="button recovery-button" @click="onRecoverySubmit">{{ t("login.recovery.submit") }}</div>
+          <div class="back-to-login" @click="showLoginForm">{{ t("login.recovery.back") }}</div>
         </template>
         <template v-else>
           <div class="success-message">
-            Посилання для відновлення пароля надіслано на вашу пошту
+            {{ t("login.recovery.success_message") }}
           </div>
-          <div class="button" @click="showLoginForm">Увiйти</div>
+          <div class="button" @click="showLoginForm">{{ t("login.form.title") }}</div>
         </template>
       </div>
     </div>
-    
-    <notifications/>
+
+    <notifications />
 
     <SelectInput
         class="select-language"
@@ -482,8 +490,8 @@ watch(route, () => {
             .input {
               width: 100%;
               padding: 12px 16px;
-              border: 1px solid #d0d0d0;
-              border-radius: 8px;
+              border: 1.5px solid #30303D26;
+              border-radius: 12px;
               font-family: Onest;
               font-size: 16px;
               line-height: 100%;
@@ -552,25 +560,6 @@ watch(route, () => {
             text-decoration: underline;
           }
         }
-      }
-    }
-
-    .registration-button {
-      text-decoration: none;
-      display: flex;
-      justify-content: center;
-      background-color: #454a53;
-      border-radius: 16px;
-      padding: 16px;
-      font-weight: 600;
-      font-size: 18px;
-      color: #ffffff;
-      width: 100%;
-      cursor: pointer;
-      font-family: Onest;
-
-      &:hover {
-        background-color: #3a3f47;
       }
     }
   }
@@ -644,8 +633,8 @@ watch(route, () => {
           .input {
             width: 100%;
             padding: 12px 16px;
-            border: 1px solid #d0d0d0;
-            border-radius: 8px;
+            border: 1.5px solid #30303D26;
+            border-radius: 12px;
             font-family: Onest;
             font-size: 16px;
             line-height: 100%;
@@ -675,7 +664,7 @@ watch(route, () => {
         color: #30303d;
         margin-bottom: 53px;
         margin-top: 53px;
-        font-family: "Onest" sans-serif;
+        font-family: "Onest", sans-serif;
         font-weight: 400;
         font-size: 21px;
         line-height: 150%;

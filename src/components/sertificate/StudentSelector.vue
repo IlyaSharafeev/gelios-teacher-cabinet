@@ -1,42 +1,72 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue';
-import type { Item } from '@/types';
+import { ref, computed, watch } from 'vue';
 
-// Update Item type to include image (if not already defined in @/types)
-interface Item {
-  id: number;
-  name: string;
-  image?: string; // Add image as an optional property
-}
-
-const props = defineProps<{
-  items: Item[];
+const props = withDefaults(defineProps<{
+  modelValue: number[] | number | null;
+  items: { id: number; name: string; image?: string }[];
   title: string;
   searchPlaceholder: string;
   noItemsText: string;
-}>();
+  selectAllText?: string;
+  singleSelect?: boolean;
+  isVisibleSearch?: boolean;
+}>(), {
+  isVisibleSearch: true,
+  singleSelect: false
+});
 
-const selected = defineModel<Item | null>({ default: null });
+const emit = defineEmits(['update:modelValue']);
+
+const selected = ref<number[] | number | null>(props.singleSelect ? null : []);
 
 const searchQuery = ref('');
 
+// Sync internal selected with modelValue
+watch(() => props.modelValue, (newValue) => {
+  selected.value = newValue;
+}, { immediate: true });
+
+// Emit update:modelValue when selected changes
+watch(selected, (newValue) => {
+  emit('update:modelValue', newValue);
+}, { deep: true });
+
 const filteredItems = computed(() => {
-  if (!searchQuery.value) return props.items;
+  if (!props.isVisibleSearch || !searchQuery.value) return props.items;
   return props.items.filter(item =>
       item.name.toLowerCase().includes(searchQuery.value.toLowerCase())
   );
 });
 
-const selectItem = (item: Item) => {
-  selected.value = item;
-  console.log('TrainerSelector: selectItem updated selected:', item);
+const selectAll = () => {
+  if (props.singleSelect) return;
+  const newValue = (Array.isArray(selected.value) && selected.value.length === props.items.length)
+      ? []
+      : props.items.map(item => item.id);
+  selected.value = newValue;
+  console.log('StudentSelector: selectAll updated selected:', newValue);
+};
+
+const toggleItem = (itemId: number) => {
+  if (props.singleSelect) {
+    selected.value = selected.value === itemId ? null : itemId;
+  } else {
+    if (!Array.isArray(selected.value)) {
+      selected.value = [itemId];
+    } else if (selected.value.includes(itemId)) {
+      selected.value = selected.value.filter(id => id !== itemId);
+    } else {
+      selected.value = [...selected.value, itemId];
+    }
+  }
+  console.log('StudentSelector: toggleItem updated selected:', selected.value);
 };
 </script>
 
 <template>
   <div class="selector">
     <div class="selector__title">{{ title }}</div>
-    <div class="selector__search-container">
+    <div class="selector__search-container" v-if="isVisibleSearch">
       <span class="selector__search-icon">
         <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path
@@ -54,16 +84,31 @@ const selectItem = (item: Item) => {
     <div class="selector__items-list">
       <template v-if="filteredItems.length > 0">
         <div
+            v-if="selectAllText && !singleSelect"
+            class="selector__item selector__item--select-all"
+            :class="{ 'selector__item--selected': Array.isArray(selected) && selected.length === items.length }"
+            @click="selectAll"
+        >
+          {{ selectAllText }}
+          <span v-if="Array.isArray(selected) && selected.length === items.length" class="selector__checkmark"></span>
+        </div>
+        <div
             v-for="item in filteredItems"
             :key="item.id"
             class="selector__item"
-            :class="{ 'selector__item--selected': selected && selected.id === item.id }"
-            @click="selectItem(item)"
+            :class="{ 'selector__item--selected': singleSelect ? selected === item.id : Array.isArray(selected) && selected.includes(item.id) }"
+            @click="toggleItem(item.id)"
         >
-          <slot name="option" :item="item">
+          <div class="item-option">
+            <img
+                v-if="item.image"
+                :src="item.image"
+                alt="Item Image"
+                class="item-image"
+            />
             <span>{{ item.name }}</span>
-          </slot>
-          <span v-if="selected && selected.id === item.id" class="selector__checkmark"></span>
+          </div>
+          <span v-if="singleSelect ? selected === item.id : Array.isArray(selected) && selected.includes(item.id)" class="selector__checkmark"></span>
         </div>
       </template>
       <div v-else class="selector__no-items">
@@ -75,7 +120,8 @@ const selectItem = (item: Item) => {
 
 <style lang="scss" scoped>
 .selector {
-  grid-column: 2 / 3;
+  display: flex;
+  flex-direction: column;
 
   .selector__title {
     font-family: 'Onest', sans-serif;
@@ -143,6 +189,11 @@ const selectItem = (item: Item) => {
       &--selected {
         background-color: #e6f0ff;
       }
+
+      &--select-all {
+        font-weight: 600;
+        color: #0066ff;
+      }
     }
 
     .selector__no-items {
@@ -161,6 +212,23 @@ const selectItem = (item: Item) => {
     background-repeat: no-repeat;
     width: 20px;
     height: 20px;
+  }
+
+  .item-option {
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    font-family: "Onest", sans-serif;
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 24px;
+  }
+
+  .item-image {
+    width: 60px;
+    height: 40px;
+    object-fit: contain;
+    border-radius: 4px;
   }
 }
 </style>

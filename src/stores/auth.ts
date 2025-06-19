@@ -1,8 +1,8 @@
 import {defineStore} from 'pinia';
 import axios from 'axios';
-import { useNotification } from "@kyvg/vue3-notification";
+import {useNotification} from "@kyvg/vue3-notification";
 
-const { notify }  = useNotification()
+const {notify} = useNotification()
 
 const baseURL = import.meta.env.VITE_API_BASE_URL;
 
@@ -15,8 +15,8 @@ export const useAuthStore = defineStore('auth', {
     }),
 
     actions: {
-        async register({ email, username, contactNumber, password }) {
-            console.log({ email, username, contactNumber, password });
+        async register({email, username, contactNumber, password}) {
+            console.log({email, username, contactNumber, password});
             try {
                 const response = await axios.post('/api/teacher', {
                     teacher: {
@@ -34,7 +34,7 @@ export const useAuthStore = defineStore('auth', {
                     localStorage.setItem('token', this.token);
                 }
                 this.error = null;
-                return { success: true };
+                return {success: true};
             } catch (error) {
                 // @ts-ignore
                 this.error = error.response?.data?.message || 'Ошибка регистрации';
@@ -44,16 +44,18 @@ export const useAuthStore = defineStore('auth', {
                         type: "error"
                     });
                 }
-                return { success: false, error: this.error };
+                return {success: false, error: this.error};
             }
         },
 
         async login({email, password}) {
             try {
-                const response = await axios.post(`${baseURL}/api/auth/sign-in`, {
+                const response = await axios.post(`${baseURL}/api/auth/login`, {
+                teacher: {
                     email,
-                    password,
-                });
+                        password,
+                }
+            });
                 console.log(response);
                 this.token = response.data.access_token;
                 this.user = response.data.user;
@@ -88,7 +90,7 @@ export const useAuthStore = defineStore('auth', {
             }
         },
 
-        async resetPassword({token,password}) {
+        async resetPassword({token, password}) {
             try {
                 await axios.post(`${baseURL}/api/auth/reset-password`, {
                     token,

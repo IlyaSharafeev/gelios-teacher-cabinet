@@ -6,8 +6,17 @@ export default defineConfig({
   plugins: [vue()],
   resolve: {
     alias: {
-      '@': path.resolve(__dirname, './src'), // @ = folder src
+      '@': path.resolve(__dirname, './src'),
     },
+  },
+  build: {
+    assetsInclude: ['**/*.json'],
+    rollupOptions: {
+      output: {
+        assetFileNames: 'assets/[name]-[hash][extname]',
+      },
+    },
+    assetsInlineLimit: 0,
   },
   server: {
     proxy: {
