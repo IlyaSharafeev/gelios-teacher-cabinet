@@ -47,7 +47,7 @@ const { t } = useI18n();
     <div class="header">
       <div class="welcome-message">
         <div class="text">
-          {{ $t('dashboard.greeting') }}, Оксана
+          {{ t('dashboard.greeting') }}, Оксана
         </div>
         <div class="pencil-background"></div>
       </div>
@@ -62,17 +62,17 @@ const { t } = useI18n();
       <div class="content-left">
         <div class="statistic">
           <div class="statistic_title">
-            {{ $t('dashboard.statistics.title') }}
+            {{ t('dashboard.statistics.title') }}
           </div>
           <div class="statistic_blocks">
             <div v-for="(stat, index) in statistics" :key="index" class="statistic_block">
               <div class="statistic_block-title">{{ stat.title }}</div>
-              <div class="statistic_block-description">{{ $t(`dashboard.statistics.${stat.description_key}`) }}</div>
+              <div class="statistic_block-description">{{ t(`dashboard.statistics.${stat.description_key}`) }}</div>
             </div>
           </div>
         </div>
         <div class="homework">
-          <div class="homework__title">{{ $t('dashboard.homework.title') }}</div>
+          <div class="homework__title">{{ t('dashboard.homework.title') }}</div>
           <div class="homework__items">
             <div v-for="(homework, index) in homeworks" :key="index" class="homework__item" :class="{ 'homework__item--overdue': homework.isOverdue }">
               <div class="name-student">{{ homework.studentName }}</div>
@@ -81,11 +81,11 @@ const { t } = useI18n();
             </div>
           </div>
         </div>
-        <router-link to="homework" class="button btn-watch-all">{{ $t('dashboard.view_all') }}</router-link>
+        <router-link to="homework" class="button btn-watch-all">{{ t('dashboard.view_all') }}</router-link>
       </div>
       <div class="content-right">
         <div class="upcoming-classes">
-          <div class="upcoming-classes__title">{{ $t('dashboard.upcoming_classes.title') }}</div>
+          <div class="upcoming-classes__title">{{ t('dashboard.upcoming_classes.title') }}</div>
           <div class="upcoming-classes__items">
             <div v-for="(item, index) in upcomingClasses" :key="index" class="upcoming-classes__item">
               <div class="upcoming-classes__item-name">{{ item.name }}</div>
@@ -94,7 +94,7 @@ const { t } = useI18n();
             </div>
           </div>
         </div>
-        <router-link to="schedule" class="button btn-watch-all">{{ $t('dashboard.view_all') }}</router-link>
+        <router-link to="schedule" class="button btn-watch-all">{{ t('dashboard.view_all') }}</router-link>
       </div>
     </div>
   </div>
