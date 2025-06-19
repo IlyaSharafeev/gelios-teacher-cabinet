@@ -1,19 +1,22 @@
 import { defineConfig } from 'vite';
 import vue from '@vitejs/plugin-vue';
 import path from 'path';
-import vueI18n from '@intlify/unplugin-vue-i18n/vite';
 
 export default defineConfig({
-  plugins: [
-    vue(),
-    vueI18n({
-      include: path.resolve(__dirname, './src/locales/languages/vue-i18n/**'), // Обновленный путь
-    }),
-  ],
+  plugins: [vue()],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
     },
+  },
+  build: {
+    assetsInclude: ['**/*.json'],
+    rollupOptions: {
+      output: {
+        assetFileNames: 'assets/[name]-[hash][extname]',
+      },
+    },
+    assetsInlineLimit: 0,
   },
   server: {
     proxy: {
