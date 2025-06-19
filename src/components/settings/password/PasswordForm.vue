@@ -19,9 +19,18 @@ const changePasswordForm = ref({
 });
 
 const changePasswordRules = computed(() => ({
-  oldPassword: { required, minLength: minLength(6) },
-  newPassword: { required, minLength: minLength(6) },
-  confirmNewPassword: { required, sameAs: sameAs(changePasswordForm.value.newPassword) },
+  oldPassword: {
+    required,
+    minLength: minLength(6)
+  },
+  newPassword: {
+    required,
+    minLength: minLength(6)
+  },
+  confirmNewPassword: {
+    required,
+    sameAs: sameAs(changePasswordForm.value.newPassword)
+  },
 }));
 
 const vChangePassword = useVuelidate(changePasswordRules, changePasswordForm);
@@ -56,6 +65,40 @@ const onChangePasswordSubmit = async () => {
     });
   }
 };
+
+// Computed validation errors for each field
+const oldPasswordErrors = computed(() => {
+  if (vChangePassword.value.oldPassword.$dirty && vChangePassword.value.oldPassword.$errors.length) {
+    return vChangePassword.value.oldPassword.$errors.map(error => {
+      if (error.$validator === 'required') return t('change_password.validation.password');
+      if (error.$validator === 'minLength') return t('change_password.validation.password');
+      return '';
+    });
+  }
+  return [];
+});
+
+const newPasswordErrors = computed(() => {
+  if (vChangePassword.value.newPassword.$dirty && vChangePassword.value.newPassword.$errors.length) {
+    return vChangePassword.value.newPassword.$errors.map(error => {
+      if (error.$validator === 'required') return t('change_password.validation.password');
+      if (error.$validator === 'minLength') return t('change_password.validation.password');
+      return '';
+    });
+  }
+  return [];
+});
+
+const confirmNewPasswordErrors = computed(() => {
+  if (vChangePassword.value.confirmNewPassword.$dirty && vChangePassword.value.confirmNewPassword.$errors.length) {
+    return vChangePassword.value.confirmNewPassword.$errors.map(error => {
+      if (error.$validator === 'required') return t('change_password.validation.confirm_password');
+      if (error.$validator === 'sameAs') return t('change_password.validation.confirm_password');
+      return '';
+    });
+  }
+  return [];
+});
 </script>
 
 <template>
@@ -69,14 +112,14 @@ const onChangePasswordSubmit = async () => {
           <div class="field-old-password">
             <input
                 class="input"
-                :class="{ 'input-error': vChangePassword.oldPassword.$error }"
+                :class="{ 'input-error': oldPasswordErrors.length }"
                 type="password"
                 :placeholder="t('change_password.form.old_password.placeholder')"
                 v-model="changePasswordForm.oldPassword"
                 @blur="vChangePassword.oldPassword.$touch"
             />
-            <div class="error-message" v-if="vChangePassword.oldPassword.$error">
-              {{ vChangePassword.oldPassword.$errors[0].$message || t("change_password.validation.password") }}
+            <div class="error-message" v-if="oldPasswordErrors.length">
+              {{ oldPasswordErrors[0] }}
             </div>
           </div>
         </div>
@@ -85,14 +128,14 @@ const onChangePasswordSubmit = async () => {
           <div class="field-new-password">
             <input
                 class="input"
-                :class="{ 'input-error': vChangePassword.newPassword.$error }"
+                :class="{ 'input-error': newPasswordErrors.length }"
                 type="password"
                 :placeholder="t('change_password.form.new_password.placeholder')"
                 v-model="changePasswordForm.newPassword"
                 @blur="vChangePassword.newPassword.$touch"
             />
-            <div class="error-message" v-if="vChangePassword.newPassword.$error">
-              {{ vChangePassword.newPassword.$errors[0].$message || t("change_password.validation.password") }}
+            <div class="error-message" v-if="newPasswordErrors.length">
+              {{ newPasswordErrors[0] }}
             </div>
           </div>
         </div>
@@ -101,14 +144,14 @@ const onChangePasswordSubmit = async () => {
           <div class="field-confirm-new-password">
             <input
                 class="input"
-                :class="{ 'input-error': vChangePassword.confirmNewPassword.$error }"
+                :class="{ 'input-error': confirmNewPasswordErrors.length }"
                 type="password"
                 :placeholder="t('change_password.form.confirm_new_password.placeholder')"
                 v-model="changePasswordForm.confirmNewPassword"
-                @blur="vChangePassword.newPassword.$touch"
+                @blur="vChangePassword.confirmNewPassword.$touch"
             />
-            <div class="error-message" v-if="vChangePassword.confirmNewPassword.$error">
-              {{ vChangePassword.confirmNewPassword.$errors[0].$message || t("change_password.validation.confirm_password") }}
+            <div class="error-message" v-if="confirmNewPasswordErrors.length">
+              {{ confirmNewPasswordErrors[0] }}
             </div>
           </div>
         </div>
@@ -209,21 +252,6 @@ const onChangePasswordSubmit = async () => {
 
       &:hover {
         background-color: #0055cc;
-      }
-    }
-
-    .back-to-dashboard {
-      display: block;
-      text-align: center;
-      margin-top: 15px;
-      color: #0066ff;
-      font-family: Onest;
-      font-weight: 500;
-      font-size: 16px;
-      text-decoration: none;
-
-      &:hover {
-        text-decoration: underline;
       }
     }
   }
