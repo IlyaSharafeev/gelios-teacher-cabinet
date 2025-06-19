@@ -7,10 +7,9 @@ export default defineConfig({
   plugins: [
     vue(),
     vueI18n({
-      include: path.resolve(__dirname, './src/locales/**'),
+      include: path.resolve(__dirname, './src/locales/languages/vue-i18n/**'), // Обновленный путь
     }),
   ],
-  assetsInclude: ['src/locales/languages/**'],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
