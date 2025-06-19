@@ -7,7 +7,7 @@ import { useVuelidate } from "@vuelidate/core";
 import { required, email, minLength, sameAs } from "@vuelidate/validators";
 import { useAuthStore } from "@/stores/auth";
 import { useRouter, useRoute } from "vue-router";
-import { useNotification } from "@kyvg/vue3-notification";
+import {Notifications, useNotification} from "@kyvg/vue3-notification";
 import { useI18n } from "vue-i18n";
 
 const { notify } = useNotification();
