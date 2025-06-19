@@ -25,7 +25,7 @@ export default {
   phone_edit_error: "Failed to edit phone field",
   email_required: "Email field is required",
   email_invalid: "Invalid email format",
-  phone_required: "Phone field is required", // Исправлено phone_wxrequired
+  phone_required: "Phone field is required",
   phone_numeric: "Phone must contain only digits",
   notifications_disabled: "All notifications disabled for {{duration}}",
   notifications_enabled: "All notifications enabled!",
@@ -157,6 +157,61 @@ export default {
         title: "Form Validation Error",
         text: "Please check the entered data"
       }
+    }
+  },
+  login: {
+    welcome: {
+      title: "Welcome to the teacher's dashboard!",
+      description: "Here you can easily manage the learning process: assign homework, issue certificates, and track student progress.",
+      second_description: "Together, we open new horizons in education — let's move forward!"
+    },
+    form: {
+      title: "Log In",
+      description: "Welcome to",
+      email: {
+        label: "Email Address",
+        placeholder: "Email Address"
+      },
+      password: {
+        label: "Enter Your Password",
+        placeholder: "Password"
+      },
+      submit: "Log In",
+      forgot_password: "Forgot password?",
+      recover: "Recover"
+    },
+    recovery: {
+      title: "Password Recovery",
+      description: "Enter the email",
+      description_suffix: "linked to your profile",
+      email: {
+        label: "Email Address",
+        placeholder: "Email Address"
+      },
+      submit: "Recover",
+      back: "Back",
+      success_message: "A password recovery link has been sent to your email"
+    },
+    reset: {
+      title: "Password Reset",
+      description: "Enter new password",
+      password: {
+        label: "New Password",
+        placeholder: "New Password"
+      },
+      confirm_password: {
+        label: "Confirm Password",
+        placeholder: "Confirm Password"
+      },
+      submit: "Save",
+      back: "Back"
+    },
+    validation: {
+      email: "This field is required or invalid email",
+      password: "Password must be at least 6 characters",
+      confirm_password: "Passwords do not match",
+      form_error: "Please check the entered data",
+      password_reset_error: "Error resetting password"
     }
   }
 };
