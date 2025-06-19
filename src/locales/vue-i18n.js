@@ -10,8 +10,8 @@ const savedLang = localStorage.getItem('selectedLanguage') || 'en';
 
 // Настройка i18n
 const i18n = createI18n({
-    locale: savedLang, // Установить язык из localStorage или по умолчанию 'en'
-    fallbackLocale: 'en', // Язык, если перевод отсутствует
+    locale: savedLang,
+    fallbackLocale: 'en',
     messages: {
         ru,
         en,

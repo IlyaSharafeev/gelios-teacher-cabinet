@@ -10,6 +10,7 @@ export default defineConfig({
       include: path.resolve(__dirname, './src/locales/languages/vue-i18n/**'), // Обновленный путь
     }),
   ],
+  assetsInclude: ['src/languages/**'],
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
