@@ -12,9 +12,9 @@ const pinia = createPinia();
 const app = createApp(App);
 
 app
+    .use(i18n)
     .use(Notifications)
     .use(vuetify)
     .use(router)
     .use(pinia)
-    .use(i18n)
     .mount("#app");
