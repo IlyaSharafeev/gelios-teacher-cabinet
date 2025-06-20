@@ -1,10 +1,8 @@
 {
   "general_settings": "General Settings",
-  "language": {
-    "ru": "Russian",
-    "en": "English",
-    "uk": "Ukrainian"
-  },
+  "language.ru": "Russian",
+  "language.en": "English",
+  "language.uk": "Ukrainian",
   "email": "Email",
   "phone": "Phone",
   "notifications": "Notifications",
@@ -32,186 +30,102 @@
   "general": "General",
   "password": "Password",
   "logout": "Logout",
-  "dashboard": {
-    "greeting": "Hello",
-    "statistics": {
-      "title": "Statistics",
-      "students_count": "Number of students",
-      "homework_count": "Homeworks to complete",
-      "lessons_count": "Lessons in the last month"
-    },
-    "homework": {
-      "title": "Homework"
-    },
-    "upcoming_classes": {
-      "title": "Upcoming Classes"
-    },
-    "view_all": "View All"
-  },
-  "homework": {
-    "title": "Homework",
-    "filters": {
-      "not_completed": "Not Completed",
-      "completed": "Completed"
-    },
-    "table": {
-      "direction": "Direction",
-      "student": "Student",
-      "task": "Task",
-      "date": "Date",
-      "progress": "Progress"
-    },
-    "directions": {
-      "all": "All Directions",
-      "speed_reading": "Speed Reading",
-      "mental_arithmetic": "Mental Arithmetic",
-      "it": "IT"
-    },
-    "students": {
-      "all": "All Students"
-    }
-  },
-  "add_homework": {
-    "tabs": {
-      "homework": "Homework",
-      "certificate": "Certificate"
-    },
-    "dialog": {
-      "title": "Are you sure you want to switch to another tab?",
-      "description": "Your changes on the current tab will not be saved."
-    }
-  },
-  "register": {
-    "welcome": {
-      "title": "Welcome to the school platform!",
-      "description": "Here you will find exciting discoveries, engaging learning materials, and opportunities to grow with us.",
-      "second_description": "Ready for an adventure? Let's go together!"
-    },
-    "form": {
-      "title": "Register",
-      "description": "Welcome to Gelios School",
-      "email": {
-        "label": "Email Address",
-        "placeholder": "Email Address"
-      },
-      "username": {
-        "label": "Username",
-        "placeholder": "Username"
-      },
-      "contact_number": {
-        "label": "Contact Number",
-        "placeholder": "+380123456789"
-      },
-      "password": {
-        "label": "Enter Your Password",
-        "placeholder": "Password"
-      },
-      "confirm_password": {
-        "label": "Confirm Password",
-        "placeholder": "Confirm Password"
-      },
-      "submit": "Register",
-      "have_account": "Already have an account?",
-      "login_link": "Log In"
-    },
-    "validation": {
-      "email": "This field is required or invalid email",
-      "username": "Username must be at least 3 characters",
-      "contact_number": "Enter a valid phone number",
-      "password": "Password must be at least 6 characters",
-      "confirm_password": "Passwords do not match",
-      "form_error": "Registration form validation failed"
-    }
-  },
-  "change_password": {
-    "form": {
-      "title": "Change Password",
-      "old_password": {
-        "label": "Old Password",
-        "placeholder": "Old Password"
-      },
-      "new_password": {
-        "label": "New Password",
-        "placeholder": "New Password"
-      },
-      "confirm_new_password": {
-        "label": "Confirm New Password",
-        "placeholder": "Confirm New Password"
-      },
-      "submit": "Save"
-    },
-    "validation": {
-      "password": "Password must be at least 6 characters",
-      "confirm_password": "Passwords do not match"
-    },
-    "notifications": {
-      "success": {
-        "title": "Password Changed Successfully",
-        "text": "Your password has been updated."
-      },
-      "error": {
-        "title": "Password Change Error",
-        "text": "Error changing password"
-      },
-      "validation": {
-        "title": "Form Validation Error",
-        "text": "Please check the entered data"
-      }
-    }
-  },
-  "login": {
-    "welcome": {
-      "title": "Welcome to the teacher's dashboard!",
-      "description": "Here you can easily manage the learning process: assign homework, issue certificates, and track student progress.",
-      "second_description": "Together, we open new horizons in education — let's move forward!"
-    },
-    "form": {
-      "title": "Log In",
-      "description": "Welcome to",
-      "email": {
-        "label": "Email Address",
-        "placeholder": "Email Address"
-      },
-      "password": {
-        "label": "Enter Your Password",
-        "placeholder": "Password"
-      },
-      "submit": "Log In",
-      "forgot_password": "Forgot password?",
-      "recover": "Recover"
-    },
-    "recovery": {
-      "title": "Password Recovery",
-      "description": "Enter the email",
-      "description_suffix": "linked to your profile",
-      "email": {
-        "label": "Email Address",
-        "placeholder": "Email Address"
-      },
-      "submit": "Recover",
-      "back": "Back",
-      "success_message": "A password recovery link has been sent to your email"
-    },
-    "reset": {
-      "title": "Password Reset",
-      "description": "Enter new password",
-      "password": {
-        "label": "New Password",
-        "placeholder": "New Password"
-      },
-      "confirm_password": {
-        "label": "Confirm Password",
-        "placeholder": "Confirm Password"
-      },
-      "submit": "Save",
-      "back": "Back"
-    },
-    "validation": {
-      "email": "This field is required or invalid email",
-      "password": "Password must be at least 6 characters",
-      "confirm_password": "Passwords do not match",
-      "form_error": "Please check the entered data",
-      "password_reset_error": "Error resetting password"
-    }
-  }
+  "dashboard.greeting": "Hello",
+  "dashboard.statistics.title": "Statistics",
+  "dashboard.statistics.students_count": "Number of students",
+  "dashboard.statistics.homework_count": "Homeworks to complete",
+  "dashboard.statistics.lessons_count": "Lessons in the last month",
+  "dashboard.homework.title": "Homework",
+  "dashboard.upcoming_classes.title": "Upcoming Classes",
+  "dashboard.view_all": "View All",
+  "homework.title": "Homework",
+  "homework.filters.not_completed": "Not Completed",
+  "homework.filters.completed": "Completed",
+  "homework.table.direction": "Direction",
+  "homework.table.student": "Student",
+  "homework.table.task": "Task",
+  "homework.table.date": "Date",
+  "homework.table.progress": "Progress",
+  "homework.directions.all": "All Directions",
+  "homework.directions.speed_reading": "Speed Reading",
+  "homework.directions.mental_arithmetic": "Mental Arithmetic",
+  "homework.directions.it": "IT",
+  "homework.students.all": "All Students",
+  "add_homework.tabs.homework": "Homework",
+  "add_homework.tabs.certificate": "Certificate",
+  "add_homework.dialog.title": "Are you sure you want to switch to another tab?",
+  "add_homework.dialog.description": "Your changes on the current tab will not be saved.",
+  "register.welcome.title": "Welcome to the school platform!",
+  "register.welcome.description": "Here you will find exciting discoveries, engaging learning materials, and opportunities to grow with us.",
+  "register.welcome.second_description": "Ready for an adventure? Let's go together!",
+  "register.form.title": "Register",
+  "register.form.description": "Welcome to Gelios School",
+  "register.form.email.label": "Email Address",
+  "register.form.email.placeholder": "Email Address",
+  "register.form.username.label": "Username",
+  "register.form.username.placeholder": "Username",
+  "register.form.contact_number.label": "Contact Number",
+  "register.form.contact_number.placeholder": "+380123456789",
+  "register.form.password.label": "Enter Your Password",
+  "register.form.password.placeholder": "Password",
+  "register.form.confirm_password.label": "Confirm Password",
+  "register.form.confirm_password.placeholder": "Confirm Password",
+  "register.form.submit": "Register",
+  "register.form.have_account": "Already have an account?",
+  "register.form.login_link": "Log In",
+  "register.validation.email": "This field is required or invalid email",
+  "register.validation.username": "Username must be at least 3 characters",
+  "register.validation.contact_number": "Enter a valid phone number",
+  "register.validation.password": "Password must be at least 6 characters",
+  "register.validation.confirm_password": "Passwords do not match",
+  "register.validation.form_error": "Registration form validation failed",
+  "change_password.form.title": "Change Password",
+  "change_password.form.old_password.label": "Old Password",
+  "change_password.form.old_password.placeholder": "Old Password",
+  "change_password.form.new_password.label": "New Password",
+  "change_password.form.new_password.placeholder": "New Password",
+  "change_password.form.confirm_new_password.label": "Confirm New Password",
+  "change_password.form.confirm_new_password.placeholder": "Confirm New Password",
+  "change_password.form.submit": "Save",
+  "change_password.validation.password": "Password must be at least 6 characters",
+  "change_password.validation.confirm_password": "Passwords do not match",
+  "change_password.notifications.success.title": "Password Changed Successfully",
+  "change_password.notifications.success.text": "Your password has been updated.",
+  "change_password.notifications.error.title": "Password Change Error",
+  "change_password.notifications.error.text": "Error changing password",
+  "change_password.notifications.validation.title": "Form Validation Error",
+  "change_password.notifications.validation.text": "Please check the entered data",
+  "login.welcome.title": "Welcome to the teacher's dashboard!",
+  "login.welcome.description": "Here you can easily manage the learning process: assign homework, issue certificates, and track student progress.",
+  "login.welcome.second_description": "Together, we open new horizons in education — let's move forward!",
+  "login.form.title": "Log In",
+  "login.form.description": "Welcome to",
+  "login.form.email.label": "Email Address",
+  "login.form.email.placeholder": "Email Address",
+  "login.form.password.label": "Enter Your Password",
+  "login.form.password.placeholder": "Password",
+  "login.form.submit": "Log In",
+  "login.form.forgot_password": "Forgot password?",
+  "login.form.recover": "Recover",
+  "login.recovery.title": "Password Recovery",
+  "login.recovery.description": "Enter the email",
+  "login.recovery.description_suffix": "linked to your profile",
+  "login.recovery.email.label": "Email Address",
+  "login.recovery.email.placeholder": "Email Address",
+  "login.recovery.submit": "Recover",
+  "login.recovery.back": "Back",
+  "login.recovery.success_message": "A password recovery link has been sent to your email",
+  "login.reset.title": "Password Reset",
+  "login.reset.description": "Enter new password",
+  "login.reset.password.label": "New Password",
+  "login.reset.password.placeholder": "New Password",
+  "login.reset.confirm_password.label": "Confirm Password",
+  "login.reset.confirm_password.placeholder": "Confirm Password",
+  "login.reset.submit": "Save",
+  "login.reset.back": "Back",
+  "login.validation.email": "This field is required or invalid email",
+  "login.validation.password": "Password must be at least 6 characters",
+  "login.validation.confirm_password": "Passwords do not match",
+  "login.validation.form_error": "Please check the entered data",
+  "login.validation.password_reset_error": "Error resetting password"
 }
