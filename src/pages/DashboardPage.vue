@@ -47,7 +47,7 @@ console.log('current locale:', useI18n().locale.value)
 <template>
   <div class="dashboard">
     <div class="header">
-      {{ t('dashboard.statistics.title') }}
+      {{ t('logout') }}
     </div>
 <!--      <div class="welcome-message">-->
 <!--        <div class="text">-->
