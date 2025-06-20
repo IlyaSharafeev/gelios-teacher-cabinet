@@ -48,10 +48,11 @@ console.log('current locale:', useI18n().locale.value)
   <div class="dashboard">
     <div class="header">
       {{ t('logout') }}
+      {{ t('dashboard.statistics.title') }}
     </div>
 <!--      <div class="welcome-message">-->
 <!--        <div class="text">-->
-<!--&lt;!&ndash;          {{ t('dashboard.greeting') }}, Оксана&ndash;&gt;-->
+<!--&lt;!&ndash;          c, Оксана&ndash;&gt;-->
 <!--        </div>-->
 <!--        <div class="pencil-background"></div>-->
 <!--      </div>-->
