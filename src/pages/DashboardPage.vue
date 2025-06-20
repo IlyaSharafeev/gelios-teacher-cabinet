@@ -42,6 +42,8 @@ const homeworks: Homework[] = [
 const { t } = useI18n();
 
 console.log('current locale:', useI18n().locale.value)
+// console.log('i18n initialized with locale:', i18n.global.locale.value);
+// console.log('Available translations:', i18n.global.messages);
 </script>
 
 <template>
