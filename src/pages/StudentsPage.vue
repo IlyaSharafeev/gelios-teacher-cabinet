@@ -9,13 +9,22 @@ interface Direction {
   abbreviation: string;
 }
 
+// Define Student interface
+interface Student {
+  id: number;
+  name: string;
+  lessonsLeft: number;
+  direction: string;
+  progress?: { completed: number; total: number }; // Optional progress data
+}
+
 // Mock data for students and directions
-const students = [
-  { id: 1, name: 'Олег Петренко', lessonsLeft: 32, directions: ['speed_reading', 'mental_arithmetic'] },
-  { id: 2, name: 'Марія Іваненко', lessonsLeft: 5, directions: ['mental_arithmetic'] },
-  { id: 3, name: 'Іван Коваленко', lessonsLeft: 3, directions: ['it'] },
-  { id: 4, name: 'Анна Сидоренко', lessonsLeft: 15, directions: ['speed_reading'] },
-  { id: 5, name: 'Павло Шевченко', lessonsLeft: 2, directions: ['it', 'mental_arithmetic'] },
+const students: Student[] = [
+  { id: 1, name: 'Олег Петренко', lessonsLeft: 32, direction: 'speed_reading', progress: { completed: 20, total: 50 } },
+  { id: 2, name: 'Марія Іваненко', lessonsLeft: 5, direction: 'mental_arithmetic', progress: { completed: 45, total: 50 } },
+  { id: 3, name: 'Іван Коваленко', lessonsLeft: 3, direction: 'it', progress: { completed: 10, total: 50 } },
+  { id: 4, name: 'Анна Сидоренко', lessonsLeft: 15, direction: 'speed_reading', progress: { completed: 30, total: 50 } },
+  { id: 5, name: 'Павло Шевченко', lessonsLeft: 2, direction: 'mental_arithmetic', progress: { completed: 5, total: 50 } },
 ];
 
 const directions: Direction[] = [
@@ -27,19 +36,31 @@ const directions: Direction[] = [
 
 const { t } = useI18n();
 
-// Initialize selectedDirection to the value 'all' instead of the object
+// Initialize selectedDirection to the value 'all'
 const selectedDirection = ref('all');
 
 const searchQuery = ref('');
 
+const selectedStudent = ref<Student | null>(null);
+const sidebarOpen = ref(false);
+
 const filteredStudents = computed(() => {
   return students.filter(student => {
     const matchesSearch = student.name.toLowerCase().includes(searchQuery.value.toLowerCase());
-    const matchesDirection = selectedDirection.value === 'all' ||
-        student.directions.includes(selectedDirection.value);
+    const matchesDirection = selectedDirection.value === 'all' || student.direction === selectedDirection.value;
     return matchesSearch && matchesDirection;
   });
 });
+
+const openSidebar = (student: Student) => {
+  selectedStudent.value = student;
+  sidebarOpen.value = true;
+};
+
+const closeSidebar = () => {
+  sidebarOpen.value = false;
+  selectedStudent.value = null;
+};
 </script>
 
 <template>
@@ -71,26 +92,45 @@ const filteredStudents = computed(() => {
           class="search-input"
       />
     </div>
-    <div class="table-container">
-      <table>
-        <tbody>
-        <tr v-for="student in filteredStudents" :key="student.id">
-          <td>{{ student.name }}</td>
-          <td :class="{ 'low-lessons': student.lessonsLeft <= 5 }">
-            {{ t('students_page.lessons_remaining') }}: {{ student.lessonsLeft }} {{ student.lessonsLeft <= 5 ? t('students_page.lesson_singular') : t('students_page.lesson_plural') }}
-          </td>
-          <td>
-              <span
-                  v-for="direction in student.directions"
-                  :key="direction"
-                  class="direction-tag"
-              >
-                {{ t(`homework.directions.${direction}`) }}
+    <div class="content-wrapper" :class="{ 'sidebar-open': sidebarOpen }">
+      <div class="table-container">
+        <table>
+          <tbody>
+          <tr v-for="student in filteredStudents" :key="student.id">
+            <td>{{ student.name }}</td>
+            <td :class="{ 'low-lessons': student.lessonsLeft <= 5 }">
+              {{ t('students_page.lessons_remaining') }}: {{ student.lessonsLeft }} {{ student.lessonsLeft <= 5 ? t('students_page.lesson_singular') : t('students_page.lesson_plural') }}
+            </td>
+            <td>
+              <span class="direction-tag">
+                {{ t(`homework.directions.${student.direction}`) }}
               </span>
-          </td>
-        </tr>
-        </tbody>
-      </table>
+            </td>
+            <td>
+              <button class="progress-button" @click="openSidebar(student)">
+                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M2 8H14M8 2V14" stroke="#333" stroke-width="1.5" stroke-linecap="round"/>
+                </svg>
+                {{ t('students_page.progress') }}
+              </button>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+      <div v-if="sidebarOpen" class="sidebar" :class="{ 'sidebar-open': sidebarOpen }">
+        <div class="sidebar-content">
+          <button class="close-sidebar" @click="closeSidebar">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M2 2L14 14M14 2L2 14" stroke="#333" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </button>
+          <h2>{{ selectedStudent?.name }}</h2>
+          <p>{{ t('students_page.direction') }}: {{ t(`homework.directions.${selectedStudent?.direction}`) }}</p>
+          <p>{{ t('students_page.lessons_remaining') }}: {{ selectedStudent?.lessonsLeft }}</p>
+          <p>{{ t('students_page.progress') }}: {{ selectedStudent?.progress?.completed }} / {{ selectedStudent?.progress?.total }} ({{ ((selectedStudent?.progress?.completed || 0) / (selectedStudent?.progress?.total || 1) * 100).toFixed(0) }}%)</p>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -100,6 +140,8 @@ const filteredStudents = computed(() => {
   padding: 52px;
   background-color: #FFFFFF;
   border-radius: 32px;
+  position: relative;
+  overflow: hidden;
 }
 
 .header {
@@ -152,12 +194,22 @@ h1 {
 
 .search-input:focus {
   outline: none;
-  box-shadow: 0 0 0 2px rgba(0, 102, 255, 0.2);
+  box-shadow: 0 0 0 2px rgba(0, 102, 255, 25576);
+}
+
+.content-wrapper {
+  position: relative;
+  transition: width 0.3s ease;
 }
 
 .table-container {
   background: #FFFFFF;
   border-radius: 16px;
+  transition: width 0.3s ease;
+}
+
+.sidebar-open .table-container {
+  width: calc(100% - 300px);
 }
 
 table {
@@ -192,6 +244,68 @@ th {
   font-size: 14px;
   font-weight: 500;
   color: #333;
+}
+
+.progress-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: #E3ECF5;
+  border: none;
+  border-radius: 12px;
+  padding: 8px 16px;
+  font-family: 'Onest', sans-serif;
+  font-size: 14px;
+  color: #333;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.progress-button:hover {
+  background: #D1E0F0;
+}
+
+.sidebar {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 300px;
+  height: 100%;
+  background: #FFFFFF;
+  box-shadow: -4px 0 12px rgba(0, 0, 0, 0.1);
+  transform: translateX(100%);
+  transition: transform 0.3s ease;
+  z-index: 1000;
+}
+
+.sidebar-open {
+  transform: translateX(0);
+}
+
+.sidebar-content {
+  padding: 32px;
+  font-family: 'Onest', sans-serif;
+  color: #333;
+}
+
+.sidebar-content h2 {
+  font-size: 24px;
+  margin-bottom: 16px;
+}
+
+.sidebar-content p {
+  font-size: 16px;
+  margin-bottom: 8px;
+}
+
+.close-sidebar {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
 }
 
 .homework__filter-select ::v-deep .v-field.v-field {
