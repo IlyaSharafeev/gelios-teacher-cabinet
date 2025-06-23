@@ -129,13 +129,11 @@ const closeSidebar = () => {
           </svg>
         </button>
         <div class="student-name">{{ selectedStudent?.name }}</div>
-<!--        <h2>{{ selectedStudent?.name }}</h2>-->
-<!--        <p>{{ t('students_page.direction') }}: {{ t(`homework.directions.${selectedStudent?.direction}`) }}</p>-->
-<!--        <p>{{ t('students_page.lessons_remaining') }}: {{ selectedStudent?.lessonsLeft }}</p>-->
-<!--        <p>{{ t('students_page.progress') }}: {{ selectedStudent?.progress?.completed }} / {{ selectedStudent?.progress?.total }} ({{ ((selectedStudent?.progress?.completed || 0) / (selectedStudent?.progress?.total || 1) * 100).toFixed(0) }}%)</p>-->
       </div>
       <div class="sidebar-content-body">
-        <div class="direction">{{ t(`homework.directions.${selectedStudent?.direction}`) }}</div>
+        <div class="direction">
+          {{ directions.find(d => d.name_key === selectedStudent?.direction)?.abbreviation || '' }}
+        </div>
       </div>
     </div>
   </div>
