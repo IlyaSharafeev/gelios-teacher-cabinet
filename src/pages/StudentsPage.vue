@@ -1,34 +1,42 @@
 <script setup lang="ts">
-import {ref, computed} from 'vue';
+import { ref, computed } from 'vue';
+import { useI18n } from 'vue-i18n';
 
+// Define Direction interface
+interface Direction {
+  id: number;
+  name_key: string;
+  abbreviation: string;
+}
+
+// Mock data for students and directions
 const students = [
-  {id: 1, name: 'Олег Петренко', lessonsLeft: 32, directions: ['Математика', 'Фізика']},
-  {id: 2, name: 'Марія Іваненко', lessonsLeft: 5, directions: ['Хімія']},
-  {id: 3, name: 'Іван Коваленко', lessonsLeft: 3, directions: ['Біологія', 'Географія']},
-  {id: 4, name: 'Анна Сидоренко', lessonsLeft: 15, directions: ['Література']},
-  {id: 5, name: 'Павло Шевченко', lessonsLeft: 2, directions: ['Англійська мова', 'Історія']},
+  { id: 1, name: 'Олег Петренко', lessonsLeft: 32, directions: ['speed_reading', 'mental_arithmetic'] },
+  { id: 2, name: 'Марія Іваненко', lessonsLeft: 5, directions: ['mental_arithmetic'] },
+  { id: 3, name: 'Іван Коваленко', lessonsLeft: 3, directions: ['it'] },
+  { id: 4, name: 'Анна Сидоренко', lessonsLeft: 15, directions: ['speed_reading'] },
+  { id: 5, name: 'Павло Шевченко', lessonsLeft: 2, directions: ['it', 'mental_arithmetic'] },
 ];
 
-const directions = [
-  {label: 'Всі напрямки', value: 'all'},
-  {label: 'Математика', value: 'Математика'},
-  {label: 'Фізика', value: 'Фізика'},
-  {label: 'Хімія', value: 'Хімія'},
-  {label: 'Біологія', value: 'Біологія'},
-  {label: 'Географія', value: 'Географія'},
-  {label: 'Історія', value: 'Історія'},
-  {label: 'Література', value: 'Література'},
-  {label: 'Англійська мова', value: 'Англійська мова'},
+const directions: Direction[] = [
+  { id: 1, name_key: 'all', abbreviation: 'ВСІ' },
+  { id: 2, name_key: 'speed_reading', abbreviation: 'ШЧ' },
+  { id: 3, name_key: 'mental_arithmetic', abbreviation: 'МА' },
+  { id: 4, name_key: 'it', abbreviation: 'IT' },
 ];
 
-const selectedDirection = ref(directions[0]);
+const { t } = useI18n();
+
+// Initialize selectedDirection to the value 'all' instead of the object
+const selectedDirection = ref('all');
+
 const searchQuery = ref('');
 
 const filteredStudents = computed(() => {
   return students.filter(student => {
     const matchesSearch = student.name.toLowerCase().includes(searchQuery.value.toLowerCase());
-    const matchesDirection = selectedDirection.value.value === 'all' ||
-        student.directions.includes(selectedDirection.value.value);
+    const matchesDirection = selectedDirection.value === 'all' ||
+        student.directions.includes(selectedDirection.value);
     return matchesSearch && matchesDirection;
   });
 });
@@ -39,7 +47,13 @@ const filteredStudents = computed(() => {
     <div class="header">
       <h1>Мої учні</h1>
       <div class="direction-filter">
-
+        <v-select
+            v-model="selectedDirection"
+            :items="directions.map((d) => ({ title: t(`homework.directions.${d.name_key}`), value: d.name_key === 'all' ? 'all' : d.name_key }))"
+            class="homework__filter-select"
+            variant="plain"
+        >
+        </v-select>
       </div>
     </div>
     <div class="search-container">
@@ -71,7 +85,7 @@ const filteredStudents = computed(() => {
                   :key="direction"
                   class="direction-tag"
               >
-                {{ direction }}
+                {{ t(`homework.directions.${direction}`) }}
               </span>
           </td>
         </tr>
@@ -83,15 +97,15 @@ const filteredStudents = computed(() => {
 
 <style scoped lang="scss">
 .students-page {
-  padding: 32px;
+  padding: 52px;
   background-color: #FFFFFF;
   border-radius: 32px;
 }
 
 .header {
   display: flex;
-  align-items: center;
-  margin-bottom: 32px;
+  align-items: flex-start;
+  justify-content: space-between;
 }
 
 h1 {
