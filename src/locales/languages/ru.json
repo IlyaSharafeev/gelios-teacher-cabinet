@@ -111,5 +111,13 @@
   "students_page.search_placeholder": "Искать ученика",
   "students_page.lessons_remaining": "Остаток",
   "students_page.lesson_progress": "Прогресс",
-  "students_page.direction": "Направление"
+  "students_page.student_progress": "Прогресс ученика",
+  "students_page.direction": "Направление",
+  "students_page.lessons_completed": "Уроков<br>пройдено",
+  "students_page.homework_assignments": "Домашних<br>заданий",
+  "students_page.lessons_remaining_desc": "Уроков<br>осталось",
+  "students_page.homework_title": "Домашние задания",
+  "students_page.completed": "Выполнено",
+  "students_page.not_completed": "Не выполнено",
+  "students_page.skills_title": "Навыки"
 }

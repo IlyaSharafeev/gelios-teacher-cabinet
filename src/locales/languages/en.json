@@ -148,5 +148,13 @@
   "students_page.lesson_plural": "lessons",
   "students_page.lesson_singular": "lesson",
   "students_page.progress": "Progress",
-  "students_page.direction": "Direction"
+  "students_page.student_progress": "Student Progress",
+  "students_page.direction": "Direction",
+  "students_page.lessons_completed": "Lessons<br>Completed",
+  "students_page.homework_assignments": "Homework<br>Assignments",
+  "students_page.lessons_remaining_desc": "Lessons<br>Remaining",
+  "students_page.homework_title": "Homework",
+  "students_page.completed": "Completed",
+  "students_page.not_completed": "Not Completed",
+  "students_page.skills_title": "Skills"
 }

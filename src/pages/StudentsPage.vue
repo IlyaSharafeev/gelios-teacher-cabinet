@@ -16,6 +16,8 @@ interface Student {
   progress?: { completed: number; total: number };
 }
 
+const { t } = useI18n();
+
 const students: Student[] = [
   { id: 1, name: 'Олег Петренко', lessonsLeft: 32, direction: 'speed_reading', progress: { completed: 20, total: 50 } },
   { id: 2, name: 'Марія Іваненко', lessonsLeft: 5, direction: 'mental_arithmetic', progress: { completed: 45, total: 50 } },
@@ -28,23 +30,32 @@ const students: Student[] = [
 ];
 
 const directions: Direction[] = [
-  { id: 1, name_key: 'all', abbreviation: 'ВСІ' },
-  { id: 2, name_key: 'speed_reading', abbreviation: 'ШЧ' },
-  { id: 3, name_key: 'mental_arithmetic', abbreviation: 'МА' },
-  { id: 4, name_key: 'ukrainian_language', abbreviation: 'УМ' },
-  { id: 5, name_key: 'speech_therapy', abbreviation: 'ЛОГ' },
-  { id: 6, name_key: 'mathematics', abbreviation: 'МАТ' },
-  { id: 7, name_key: 'it_gelios_start', abbreviation: 'ITG' },
-  { id: 8, name_key: 'multiplication_division', abbreviation: 'МД' },
-  { id: 9, name_key: 'school_preparation', abbreviation: 'ПШ' },
+  { id: 1, name_key: 'all', abbreviation: t('homework.directions.abbreviations.all') },
+  { id: 2, name_key: 'speed_reading', abbreviation: t('homework.directions.abbreviations.speed_reading') },
+  { id: 3, name_key: 'mental_arithmetic', abbreviation: t('homework.directions.abbreviations.mental_arithmetic') },
+  { id: 4, name_key: 'ukrainian_language', abbreviation: t('homework.directions.abbreviations.ukrainian_language') },
+  { id: 5, name_key: 'speech_therapy', abbreviation: t('homework.directions.abbreviations.speech_therapy') },
+  { id: 6, name_key: 'mathematics', abbreviation: t('homework.directions.abbreviations.mathematics') },
+  { id: 7, name_key: 'it_gelios_start', abbreviation: t('homework.directions.abbreviations.it_gelios_start') },
+  { id: 8, name_key: 'multiplication_division', abbreviation: t('homework.directions.abbreviations.multiplication_division') },
+  { id: 9, name_key: 'school_preparation', abbreviation: t('homework.directions.abbreviations.school_preparation') },
 ];
-
-const { t } = useI18n();
 
 const selectedDirection = ref('all');
 const searchQuery = ref('');
 const selectedStudent = ref<Student | null>(null);
 const sidebarOpen = ref(false);
+const activeTab = ref('МА');
+
+// Mock skills data
+const skills = ref([
+  { name: 'Кіберкішка', value: 32 },
+  { name: 'Флеш карти', value: 10 },
+  { name: 'Знайди пару', value: 6 },
+  { name: 'Splitz', value: -12 },
+  { name: 'Таблиця Шульте', value: 15 },
+  { name: 'Тексти', value: -16 },
+]);
 
 const filteredStudents = computed(() => {
   return students.filter(student => {
@@ -57,6 +68,8 @@ const filteredStudents = computed(() => {
 const openSidebar = (student: Student) => {
   selectedStudent.value = student;
   sidebarOpen.value = true;
+  const direction = directions.find(d => d.name_key === student.direction);
+  activeTab.value = direction?.abbreviation || 'МА';
 };
 
 const closeSidebar = () => {
@@ -102,16 +115,19 @@ const closeSidebar = () => {
             <tr v-for="student in filteredStudents" :key="student.id">
               <td>{{ student.name }}</td>
               <td :class="{ 'low-lessons': student.lessonsLeft <= 5 }">
-                {{ t('students_page.lessons_remaining') }}: {{ student.lessonsLeft }} {{ student.lessonsLeft <= 5 ? t('students_page.lesson_singular') : t('students_page.lesson_plural') }}
+                {{ t('students_page.lessons_remaining') }}: {{ student.lessonsLeft }}
+                {{ student.lessonsLeft <= 5 ? t('students_page.lesson_singular') : t('students_page.lesson_plural') }}
               </td>
               <td class="progress-direction">
+                <!--
                 <span class="direction-tag" :class="`direction-${student.direction}`">
-                  {{ t(`homework.directions.abbreviations.${student.direction}`) }}
+                  {{ directions.find(d => d.name_key === student.direction)?.abbreviation || '' }}
                 </span>
+                -->
               </td>
               <td class="progress-td">
                 <button class="progress-button" @click="openSidebar(student)">
-                  {{ t('students_page.progress') }}
+                  {{ t('students_page.student_progress') }}
                   <div class="external-link-icon"></div>
                 </button>
               </td>
@@ -121,21 +137,83 @@ const closeSidebar = () => {
         </div>
       </div>
     </div>
-    <div v-if="sidebarOpen" class="sidebar" :class="{ 'sidebar-open': sidebarOpen }">
-      <div class="sidebar-content-header">
-        <button class="close-sidebar" @click="closeSidebar">
-          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M2 2L14 14M14 2L2 14" stroke="#333" stroke-width="1.5" stroke-linecap="round"/>
-          </svg>
-        </button>
-        <div class="student-name">{{ selectedStudent?.name }}</div>
-      </div>
-      <div class="sidebar-content-body">
-        <div class="direction">
-          {{ directions.find(d => d.name_key === selectedStudent?.direction)?.abbreviation || '' }}
+
+    <!-- Sidebar -->
+    <aside class="sidebar" v-if="sidebarOpen" :class="{ 'sidebar-open': sidebarOpen }">
+      <div class="dashboard-card">
+        <div class="dashboard__header">
+          <button class="dashboard__close-btn" @click="closeSidebar()">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M2 2L14 14M14 2L2 14" stroke="#333333" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+          </button>
+          <div class="dashboard__name">{{ selectedStudent?.name || 'N/A' }}</div>
+          <div class="dashboard__switcher">
+            <button
+                :class="['switch-btn', { active: activeTab === directions.find(d => d.name_key === selectedStudent?.direction)?.abbreviation }]"
+                @click="activeTab = directions.find(d => d.name_key === selectedStudent?.direction)?.abbreviation || 'МА'">
+              {{ directions.find(d => d.name_key === selectedStudent?.direction)?.abbreviation || 'МА' }}
+            </button>
+            <button :class="['switch-btn', { active: activeTab === t('homework.directions.abbreviations.speed_reading') }]" @click="activeTab = t('homework.directions.abbreviations.speed_reading')">
+              {{ t('homework.directions.abbreviations.speed_reading') }}
+            </button>
+          </div>
+        </div>
+
+        <div class="dashboard__stats">
+          <div class="stat">
+            <div class="stat__num">{{ selectedStudent?.progress?.completed || 0 }}</div>
+            <div class="stat__desc" v-html="t('students_page.lessons_completed')"></div>
+          </div>
+          <div class="stat">
+            <div class="stat__num">{{ selectedStudent?.progress?.total || 0 }}</div>
+            <div class="stat__desc" v-html="t('students_page.homework_assignments')"></div>
+          </div>
+          <div class="stat">
+            <div class="stat__num stat__num--blue">{{ selectedStudent?.lessonsLeft || 0 }}</div>
+            <div class="stat__desc" v-html="t('students_page.lessons_remaining_desc')"></div>
+          </div>
+        </div>
+
+        <div class="dashboard__hw">
+          <div class="hw__title">{{ t('students_page.homework_title') }}</div>
+          <div class="progress-bar">
+            <div class="progress-bar__done"
+                 :style="{ width: selectedStudent?.progress ? `${(selectedStudent.progress.completed / selectedStudent.progress.total) * 100}%` : '0%' }"></div>
+            <div class="progress-bar__fail"
+                 :style="{ width: selectedStudent?.progress ? `${((selectedStudent.progress.total - selectedStudent.progress.completed) / selectedStudent.progress.total) * 100}%` : '0%' }"></div>
+          </div>
+          <div class="hw__legend">
+            <span class="hw__dot hw__dot--done"></span> {{ t('students_page.completed') }}
+            <span class="hw__dot hw__dot--fail"></span> {{ t('students_page.not_completed') }}
+          </div>
+          <div class="hw__stats">
+            <span class="hw__done-num">{{ selectedStudent?.progress?.completed || 0 }}</span>
+            <span class="hw__fail-num">{{ selectedStudent?.progress ? selectedStudent.progress.total - selectedStudent.progress.completed : 0 }}</span>
+          </div>
+        </div>
+
+        <div class="dashboard__skills">
+          <div class="skills__title">{{ t('students_page.skills_title') }}</div>
+          <div class="skills__list">
+            <div class="skill-row" v-for="skill in skills" :key="skill.name">
+              <div class="skill__name">{{ skill.name }}</div>
+              <div class="skill__progress">
+                <div class="skill__bar-bg">
+                  <div
+                      class="skill__bar-fg"
+                      :style="{ width: Math.abs(skill.value) + '%', background: skill.value >= 0 ? '#2377FC' : '#FF5050' }"
+                  ></div>
+                </div>
+                <div class="skill__value" :class="{ minus: skill.value < 0 }">
+                  {{ skill.value > 0 ? '+' : '' }}{{ skill.value }}%
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
+    </aside>
   </div>
 </template>
 
@@ -151,6 +229,7 @@ $color-school-preparation: #d5b1f4;
 
 .students-page-wrapper {
   position: relative;
+  display: flex;
 }
 
 .students-page {
@@ -159,6 +238,7 @@ $color-school-preparation: #d5b1f4;
   border-radius: 32px;
   position: relative;
   overflow: hidden;
+  flex: 1;
 }
 
 .header {
@@ -226,7 +306,7 @@ h1 {
 }
 
 .content-wrapper.sidebar-open {
-  width: calc(100% - 300px);
+  width: calc(100% - 552px);
 }
 
 table {
@@ -332,14 +412,16 @@ th, td {
 }
 
 .sidebar {
-  padding: 32px;
+  width: 552px;
+  background: #f7fafd;
+  border-radius: 20px;
+  padding: 28px 18px 24px 18px;
+  font-family: 'Inter', sans-serif;
   position: absolute;
   top: 0;
   right: 0;
-  width: 552px;
   height: 100%;
-  background: #FFFFFF;
-  box-shadow: -4px 0 12px rgba(0, 0,0, 0.1);
+  box-shadow: -4px 0 12px rgba(0, 0, 0, 0.1);
   transform: translateX(100%);
   transition: transform 0.3s ease;
   z-index: 1000;
@@ -349,40 +431,207 @@ th, td {
   transform: translateX(0);
 }
 
-.sidebar-content-header {
-  font-family: 'Onest', sans-serif;
-  color: #333;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
+.dashboard-card {
+  width: 100%;
 }
 
-.sidebar-content h2 {
+.dashboard__header {
+  position: relative;
+}
+
+.dashboard__name {
   font-size: 24px;
-  margin-bottom: 16px;
+  font-weight: 500;
+  margin-bottom: 18px;
 }
 
-.sidebar-content p {
-  font-size: 16px;
-  margin-bottom: 8px;
-}
-
-.close-sidebar {
+.dashboard__close-btn {
   position: absolute;
-  top: 32px;
-  right: 32px;
+  top: 0;
+  right: 0;
   background: none;
   border: none;
   cursor: pointer;
   padding: 8px;
 }
 
-.student-name {
-  font-family: Onest;
+.dashboard__switcher {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.switch-btn {
+  padding: 7px 20px;
+  border-radius: 12px;
+  border: none;
+  background: #eaeef2;
+  color: #2377fc;
   font-weight: 500;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.switch-btn.active {
+  background: #2377fc;
+  color: #fff;
+}
+
+.dashboard__stats {
+  display: flex;
+  gap: 24px;
+  background: #fff;
+  border-radius: 14px;
+  padding: 20px 0;
+  margin-bottom: 24px;
+  justify-content: space-around;
+}
+
+.stat {
+  text-align: center;
+}
+
+.stat__num {
   font-size: 32px;
-  line-height: 24px;
-  letter-spacing: -2%;
+  font-weight: 500;
+  margin-bottom: 2px;
+}
+
+.stat__num--blue {
+  color: #2377fc;
+}
+
+.stat__desc {
+  font-size: 13px;
+  color: #999;
+  font-weight: 400;
+  line-height: 1.2;
+}
+
+.dashboard__hw {
+  margin-bottom: 24px;
+}
+
+.hw__title {
+  font-size: 18px;
+  font-weight: 500;
+  margin-bottom: 7px;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 18px;
+  border-radius: 9px;
+  background: #eaeef2;
+  display: flex;
+  overflow: hidden;
+  margin-bottom: 8px;
+}
+
+.progress-bar__done {
+  background: #42c848;
+  height: 100%;
+}
+
+.progress-bar__fail {
+  background: #ff5050;
+  height: 100%;
+}
+
+.hw__legend {
+  font-size: 13px;
+  margin-bottom: 2px;
+}
+
+.hw__dot {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin: 0 4px 0 12px;
+}
+
+.hw__dot--done {
+  background: #42c848;
+}
+
+.hw__dot--fail {
+  background: #ff5050;
+}
+
+.hw__stats {
+  font-size: 14px;
+  font-weight: 500;
+  display: flex;
+  gap: 10px;
+  margin-top: 3px;
+}
+
+.hw__done-num {
+  color: #42c848;
+}
+
+.hw__fail-num {
+  color: #ff5050;
+}
+
+.dashboard__skills {
+  margin-top: 14px;
+}
+
+.skills__title {
+  font-size: 18px;
+  font-weight: 500;
+  margin-bottom: 8px;
+}
+
+.skills__list {
+  width: 100%;
+}
+
+.skill-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+  gap: 12px;
+}
+
+.skill__name {
+  flex: 0 0 120px;
+  font-size: 15px;
+}
+
+.skill__progress {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  gap: 8px;
+}
+
+.skill__bar-bg {
+  width: 80px;
+  height: 10px;
+  border-radius: 6px;
+  background: #eaeef2;
+  overflow: hidden;
+  position: relative;
+}
+
+.skill__bar-fg {
+  height: 100%;
+  border-radius: 6px;
+}
+
+.skill__value {
+  min-width: 38px;
+  text-align: right;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.skill__value.minus {
+  color: #ff5050;
 }
 
 .homework__filter-select ::v-deep .v-field.v-field {

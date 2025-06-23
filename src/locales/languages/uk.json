@@ -146,8 +146,16 @@
   "students_page.title": "Мої учні",
   "students_page.search_placeholder": "Шукати учня",
   "students_page.lessons_remaining": "Залишилось",
-  "students_page.lesson_plural": "уроки",
-  "students_page.lesson_singular": "уроків",
+  "students_page.lesson_plural": "уроків",
+  "students_page.lesson_singular": "уроки",
   "students_page.progress": "Прогрес",
-  "students_page.direction": "Напрямок"
+  "students_page.student_progress": "Прогрес учня",
+  "students_page.direction": "Напрямок",
+  "students_page.lessons_completed": "Уроків<br>пройдено",
+  "students_page.homework_assignments": "Домашніх<br>завдань",
+  "students_page.lessons_remaining_desc": "Уроків<br>залишилось",
+  "students_page.homework_title": "Домашні завдання",
+  "students_page.completed": "Виконано",
+  "students_page.not_completed": "Не виконано",
+  "students_page.skills_title": "Навички"
 }
