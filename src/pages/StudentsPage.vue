@@ -72,7 +72,8 @@ const closeSidebar = () => {
 </script>
 
 <template>
-  <div class="students-page">
+  <div class="students-page-wrapper">
+    <div class="students-page">
     <div class="header">
       <h1>{{ t('students_page.title') }}</h1>
       <div class="direction-filter">
@@ -109,39 +110,53 @@ const closeSidebar = () => {
             <td :class="{ 'low-lessons': student.lessonsLeft <= 5 }">
               {{ t('students_page.lessons_remaining') }}: {{ student.lessonsLeft }} {{ student.lessonsLeft <= 5 ? t('students_page.lesson_singular') : t('students_page.lesson_plural') }}
             </td>
-            <td class="progress-td">
+            <td class="progress-direction">
               <span class="direction-tag" :class="`direction-${student.direction}`">
                 {{ t(`homework.directions.abbreviations.${student.direction}`) }}
               </span>
+            </td>
+            <td class="progress-td">
               <button class="progress-button" @click="openSidebar(student)">
-                <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M2 8H14M8 2V14" stroke="#333" stroke-width="1.5" stroke-linecap="round"/>
-                </svg>
                 {{ t('students_page.progress') }}
+                <div class="external-link-icon"></div>
               </button>
             </td>
           </tr>
           </tbody>
         </table>
       </div>
-      <div v-if="sidebarOpen" class="sidebar" :class="{ 'sidebar-open': sidebarOpen }">
-        <div class="sidebar-content">
-          <button class="close-sidebar" @click="closeSidebar">
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M2 2L14 14M14 2L2 14" stroke="#333" stroke-width="1.5" stroke-linecap="round"/>
-            </svg>
-          </button>
-          <h2>{{ selectedStudent?.name }}</h2>
-          <p>{{ t('students_page.direction') }}: {{ t(`homework.directions.${selectedStudent?.direction}`) }}</p>
-          <p>{{ t('students_page.lessons_remaining') }}: {{ selectedStudent?.lessonsLeft }}</p>
-          <p>{{ t('students_page.progress') }}: {{ selectedStudent?.progress?.completed }} / {{ selectedStudent?.progress?.total }} ({{ ((selectedStudent?.progress?.completed || 0) / (selectedStudent?.progress?.total || 1) * 100).toFixed(0) }}%)</p>
-        </div>
+    </div>
+  </div>
+    <div v-if="sidebarOpen" class="sidebar" :class="{ 'sidebar-open': sidebarOpen }">
+      <div class="sidebar-content">
+        <button class="close-sidebar" @click="closeSidebar">
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M2 2L14 14M14 2L2 14" stroke="#333" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+        </button>
+        <h2>{{ selectedStudent?.name }}</h2>
+        <p>{{ t('students_page.direction') }}: {{ t(`homework.directions.${selectedStudent?.direction}`) }}</p>
+        <p>{{ t('students_page.lessons_remaining') }}: {{ selectedStudent?.lessonsLeft }}</p>
+        <p>{{ t('students_page.progress') }}: {{ selectedStudent?.progress?.completed }} / {{ selectedStudent?.progress?.total }} ({{ ((selectedStudent?.progress?.completed || 0) / (selectedStudent?.progress?.total || 1) * 100).toFixed(0) }}%)</p>
       </div>
     </div>
   </div>
 </template>
 
 <style scoped lang="scss">
+$color-speed-reading: #247CFF26;
+$color-mental-arithmetic: #FF84C526;
+$color-ukrainian-language: #F7DC0126;
+$color-speech-therapy: #f4e0b2;
+$color-mathematics: #FF84C526;
+$color-it-gelios-start: #ddeaf6;
+$color-multiplication-division: #b5f89b;
+$color-school-preparation: #d5b1f4;
+
+.students-page-wrapper {
+  position: relative;
+}
+
 .students-page {
   padding: 52px;
   background-color: #FFFFFF;
@@ -242,59 +257,78 @@ th, td {
 
 .direction-tag {
   display: inline-block;
-  border-radius: 12px;
-  padding: 4px 8px;
+  border-radius: 29px;
+  padding: 5px 9px;
   margin-right: 0;
-  font-size: 'Arial', sans-serif;
   font-weight: bold;
+  font-size: 16px;
   color: #fff;
 }
 
 .direction-speed_reading {
-  background: #3498f6;
+  background: $color-speed-reading;
+  color: #1875FF;
 }
 
 .direction-mental_arithmetic {
-  background: #ff6873;
+  background: $color-mental-arithmetic;
+  color: #FF54AE;
 }
 
 .direction-ukrainian_language {
-  background: #34d058;
+  background: $color-ukrainian-language;
+  color: #DE7600;
 }
 
 .direction-speech_therapy {
-  background: #f4e0b2;
+  background: $color-speech-therapy;
+  color: #DE7600;
 }
 
 .direction-mathematics {
-  background: #3464f5;
+  background: $color-mathematics;
+  color: #FF54AE;
 }
 
 .direction-it_gelios_start {
-  background: #ff68c0;
+  background: $color-it-gelios-start;
+  color: #007bff;
 }
 
 .direction-multiplication_division {
-  background: #68d034;
+  background: $color-multiplication-division;
+  color: #4e754e;
 }
 
 .direction-school_preparation {
-  background: #b068f5;
+  background: $color-school-preparation;
+  color: purple;
 }
 
 .progress-button {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
+  justify-content: center;
   gap: 8px;
-  background: #E3ECF5;
   border: none;
   border-radius: 12px;
   padding: 8px 16px;
   font-family: 'Onest', sans-serif;
-  font-size: 14px;
-  color: #333;
+  color: #0066FF;
   cursor: pointer;
   transition: background 0.2s;
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 24px;
+  letter-spacing: 0%;
+}
+
+.external-link-icon {
+  background-image: url("@/assets/images/icons/external-link.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  width: 20px;
+  height: 20px;
 }
 
 .progress-button:hover {
