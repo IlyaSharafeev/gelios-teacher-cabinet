@@ -41,10 +41,10 @@ const filteredStudents = computed(() => {
     <div class="header">
       <h1>Мої учні</h1>
       <div class="direction-filter">
-<!--        <LanguageSelect-->
-<!--            v-model="selectedDirection"-->
-<!--            :modelValue="selectedDirection"-->
-<!--        />-->
+        <!--        <LanguageSelect-->
+        <!--            v-model="selectedDirection"-->
+        <!--            :modelValue="selectedDirection"-->
+        <!--        />-->
       </div>
     </div>
     <div class="search-container">
@@ -134,7 +134,7 @@ table {
 }
 
 th, td {
-  padding: 13px 20px;
+  padding: 20px; /* Increased padding to create 20px vertical spacing */
   text-align: left;
   font-family: 'Onest', sans-serif;
   font-size: 16px;
@@ -142,9 +142,9 @@ th, td {
 }
 
 th {
-  font-weight: 600
+  font-weight: 600;
   border-bottom: 1px solid #ddd;
-}s
+}
 
 .low-lessons {
   color: #FF0000;
