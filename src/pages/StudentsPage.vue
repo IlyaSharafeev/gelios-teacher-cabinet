@@ -122,16 +122,20 @@ const closeSidebar = () => {
       </div>
     </div>
     <div v-if="sidebarOpen" class="sidebar" :class="{ 'sidebar-open': sidebarOpen }">
-      <div class="sidebar-content">
+      <div class="sidebar-content-header">
         <button class="close-sidebar" @click="closeSidebar">
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M2 2L14 14M14 2L2 14" stroke="#333" stroke-width="1.5" stroke-linecap="round"/>
           </svg>
         </button>
-        <h2>{{ selectedStudent?.name }}</h2>
-        <p>{{ t('students_page.direction') }}: {{ t(`homework.directions.${selectedStudent?.direction}`) }}</p>
-        <p>{{ t('students_page.lessons_remaining') }}: {{ selectedStudent?.lessonsLeft }}</p>
-        <p>{{ t('students_page.progress') }}: {{ selectedStudent?.progress?.completed }} / {{ selectedStudent?.progress?.total }} ({{ ((selectedStudent?.progress?.completed || 0) / (selectedStudent?.progress?.total || 1) * 100).toFixed(0) }}%)</p>
+        <div class="student-name">{{ selectedStudent?.name }}</div>
+<!--        <h2>{{ selectedStudent?.name }}</h2>-->
+<!--        <p>{{ t('students_page.direction') }}: {{ t(`homework.directions.${selectedStudent?.direction}`) }}</p>-->
+<!--        <p>{{ t('students_page.lessons_remaining') }}: {{ selectedStudent?.lessonsLeft }}</p>-->
+<!--        <p>{{ t('students_page.progress') }}: {{ selectedStudent?.progress?.completed }} / {{ selectedStudent?.progress?.total }} ({{ ((selectedStudent?.progress?.completed || 0) / (selectedStudent?.progress?.total || 1) * 100).toFixed(0) }}%)</p>-->
+      </div>
+      <div class="sidebar-content-body">
+        <div class="direction">{{ t(`homework.directions.${selectedStudent?.direction}`) }}</div>
       </div>
     </div>
   </div>
@@ -330,10 +334,11 @@ th, td {
 }
 
 .sidebar {
+  padding: 32px;
   position: absolute;
   top: 0;
   right: 0;
-  width: 300px;
+  width: 552px;
   height: 100%;
   background: #FFFFFF;
   box-shadow: -4px 0 12px rgba(0, 0,0, 0.1);
@@ -346,10 +351,12 @@ th, td {
   transform: translateX(0);
 }
 
-.sidebar-content {
-  padding: 32px;
+.sidebar-content-header {
   font-family: 'Onest', sans-serif;
   color: #333;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
 }
 
 .sidebar-content h2 {
@@ -364,12 +371,20 @@ th, td {
 
 .close-sidebar {
   position: absolute;
-  top: 16px;
-  right: 16px;
+  top: 32px;
+  right: 32px;
   background: none;
   border: none;
   cursor: pointer;
   padding: 8px;
+}
+
+.student-name {
+  font-family: Onest;
+  font-weight: 500;
+  font-size: 32px;
+  line-height: 24px;
+  letter-spacing: -2%;
 }
 
 .homework__filter-select ::v-deep .v-field.v-field {
