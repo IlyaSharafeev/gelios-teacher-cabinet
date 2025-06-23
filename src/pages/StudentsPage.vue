@@ -193,4 +193,9 @@ th {
   font-weight: 500;
   color: #333;
 }
+
+.homework__filter-select ::v-deep .v-field.v-field {
+  border: 1.5px solid #30303D26 !important;
+  border-radius: 12px;
+}
 </style>
