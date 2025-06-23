@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import {ref, computed} from 'vue';
-// import LanguageSelect from './LanguageSelect.vue'; // Assuming LanguageSelect.vue is in the same directory
 
-// Mock data for students and directions
 const students = [
   {id: 1, name: 'Олег Петренко', lessonsLeft: 32, directions: ['Математика', 'Фізика']},
   {id: 2, name: 'Марія Іваненко', lessonsLeft: 5, directions: ['Хімія']},
@@ -41,10 +39,7 @@ const filteredStudents = computed(() => {
     <div class="header">
       <h1>Мої учні</h1>
       <div class="direction-filter">
-        <!--        <LanguageSelect-->
-        <!--            v-model="selectedDirection"-->
-        <!--            :modelValue="selectedDirection"-->
-        <!--        />-->
+
       </div>
     </div>
     <div class="search-container">
