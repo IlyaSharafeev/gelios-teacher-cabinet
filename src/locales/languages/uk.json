@@ -133,5 +133,10 @@
   "login.validation.password": "Пароль має бути не менше 6 символів",
   "login.validation.confirm_password": "Паролі не збігаються",
   "login.validation.form_error": "Будь ласка, перевірте введені дані",
-  "login.validation.password_reset_error": "Помилка при скиданні пароля"
+  "login.validation.password_reset_error": "Помилка при скиданні пароля",
+  "students_page.title": "Мої учні",
+  "students_page.search_placeholder": "Шукати учня",
+  "students_page.lessons_remaining": "Залишилось",
+  "students_page.lesson_plural": "уроки",
+  "students_page.lesson_singular": "уроків"
 }

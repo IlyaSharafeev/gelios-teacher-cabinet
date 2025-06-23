@@ -127,5 +127,10 @@
   "login.validation.password": "Пароль должен быть не менее 6 символов",
   "login.validation.confirm_password": "Пароли не совпадают",
   "login.validation.form_error": "Пожалуйста, проверьте введенные данные",
-  "login.validation.password_reset_error": "Ошибка при сбросе пароля"
+  "login.validation.password_reset_error": "Ошибка при сбросе пароля",
+  "students_page.title": "Мои ученики",
+  "students_page.search_placeholder": "Искать ученика",
+  "students_page.lessons_remaining": "Осталось",
+  "students_page.lesson_plural": "уроки",
+  "students_page.lesson_singular": "уроков"
 }

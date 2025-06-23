@@ -45,7 +45,7 @@ const filteredStudents = computed(() => {
 <template>
   <div class="students-page">
     <div class="header">
-      <h1>Мої учні</h1>
+      <h1>{{ t('students_page.title') }}</h1>
       <div class="direction-filter">
         <v-select
             v-model="selectedDirection"
@@ -67,7 +67,7 @@ const filteredStudents = computed(() => {
       <input
           v-model="searchQuery"
           type="text"
-          placeholder="Шукати учня"
+          :placeholder="t('students_page.search_placeholder')"
           class="search-input"
       />
     </div>
@@ -77,7 +77,7 @@ const filteredStudents = computed(() => {
         <tr v-for="student in filteredStudents" :key="student.id">
           <td>{{ student.name }}</td>
           <td :class="{ 'low-lessons': student.lessonsLeft <= 5 }">
-            Залишилось: {{ student.lessonsLeft }} {{ student.lessonsLeft <= 5 ? 'уроків' : 'уроки' }}
+            {{ t('students_page.lessons_remaining') }}: {{ student.lessonsLeft }} {{ student.lessonsLeft <= 5 ? t('students_page.lesson_singular') : t('students_page.lesson_plural') }}
           </td>
           <td>
               <span
