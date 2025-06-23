@@ -22,16 +22,24 @@ interface Student {
 const students: Student[] = [
   { id: 1, name: 'Олег Петренко', lessonsLeft: 32, direction: 'speed_reading', progress: { completed: 20, total: 50 } },
   { id: 2, name: 'Марія Іваненко', lessonsLeft: 5, direction: 'mental_arithmetic', progress: { completed: 45, total: 50 } },
-  { id: 3, name: 'Іван Коваленко', lessonsLeft: 3, direction: 'it', progress: { completed: 10, total: 50 } },
-  { id: 4, name: 'Анна Сидоренко', lessonsLeft: 15, direction: 'speed_reading', progress: { completed: 30, total: 50 } },
-  { id: 5, name: 'Павло Шевченко', lessonsLeft: 2, direction: 'mental_arithmetic', progress: { completed: 5, total: 50 } },
+  { id: 3, name: 'Іван Коваленко', lessonsLeft: 3, direction: 'ukrainian_language', progress: { completed: 10, total: 50 } },
+  { id: 4, name: 'Анна Сидоренко', lessonsLeft: 15, direction: 'speech_therapy', progress: { completed: 30, total: 50 } },
+  { id: 5, name: 'Павло Шевченко', lessonsLeft: 2, direction: 'mathematics', progress: { completed: 5, total: 50 } },
+  { id: 6, name: 'Софія Гриценко', lessonsLeft: 10, direction: 'it_gelios_start', progress: { completed: 15, total: 50 } },
+  { id: 7, name: 'Дмитро Лисенко', lessonsLeft: 8, direction: 'multiplication_division', progress: { completed: 25, total: 50 } },
+  { id: 8, name: 'Олена Бондаренко', lessonsLeft: 12, direction: 'school_preparation', progress: { completed: 35, total: 50 } },
 ];
 
 const directions: Direction[] = [
   { id: 1, name_key: 'all', abbreviation: 'ВСІ' },
   { id: 2, name_key: 'speed_reading', abbreviation: 'ШЧ' },
   { id: 3, name_key: 'mental_arithmetic', abbreviation: 'МА' },
-  { id: 4, name_key: 'it', abbreviation: 'IT' },
+  { id: 4, name_key: 'ukrainian_language', abbreviation: 'УМ' },
+  { id: 5, name_key: 'speech_therapy', abbreviation: 'ЛОГ' },
+  { id: 6, name_key: 'mathematics', abbreviation: 'МАТ' },
+  { id: 7, name_key: 'it_gelios_start', abbreviation: 'ITG' },
+  { id: 8, name_key: 'multiplication_division', abbreviation: 'МД' },
+  { id: 9, name_key: 'school_preparation', abbreviation: 'ПШ' },
 ];
 
 const { t } = useI18n();
@@ -102,7 +110,7 @@ const closeSidebar = () => {
               {{ t('students_page.lessons_remaining') }}: {{ student.lessonsLeft }} {{ student.lessonsLeft <= 5 ? t('students_page.lesson_singular') : t('students_page.lesson_plural') }}
             </td>
             <td>
-              <span class="direction-tag">
+              <span class="direction-tag" :class="`direction-${student.direction}`">
                 {{ t(`homework.directions.${student.direction}`) }}
               </span>
             </td>
@@ -236,7 +244,6 @@ th {
 
 .direction-tag {
   display: inline-block;
-  background: #E3ECF5;
   border-radius: 12px;
   padding: 4px 12px;
   margin-right: 8px;
@@ -244,6 +251,38 @@ th {
   font-size: 14px;
   font-weight: 500;
   color: #333;
+}
+
+.direction-speed_reading {
+  background: #E3ECF5;
+}
+
+.direction-mental_arithmetic {
+  background: #F5E3E3;
+}
+
+.direction-ukrainian_language {
+  background: #E3F5E8;
+}
+
+.direction-speech_therapy {
+  background: #F5F0E3;
+}
+
+.direction-mathematics {
+  background: #E3E8F5;
+}
+
+.direction-it_gelios_start {
+  background: #F5E3F0;
+}
+
+.direction-multiplication_division {
+  background: #E8F5E3;
+}
+
+.direction-school_preparation {
+  background: #F0E3F5;
 }
 
 .progress-button {

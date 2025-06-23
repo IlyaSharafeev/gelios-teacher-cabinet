@@ -49,7 +49,12 @@
   "homework.directions.all": "All Directions",
   "homework.directions.speed_reading": "Speed Reading",
   "homework.directions.mental_arithmetic": "Mental Arithmetic",
-  "homework.directions.it": "IT",
+  "homework.directions.ukrainian_language": "Ukrainian Language",
+  "homework.directions.speech_therapy": "Speech Therapy",
+  "homework.directions.mathematics": "Mathematics",
+  "homework.directions.it_gelios_start": "IT Gelios Start",
+  "homework.directions.multiplication_division": "Multiplication and Division",
+  "homework.directions.school_preparation": "School Preparation",
   "homework.students.all": "All Students",
   "add_homework.tabs.homework": "Homework",
   "add_homework.tabs.certificate": "Certificate",
@@ -132,5 +137,7 @@
   "students_page.search_placeholder": "Search for a student",
   "students_page.lessons_remaining": "Remaining",
   "students_page.lesson_plural": "lessons",
-  "students_page.lesson_singular": "lesson"
+  "students_page.lesson_singular": "lesson",
+  "students_page.progress": "Progress",
+  "students_page.direction": "Direction"
 }

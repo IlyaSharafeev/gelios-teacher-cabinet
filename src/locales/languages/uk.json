@@ -138,5 +138,13 @@
   "students_page.search_placeholder": "Шукати учня",
   "students_page.lessons_remaining": "Залишилось",
   "students_page.lesson_plural": "уроки",
-  "students_page.lesson_singular": "уроків"
+  "students_page.lesson_singular": "уроків",
+  "homework.directions.ukrainian_language": "Українська мова",
+  "homework.directions.speech_therapy": "Логопедія",
+  "homework.directions.mathematics": "Математика",
+  "homework.directions.it_gelios_start": "IT Gelios Start",
+  "homework.directions.multiplication_division": "Множення та ділення",
+  "homework.directions.school_preparation": "Підготовка до школи",
+  "students_page.progress": "Прогрес",
+  "students_page.direction": "Напрямок"
 }
