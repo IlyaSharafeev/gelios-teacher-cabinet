@@ -2,23 +2,20 @@
 import { ref, computed } from 'vue';
 import { useI18n } from 'vue-i18n';
 
-// Define Direction interface
 interface Direction {
   id: number;
   name_key: string;
   abbreviation: string;
 }
 
-// Define Student interface
 interface Student {
   id: number;
   name: string;
   lessonsLeft: number;
   direction: string;
-  progress?: { completed: number; total: number }; // Optional progress data
+  progress?: { completed: number; total: number };
 }
 
-// Mock data for students and directions
 const students: Student[] = [
   { id: 1, name: 'Олег Петренко', lessonsLeft: 32, direction: 'speed_reading', progress: { completed: 20, total: 50 } },
   { id: 2, name: 'Марія Іваненко', lessonsLeft: 5, direction: 'mental_arithmetic', progress: { completed: 45, total: 50 } },
@@ -44,11 +41,8 @@ const directions: Direction[] = [
 
 const { t } = useI18n();
 
-// Initialize selectedDirection to the value 'all'
 const selectedDirection = ref('all');
-
 const searchQuery = ref('');
-
 const selectedStudent = ref<Student | null>(null);
 const sidebarOpen = ref(false);
 
@@ -74,59 +68,59 @@ const closeSidebar = () => {
 <template>
   <div class="students-page-wrapper">
     <div class="students-page">
-    <div class="header">
-      <h1>{{ t('students_page.title') }}</h1>
-      <div class="direction-filter">
-        <v-select
-            v-model="selectedDirection"
-            :items="directions.map((d) => ({ title: t(`homework.directions.${d.name_key}`), value: d.name_key === 'all' ? 'all' : d.name_key }))"
-            class="homework__filter-select"
-            variant="plain"
-        >
-        </v-select>
+      <div class="content-wrapper" :class="{ 'sidebar-open': sidebarOpen }">
+        <div class="header">
+          <h1>{{ t('students_page.title') }}</h1>
+          <div class="direction-filter">
+            <v-select
+                v-model="selectedDirection"
+                :items="directions.map((d) => ({ title: t(`homework.directions.${d.name_key}`), value: d.name_key === 'all' ? 'all' : d.name_key }))"
+                class="homework__filter-select"
+                variant="plain"
+            >
+            </v-select>
+          </div>
+        </div>
+        <div class="search-container">
+          <span class="selector__search-icon">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path
+                  d="M17.5 17.5L14.5834 14.5833M16.6667 9.58333C16.6667 13.4954 13.4954 16.6667 9.58333 16.6667C5.67132 16.6667 2.5 13.4954 2.5 9.58333C2.5 5.67132 5.67132 2.5 9.58333 2.5C13.4954 2.5 16.6667 5.67132 16.6667 9.58333Z"
+                  stroke="#30303D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </span>
+          <input
+              v-model="searchQuery"
+              type="text"
+              :placeholder="t('students_page.search_placeholder')"
+              class="search-input"
+          />
+        </div>
+        <div class="table-container">
+          <table>
+            <tbody>
+            <tr v-for="student in filteredStudents" :key="student.id">
+              <td>{{ student.name }}</td>
+              <td :class="{ 'low-lessons': student.lessonsLeft <= 5 }">
+                {{ t('students_page.lessons_remaining') }}: {{ student.lessonsLeft }} {{ student.lessonsLeft <= 5 ? t('students_page.lesson_singular') : t('students_page.lesson_plural') }}
+              </td>
+              <td class="progress-direction">
+                <span class="direction-tag" :class="`direction-${student.direction}`">
+                  {{ t(`homework.directions.abbreviations.${student.direction}`) }}
+                </span>
+              </td>
+              <td class="progress-td">
+                <button class="progress-button" @click="openSidebar(student)">
+                  {{ t('students_page.progress') }}
+                  <div class="external-link-icon"></div>
+                </button>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
-    <div class="search-container">
-      <span class="selector__search-icon">
-        <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path
-              d="M17.5 17.5L14.5834 14.5833M16.6667 9.58333C16.6667 13.4954 13.4954 16.6667 9.58333 16.6667C5.67132 16.6667 2.5 13.4954 2.5 9.58333C2.5 5.67132 5.67132 2.5 9.58333 2.5C13.4954 2.5 16.6667 5.67132 16.6667 9.58333Z"
-              stroke="#30303D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-      </span>
-      <input
-          v-model="searchQuery"
-          type="text"
-          :placeholder="t('students_page.search_placeholder')"
-          class="search-input"
-      />
-    </div>
-    <div class="content-wrapper" :class="{ 'sidebar-open': sidebarOpen }">
-      <div class="table-container">
-        <table>
-          <tbody>
-          <tr v-for="student in filteredStudents" :key="student.id">
-            <td>{{ student.name }}</td>
-            <td :class="{ 'low-lessons': student.lessonsLeft <= 5 }">
-              {{ t('students_page.lessons_remaining') }}: {{ student.lessonsLeft }} {{ student.lessonsLeft <= 5 ? t('students_page.lesson_singular') : t('students_page.lesson_plural') }}
-            </td>
-            <td class="progress-direction">
-              <span class="direction-tag" :class="`direction-${student.direction}`">
-                {{ t(`homework.directions.abbreviations.${student.direction}`) }}
-              </span>
-            </td>
-            <td class="progress-td">
-              <button class="progress-button" @click="openSidebar(student)">
-                {{ t('students_page.progress') }}
-                <div class="external-link-icon"></div>
-              </button>
-            </td>
-          </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
     <div v-if="sidebarOpen" class="sidebar" :class="{ 'sidebar-open': sidebarOpen }">
       <div class="sidebar-content">
         <button class="close-sidebar" @click="closeSidebar">
@@ -229,7 +223,7 @@ h1 {
   transition: width 0.3s ease;
 }
 
-.sidebar-open .table-container {
+.content-wrapper.sidebar-open {
   width: calc(100% - 300px);
 }
 
