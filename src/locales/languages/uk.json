@@ -30,7 +30,6 @@
   "general": "Загальні",
   "password": "Пароль",
   "logout": "Вийти",
-
   "dashboard.greeting": "Добридень",
   "dashboard.statistics.title": "Статистика",
   "dashboard.statistics.students_count": "Кількість учнів",
@@ -39,7 +38,6 @@
   "dashboard.homework.title": "Домашні завдання",
   "dashboard.upcoming_classes.title": "Найближчі заняття",
   "dashboard.view_all": "Дивитися всі",
-
   "homework.title": "Домашня робота",
   "homework.filters.not_completed": "Не виконані",
   "homework.filters.completed": "Виконані",
@@ -52,13 +50,26 @@
   "homework.directions.speed_reading": "Швидкочитання",
   "homework.directions.mental_arithmetic": "Ментальна арифметика",
   "homework.directions.it": "IT",
+  "homework.directions.ukrainian_language": "Українська мова",
+  "homework.directions.speech_therapy": "Логопедія",
+  "homework.directions.mathematics": "Математика",
+  "homework.directions.it_gelios_start": "IT Gelios Start",
+  "homework.directions.multiplication_division": "Множення та ділення",
+  "homework.directions.school_preparation": "Підготовка до школи",
+  "homework.directions.abbreviations.all": "ВСІ",
+  "homework.directions.abbreviations.speed_reading": "ШЧ",
+  "homework.directions.abbreviations.mental_arithmetic": "МА",
+  "homework.directions.abbreviations.ukrainian_language": "УМ",
+  "homework.directions.abbreviations.speech_therapy": "ЛОГ",
+  "homework.directions.abbreviations.mathematics": "МАТ",
+  "homework.directions.abbreviations.it_gelios_start": "ITG",
+  "homework.directions.abbreviations.multiplication_division": "МД",
+  "homework.directions.abbreviations.school_preparation": "ПШ",
   "homework.students.all": "Всі учні",
-
   "add_homework.tabs.homework": "Домашнє завдання",
   "add_homework.tabs.certificate": "Сертифікат",
   "add_homework.dialog.title": "Ви дійсно хочете відкрити іншу вкладку?",
   "add_homework.dialog.description": "Ваші дії на поточній не збережуться",
-
   "register.welcome.title": "Вітаємо вас на платформі школи!",
   "register.welcome.description": "Тут чекають цікаві відкриття, захоплюючі навчальні матеріали та можливість розвиватися разом з нами.",
   "register.welcome.second_description": "Готові до пригод? Рушаймо разом!",
@@ -83,7 +94,6 @@
   "register.validation.password": "Пароль має бути не менше 6 символів",
   "register.validation.confirm_password": "Паролі не збігаються",
   "register.validation.form_error": "Помилка валідації форми реєстрації",
-
   "change_password.form.title": "Змінити пароль",
   "change_password.form.old_password.label": "Старий пароль",
   "change_password.form.old_password.placeholder": "Старий пароль",
@@ -100,7 +110,6 @@
   "change_password.notifications.error.text": "Помилка при зміні пароля",
   "change_password.notifications.validation.title": "Помилка валідації форми",
   "change_password.notifications.validation.text": "Будь ласка, перевірте введені дані",
-
   "login.welcome.title": "Вітаємо в кабінеті вчителя!",
   "login.welcome.description": "Тут ви зможете легко керувати навчальним процесом: призначати домашні завдання, видавати сертифікати та стежити за прогресом учнів.",
   "login.welcome.second_description": "Разом ми відкриваємо нові горизонти освіти — рушаймо вперед!",
@@ -139,12 +148,6 @@
   "students_page.lessons_remaining": "Залишилось",
   "students_page.lesson_plural": "уроки",
   "students_page.lesson_singular": "уроків",
-  "homework.directions.ukrainian_language": "Українська мова",
-  "homework.directions.speech_therapy": "Логопедія",
-  "homework.directions.mathematics": "Математика",
-  "homework.directions.it_gelios_start": "IT Gelios Start",
-  "homework.directions.multiplication_division": "Множення та ділення",
-  "homework.directions.school_preparation": "Підготовка до школи",
   "students_page.progress": "Прогрес",
   "students_page.direction": "Напрямок"
 }

@@ -109,12 +109,10 @@ const closeSidebar = () => {
             <td :class="{ 'low-lessons': student.lessonsLeft <= 5 }">
               {{ t('students_page.lessons_remaining') }}: {{ student.lessonsLeft }} {{ student.lessonsLeft <= 5 ? t('students_page.lesson_singular') : t('students_page.lesson_plural') }}
             </td>
-            <td>
+            <td class="progress-td">
               <span class="direction-tag" :class="`direction-${student.direction}`">
-                {{ t(`homework.directions.${student.direction}`) }}
+                {{ t(`homework.directions.abbreviations.${student.direction}`) }}
               </span>
-            </td>
-            <td>
               <button class="progress-button" @click="openSidebar(student)">
                 <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
                   <path d="M2 8H14M8 2V14" stroke="#333" stroke-width="1.5" stroke-linecap="round"/>
@@ -233,9 +231,9 @@ th, td {
   color: #333;
 }
 
-th {
-  font-weight: 600;
-  border-bottom: 1px solid #ddd;
+.progress-td {
+  display: flex;
+  gap: 20px;
 }
 
 .low-lessons {
@@ -245,44 +243,43 @@ th {
 .direction-tag {
   display: inline-block;
   border-radius: 12px;
-  padding: 4px 12px;
-  margin-right: 8px;
-  margin-bottom: 4px;
-  font-size: 14px;
-  font-weight: 500;
-  color: #333;
+  padding: 4px 8px;
+  margin-right: 0;
+  font-size: 'Arial', sans-serif;
+  font-weight: bold;
+  color: #fff;
 }
 
 .direction-speed_reading {
-  background: #E3ECF5;
+  background: #3498f6;
 }
 
 .direction-mental_arithmetic {
-  background: #F5E3E3;
+  background: #ff6873;
 }
 
 .direction-ukrainian_language {
-  background: #E3F5E8;
+  background: #34d058;
 }
 
 .direction-speech_therapy {
-  background: #F5F0E3;
+  background: #f4e0b2;
 }
 
 .direction-mathematics {
-  background: #E3E8F5;
+  background: #3464f5;
 }
 
 .direction-it_gelios_start {
-  background: #F5E3F0;
+  background: #ff68c0;
 }
 
 .direction-multiplication_division {
-  background: #E8F5E3;
+  background: #68d034;
 }
 
 .direction-school_preparation {
-  background: #F0E3F5;
+  background: #b068f5;
 }
 
 .progress-button {
@@ -311,7 +308,7 @@ th {
   width: 300px;
   height: 100%;
   background: #FFFFFF;
-  box-shadow: -4px 0 12px rgba(0, 0, 0, 0.1);
+  box-shadow: -4px 0 12px rgba(0, 0,0, 0.1);
   transform: translateX(100%);
   transition: transform 0.3s ease;
   z-index: 1000;
