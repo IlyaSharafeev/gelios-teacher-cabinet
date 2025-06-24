@@ -449,7 +449,7 @@ th, td {
   width: 552px;
   background: #f7fafd;
   border-radius: 20px;
-  padding: 28px 18px 24px 18px;
+  padding: 32px;
   font-family: 'Inter', sans-serif;
   position: absolute;
   top: 0;
@@ -474,9 +474,14 @@ th, td {
 }
 
 .dashboard__name {
-  font-size: 24px;
+  font-size: 32px;
   font-weight: 500;
-  margin-bottom: 18px;
+  margin-bottom: 44px;
+  font-family: Onest;
+  font-weight: 500;
+  font-size: 32px;
+  line-height: 24px;
+  letter-spacing: -2%;
 }
 
 .dashboard__close-btn {
@@ -496,7 +501,7 @@ th, td {
 }
 
 .switch-btn {
-  padding: 7px 20px;
+  padding: 10px 57px;
   border-radius: 12px;
   border: none;
   background: #eaeef2;
@@ -516,20 +521,23 @@ th, td {
   display: flex;
   gap: 24px;
   background: #F2F2F2;
-  border-radius: 14px;
+  border-radius: 18px;
   padding: 20px 0;
-  margin-bottom: 24px;
+  margin-bottom: 36px;
   justify-content: space-around;
 }
 
-.stat {
-  text-align: center;
-}
+.stat {}
 
 .stat__num {
   font-size: 32px;
   font-weight: 500;
   margin-bottom: 2px;
+  font-family: Onest;
+  font-weight: 500;
+  font-size: 50px;
+  line-height: 100%;
+  letter-spacing: -2%;
 }
 
 .stat__num--blue {
@@ -541,6 +549,11 @@ th, td {
   color: #999;
   font-weight: 400;
   line-height: 1.2;
+  font-family: Onest;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 100%;
+  letter-spacing: 0%;
 }
 
 .dashboard__hw {}
@@ -670,9 +683,18 @@ th, td {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  font-family: "Onest" sans-serif;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 24px;
+  letter-spacing: 0%;
+  color: #30303D;
 }
 
 .skills__list {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
   width: 100%;
 }
 
@@ -702,8 +724,8 @@ th, td {
 
 .skill__bar-bg {
   width: 100%;
-  height: 10px;
-  border-radius: 6px;
+  height: 24px;
+  border-radius: 44px;
   background: #eaeef2;
   overflow: hidden;
   position: relative;
@@ -711,7 +733,7 @@ th, td {
 
 .skill__bar-fg {
   height: 100%;
-  border-radius: 6px;
+  border-radius: 44px;
 }
 
 .skill__value {
