@@ -144,7 +144,7 @@
   "login.validation.password_reset_error": "Error resetting password",
   "students_page.title": "My Students",
   "students_page.search_placeholder": "Search for a student",
-  "students_page.lessons_remaining": "Remaining",
+  "students_page.remaining": "remaining",
   "students_page.lesson_plural": "lessons",
   "students_page.lesson_singular": "lesson",
   "students_page.progress": "Progress",

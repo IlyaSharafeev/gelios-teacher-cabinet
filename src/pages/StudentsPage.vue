@@ -12,8 +12,8 @@ interface Student {
   id: number;
   name: string;
   lessonsLeft: number;
-  direction: string;
-  progress?: { completed: number; total: number };
+  directions: string[]; // Changed from direction to directions array
+  progress?: { [key: string]: { completed: number; total: number } }; // Progress per direction
 }
 
 interface Skill {
@@ -28,14 +28,86 @@ interface SkillsData {
 const { t } = useI18n();
 
 const students: Student[] = [
-  { id: 1, name: 'Олег Петренко', lessonsLeft: 32, direction: 'speed_reading', progress: { completed: 20, total: 50 } },
-  { id: 2, name: 'Марія Іваненко', lessonsLeft: 5, direction: 'mental_arithmetic', progress: { completed: 45, total: 50 } },
-  { id: 3, name: 'Іван Коваленко', lessonsLeft: 3, direction: 'ukrainian_language', progress: { completed: 10, total: 50 } },
-  { id: 4, name: 'Анна Сидоренко', lessonsLeft: 15, direction: 'speech_therapy', progress: { completed: 30, total: 50 } },
-  { id: 5, name: 'Павло Шевченко', lessonsLeft: 2, direction: 'mathematics', progress: { completed: 5, total: 50 } },
-  { id: 6, name: 'Софія Гриценко', lessonsLeft: 10, direction: 'it_gelios_start', progress: { completed: 15, total: 50 } },
-  { id: 7, name: 'Дмитро Лисенко', lessonsLeft: 8, direction: 'multiplication_division', progress: { completed: 25, total: 50 } },
-  { id: 8, name: 'Олена Бондаренко', lessonsLeft: 12, direction: 'school_preparation', progress: { completed: 35, total: 50 } },
+  {
+    id: 1,
+    name: 'Олег Петренко',
+    lessonsLeft: 32,
+    directions: ['speed_reading', 'mental_arithmetic'],
+    progress: {
+      speed_reading: { completed: 20, total: 50 },
+      mental_arithmetic: { completed: 15, total: 50 }
+    }
+  },
+  {
+    id: 2,
+    name: 'Марія Іваненко',
+    lessonsLeft: 5,
+    directions: ['mental_arithmetic', 'ukrainian_language'],
+    progress: {
+      mental_arithmetic: { completed: 45, total: 50 },
+      ukrainian_language: { completed: 10, total: 50 }
+    }
+  },
+  {
+    id: 3,
+    name: 'Іван Коваленко',
+    lessonsLeft: 3,
+    directions: ['ukrainian_language', 'mathematics'],
+    progress: {
+      ukrainian_language: { completed: 10, total: 50 },
+      mathematics: { completed: 5, total: 50 }
+    }
+  },
+  {
+    id: 4,
+    name: 'Анна Сидоренко',
+    lessonsLeft: 15,
+    directions: ['speech_therapy', 'school_preparation'],
+    progress: {
+      speech_therapy: { completed: 30, total: 50 },
+      school_preparation: { completed: 35, total: 50 }
+    }
+  },
+  {
+    id: 5,
+    name: 'Павло Шевченко',
+    lessonsLeft: 2,
+    directions: ['mathematics', 'multiplication_division'],
+    progress: {
+      mathematics: { completed: 5, total: 50 },
+      multiplication_division: { completed: 25, total: 50 }
+    }
+  },
+  {
+    id: 6,
+    name: 'Софія Гриценко',
+    lessonsLeft: 10,
+    directions: ['it_gelios_start', 'speed_reading'],
+    progress: {
+      it_gelios_start: { completed: 15, total: 50 },
+      speed_reading: { completed: 20, total: 50 }
+    }
+  },
+  {
+    id: 7,
+    name: 'Дмитро Лисенко',
+    lessonsLeft: 8,
+    directions: ['multiplication_division', 'mental_arithmetic'],
+    progress: {
+      multiplication_division: { completed: 25, total: 50 },
+      mental_arithmetic: { completed: 15, total: 50 }
+    }
+  },
+  {
+    id: 8,
+    name: 'Олена Бондаренко',
+    lessonsLeft: 12,
+    directions: ['school_preparation', 'speech_therapy'],
+    progress: {
+      school_preparation: { completed: 35, total: 50 },
+      speech_therapy: { completed: 30, total: 50 }
+    }
+  },
 ];
 
 const directions: Direction[] = [
@@ -106,14 +178,14 @@ const skillsData = ref<SkillsData>({
 const filteredStudents = computed(() => {
   return students.filter(student => {
     const matchesSearch = student.name.toLowerCase().includes(searchQuery.value.toLowerCase());
-    const matchesDirection = selectedDirection.value === 'all' || student.direction === selectedDirection.value;
+    const matchesDirection = selectedDirection.value === 'all' || student.directions.includes(selectedDirection.value);
     return matchesSearch && matchesDirection;
   });
 });
 
 const currentSkills = computed(() => {
   const direction = directions.find(d => d.abbreviation === activeTab.value)?.name_key
-      || selectedStudent.value?.direction
+      || selectedStudent.value?.directions[0]
       || 'speed_reading';
   return skillsData.value[direction];
 });
@@ -121,8 +193,10 @@ const currentSkills = computed(() => {
 const openSidebar = (student: Student, viaTag: boolean = false, tagAbbreviation: string | null = null) => {
   selectedStudent.value = student;
   sidebarOpen.value = true;
-  const direction = directions.find(d => d.name_key === student.direction);
-  activeTab.value = viaTag && tagAbbreviation ? tagAbbreviation : direction?.abbreviation || 'МА';
+  const direction = tagAbbreviation
+      ? directions.find(d => d.abbreviation === tagAbbreviation)?.name_key
+      : student.directions[0];
+  activeTab.value = directions.find(d => d.name_key === direction)?.abbreviation || 'МА';
 };
 
 const closeSidebar = () => {
@@ -170,10 +244,7 @@ const closeSidebar = () => {
                 <v-tooltip v-if="student.lessonsLeft <= 5" :text="`${student.lessonsLeft} ${student.lessonsLeft === 1 ? t('students_page.lesson_singular') : t('students_page.lesson_plural')} ${t('students_page.remaining')}`" location="top">
                   <template v-slot:activator="{ props }">
                     <span v-bind="props" class="info-icon">
-                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="8" cy="8" r="7" stroke="#30303D" stroke-width="1.5"/>
-                        <path d="M8 12V7M8 5V4" stroke="#30303D" stroke-width="1.5" stroke-linecap="round"/>
-                      </svg>
+                       <img src="@/assets/images/icons/streamline-ultimate_time-clock-fire-bold.svg" alt="time-clock-fire-bold">
                     </span>
                   </template>
                 </v-tooltip>
@@ -181,14 +252,14 @@ const closeSidebar = () => {
               </td>
               <td class="progress-direction">
                 <span
+                    v-for="dir in student.directions"
+                    :key="dir"
                     class="direction-tag"
-                    :class="`direction-${student.direction}`"
-                    @click="openSidebar(student, true, directions.find(d => d.name_key === student.direction)?.abbreviation)"
+                    :class="`direction-${dir}`"
+                    @click="openSidebar(student, true, directions.find(d => d.name_key === dir)?.abbreviation)"
                 >
-                  {{ directions.find(d => d.name_key === student.direction)?.abbreviation || '' }}
+                  {{ directions.find(d => d.name_key === dir)?.abbreviation || '' }}
                 </span>
-              </td>
-              <td class="progress-td">
                 <button class="progress-button" @click="openSidebar(student)">
                   {{ t('students_page.student_progress') }}
                   <div class="external-link-icon"></div>
@@ -212,7 +283,7 @@ const closeSidebar = () => {
           <div class="dashboard__name">{{ selectedStudent?.name || 'N/A' }}</div>
           <div class="dashboard__switcher">
             <button
-                v-for="dir in directions.filter(d => d.name_key !== 'all' && (d.name_key === selectedStudent?.direction || d.abbreviation === activeTab))"
+                v-for="dir in directions.filter(d => selectedStudent?.directions.includes(d.name_key))"
                 :key="dir.id"
                 :class="['switch-btn', { active: activeTab === dir.abbreviation }]"
                 @click="activeTab = dir.abbreviation"
@@ -224,11 +295,11 @@ const closeSidebar = () => {
 
         <div class="dashboard__stats">
           <div class="stat">
-            <div class="stat__num">{{ selectedStudent?.progress?.completed || 0 }}</div>
+            <div class="stat__num">{{ selectedStudent?.progress?.[directions.find(d => d.abbreviation === activeTab)?.name_key || selectedStudent?.directions[0]]?.completed || 0 }}</div>
             <div class="stat__desc" v-html="t('students_page.lessons_completed')"></div>
           </div>
           <div class="stat">
-            <div class="stat__num">{{ selectedStudent?.progress?.total || 0 }}</div>
+            <div class="stat__num">{{ selectedStudent?.progress?.[directions.find(d => d.abbreviation === activeTab)?.name_key || selectedStudent?.directions[0]]?.total || 0 }}</div>
             <div class="stat__desc" v-html="t('students_page.homework_assignments')"></div>
           </div>
           <div class="stat">
@@ -241,13 +312,13 @@ const closeSidebar = () => {
           <div class="hw__title">{{ t('students_page.homework_title') }}</div>
           <div class="progress-bar">
             <div class="progress-bar__done"
-                 :style="{ width: selectedStudent?.progress?.total ? `${(selectedStudent.progress.completed / selectedStudent.progress.total) * 100}%` : '0%' }">
-              <span class="hw__done-num">{{ selectedStudent?.progress?.completed || 0 }}</span>
+                 :style="{ width: selectedStudent?.progress?.[directions.find(d => d.abbreviation === activeTab)?.name_key || selectedStudent?.directions[0]]?.total ? `${(selectedStudent.progress[directions.find(d => d.abbreviation === activeTab)?.name_key || selectedStudent.directions[0]].completed / selectedStudent.progress[directions.find(d => d.abbreviation === activeTab)?.name_key || selectedStudent.directions[0]].total) * 100}%` : '0%' }">
+              <span class="hw__done-num">{{ selectedStudent?.progress?.[directions.find(d => d.abbreviation === activeTab)?.name_key || selectedStudent?.directions[0]]?.completed || 0 }}</span>
             </div>
             <div class="progress-bar__fail"
-                 :style="{ width: selectedStudent?.progress?.total ? `${((selectedStudent.progress.total - selectedStudent.progress.completed) / selectedStudent.progress.total) * 100}%` : '0%' }">
+                 :style="{ width: selectedStudent?.progress?.[directions.find(d => d.abbreviation === activeTab)?.name_key || selectedStudent?.directions[0]]?.total ? `${((selectedStudent.progress[directions.find(d => d.abbreviation === activeTab)?.name_key || selectedStudent.directions[0]].total - selectedStudent.progress[directions.find(d => d.abbreviation === activeTab)?.name_key || selectedStudent.directions[0]].completed) / selectedStudent.progress[directions.find(d => d.abbreviation === activeTab)?.name_key || selectedStudent.directions[0]].total) * 100}%` : '0%' }">
               <span class="hw__fail-num">{{
-                  selectedStudent?.progress?.total ? selectedStudent.progress.total - selectedStudent.progress.completed : 0
+                  selectedStudent?.progress?.[directions.find(d => d.abbreviation === activeTab)?.name_key || selectedStudent?.directions[0]]?.total ? selectedStudent.progress[directions.find(d => d.abbreviation === activeTab)?.name_key || selectedStudent.directions[0]].total - selectedStudent.progress[directions.find(d => d.abbreviation === activeTab)?.name_key || selectedStudent.directions[0]].completed : 0
                 }}</span>
             </div>
           </div>
@@ -398,6 +469,12 @@ th, td {
   gap: 8px;
 }
 
+tr {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
 .info-icon {
   cursor: pointer;
   display: inline-flex;
@@ -414,6 +491,13 @@ th, td {
   background: #e0e0e0;
 }
 
+.progress-direction {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  justify-content: flex-end;
+}
+
 .progress-td {
   display: flex;
   gap: 20px;
@@ -421,7 +505,9 @@ th, td {
 }
 
 .direction-tag {
-  display: inline-block;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   border-radius: 29px;
   padding: 5px 9px;
   font-weight: bold;
@@ -429,6 +515,8 @@ th, td {
   color: #fff;
   cursor: pointer;
   transition: opacity 0.2s;
+  width: 54px;
+  height: 34px;
 }
 
 .direction-tag:hover {

@@ -109,7 +109,7 @@
   "change_password.form.error.text": "Ошибка при смене пароля",
   "students_page.title": "Мои ученики",
   "students_page.search_placeholder": "Искать ученика",
-  "students_page.lessons_remaining": "Остаток",
+  "students_page.remaining": "осталось",
   "students_page.lesson_progress": "Прогресс",
   "students_page.student_progress": "Прогресс ученика",
   "students_page.direction": "Направление",

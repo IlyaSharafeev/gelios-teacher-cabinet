@@ -145,7 +145,7 @@
   "login.validation.password_reset_error": "Помилка при скиданні пароля",
   "students_page.title": "Мої учні",
   "students_page.search_placeholder": "Шукати учня",
-  "students_page.lessons_remaining": "Залишилось",
+  "students_page.remaining": "залишилось",
   "students_page.lesson_plural": "уроків",
   "students_page.lesson_singular": "уроки",
   "students_page.progress": "Прогрес",
