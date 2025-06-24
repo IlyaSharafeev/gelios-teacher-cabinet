@@ -4,6 +4,7 @@ import StudentSelector from './StudentSelector.vue';
 import SelectedStudentsCertification from './SelectedStudentsCertification.vue';
 import SelectedLevelCertification from './SelectedLevelCertification.vue';
 import SelectedDirection from './SelectedDirection.vue';
+import LanguageSelector from './LanguageSelector.vue';
 
 // Import images for levels
 import junior from '@/assets/backgrounds/certificate-level/junior.png';
@@ -12,7 +13,7 @@ import advanced from '@/assets/backgrounds/certificate-level/advanced.png';
 import polymath from '@/assets/backgrounds/certificate-level/polymath.png';
 import pro from '@/assets/backgrounds/certificate-level/pro.png';
 import full from '@/assets/backgrounds/certificate-level/full.png';
-// Import success image (placeholder path; update as needed)
+// Import success image
 import successImage from '@/assets/backgrounds/certification/success.png';
 
 // Define directions
@@ -69,7 +70,13 @@ const levels = [
   { id: 6, name: 'Повний курс', image: full },
 ];
 
-// Define students
+// Define languages
+const languages = [
+  { id: 'uk', name: 'Українська' },
+  { id: 'en', name: 'English' },
+];
+
+// Define students with corrected IDs and names
 const students = [
   { id: 1, name: 'Олег Петренко' },
   { id: 2, name: 'Марія Іваненко' },
@@ -95,12 +102,11 @@ const students = [
   { id: 22, name: 'Ірина Власенко' },
   { id: 23, name: 'Богдан Марчук' },
   { id: 24, name: 'Оксана Левченко' },
-  { id: 24, name: 'Оксана Левченко' },
   { id: 25, name: 'Андрій Дорошенко' },
   { id: 26, name: 'Людмила Савчук' },
   { id: 27, name: 'Володимир Гнатюк' },
   { id: 28, name: 'Єлизавета Соколова' },
-  { id: 29, name: 'Денис Білоус' },
+  { id: 29, name: 'Денис Bілоус' },
   { id: 30, name: 'Світлана Кравець' },
   { id: 31, name: 'Ярослав Олійник' },
   { id: 32, name: 'Христина Підлісецька' },
@@ -117,37 +123,42 @@ const students = [
   { id: 43, name: 'Ангеліна Романів' },
   { id: 44, name: 'Святослав Кушнір' },
   { id: 45, name: 'Марта Лозинська' },
-  { id: 46, name: 'Віталій' }, // Duplicate ID with student id 25, removed to avoid issues
-  { id: 46, name: 'Віталій Семенюк' }, // Duplicate ID with student id 25, removed to avoid issues
-  { id: 47, name: 'Олеся Турчин' }, // Typo in name, corrected below
-  { id: 47, name: 'Ростислав' }, // Likely meant to be id 48, corrected below
-  { id: 49, name: 'Соломія Данилюк' }, // Typo in name, corrected below
-  { id: 'Юрій' }, // Invalid id type (string), corrected below
+  { id: 46, name: 'Віталій Семенюк' },
+  { id: 47, name: 'Олеся Турчин' },
+  { id: 48, name: 'Ростислав Зварич' },
+  { id: 49, name: 'Соломія Данилюк' },
+  { id: 50, name: 'Юрій Остапчук' },
 ];
-
 
 // Step navigation
 const currentStep = reactive({ value: 1 });
 const steps = [
-  { id: 1, name: 'Вибір напрямку, рівня та учнів' },
+  { id: 1, name: 'Вибір напрямку, рівня, мови та учнів' },
   { id: 2, name: 'Ваш вибір' },
   { id: 3, name: 'Сертифікати додані' },
 ];
 
 const selectedDirection = reactive({ value: null as number | null });
 const selectedLevel = reactive({ value: [] as number[] });
+const selectedLanguage = reactive({ value: null as string | null });
 const selectedStudents = reactive({ value: [] as number[] });
 
 const emit = defineEmits(['has-unsaved-changes']);
 
 const isFormValid = computed(() => {
-  return selectedDirection.value !== null && selectedLevel.value.length > 0 && selectedStudents.value.length > 0;
+  return (
+      selectedDirection.value !== null &&
+      selectedLevel.value.length > 0 &&
+      selectedLanguage.value !== null &&
+      selectedStudents.value.length > 0
+  );
 });
 
 const hasUnsavedChanges = computed(() => {
   return (
       selectedDirection.value !== null ||
       selectedLevel.value.length > 0 ||
+      selectedLanguage.value !== null ||
       selectedStudents.value.length > 0
   );
 });
@@ -157,19 +168,22 @@ watch(hasUnsavedChanges, (value) => {
 });
 
 const nextStep = () => {
-  console.log('Selected Levels before moving to step 2:', selectedLevel.value); // Debug log
+  console.log('Selected Levels before moving to step 2:', selectedLevel.value);
+  console.log('Selected Language before moving to step 2:', selectedLanguage.value);
   if (isFormValid.value && currentStep.value < steps.length - 1) {
     currentStep.value++;
     console.log('Proceeding to next step:', {
       step: currentStep.value,
       direction: selectedDirection.value,
       level: selectedLevel.value,
+      language: selectedLanguage.value,
       students: selectedStudents.value,
     });
   } else {
     console.log('Form is invalid:', {
       direction: selectedDirection.value,
       level: selectedLevel.value,
+      language: selectedLanguage.value,
       students: selectedStudents.value,
     });
   }
@@ -184,14 +198,15 @@ const prevStep = () => {
 const resetForm = () => {
   selectedDirection.value = null;
   selectedLevel.value = [];
+  selectedLanguage.value = null;
   selectedStudents.value = [];
-  // currentStep.value = 1;
 };
 
 const addCertificates = () => {
   console.log('Form state:', {
     direction: selectedDirection.value,
     level: selectedLevel.value,
+    language: selectedLanguage.value,
     students: selectedStudents.value,
   });
   if (isFormValid.value) {
@@ -199,9 +214,10 @@ const addCertificates = () => {
     console.log('Certificates added:', {
       direction: selectedDirection.value,
       level: selectedLevel.value,
+      language: selectedLanguage.value,
       students: selectedStudents.value,
     });
-    setTimeout(resetForm, 2000); // Задержка перед сбросом формы
+    setTimeout(resetForm, 2000);
   } else {
     console.log('Form is invalid');
   }
@@ -234,6 +250,7 @@ const addCertificates = () => {
           no-items-text="Напрямків не знайдено"
           :single-select="true"
           :is-visible-search="false"
+          :show-checkbox="false"
       />
       <StudentSelector
           :items="levels"
@@ -252,13 +269,23 @@ const addCertificates = () => {
           no-items-text="Учнів не знайдено"
           select-all-text="Вибрати всіх"
       />
+      <LanguageSelector
+          :items="languages"
+          v-model="selectedLanguage.value"
+          title="Мова"
+          no-items-text="Мови не знайдено"
+      />
     </div>
 
     <div v-if="currentStep.value === 2" class="certificate-form__content step-confirmation">
       <div class="confirmation-step">
         <SelectedDirection :directions="directions" v-model="selectedDirection.value" />
-        <SelectedStudentsCertification :students="students" v-model="selectedStudents.value" />
+        <div class="confirmation-item">
+          <strong>Мова сертифіката</strong>
+          <span>{{ languages.find(l => l.id === selectedLanguage.value)?.name || 'Мова не вибрана' }}</span>
+        </div>
         <SelectedLevelCertification :levels="levels" v-model="selectedLevel.value" />
+        <SelectedStudentsCertification :students="students" v-model="selectedStudents.value" />
       </div>
     </div>
 
