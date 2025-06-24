@@ -483,7 +483,6 @@ tr {
   width: 24px;
   height: 24px;
   border-radius: 50%;
-  background: #f0f0f0;
   transition: background 0.2s;
 }
 
