@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue';
-import { useI18n } from 'vue-i18n';
+import {ref, computed} from 'vue';
+import {useI18n} from 'vue-i18n';
 
 interface Direction {
   id: number;
@@ -16,29 +16,51 @@ interface Student {
   progress?: { completed: number; total: number };
 }
 
-const { t } = useI18n();
+const {t} = useI18n();
 
 const students: Student[] = [
-  { id: 1, name: 'Олег Петренко', lessonsLeft: 32, direction: 'speed_reading', progress: { completed: 20, total: 50 } },
-  { id: 2, name: 'Марія Іваненко', lessonsLeft: 5, direction: 'mental_arithmetic', progress: { completed: 45, total: 50 } },
-  { id: 3, name: 'Іван Коваленко', lessonsLeft: 3, direction: 'ukrainian_language', progress: { completed: 10, total: 50 } },
-  { id: 4, name: 'Анна Сидоренко', lessonsLeft: 15, direction: 'speech_therapy', progress: { completed: 30, total: 50 } },
-  { id: 5, name: 'Павло Шевченко', lessonsLeft: 2, direction: 'mathematics', progress: { completed: 5, total: 50 } },
-  { id: 6, name: 'Софія Гриценко', lessonsLeft: 10, direction: 'it_gelios_start', progress: { completed: 15, total: 50 } },
-  { id: 7, name: 'Дмитро Лисенко', lessonsLeft: 8, direction: 'multiplication_division', progress: { completed: 25, total: 50 } },
-  { id: 8, name: 'Олена Бондаренко', lessonsLeft: 12, direction: 'school_preparation', progress: { completed: 35, total: 50 } },
+  {id: 1, name: 'Олег Петренко', lessonsLeft: 32, direction: 'speed_reading', progress: {completed: 20, total: 50}},
+  {id: 2, name: 'Марія Іваненко', lessonsLeft: 5, direction: 'mental_arithmetic', progress: {completed: 45, total: 50}},
+  {
+    id: 3,
+    name: 'Іван Коваленко',
+    lessonsLeft: 3,
+    direction: 'ukrainian_language',
+    progress: {completed: 10, total: 50}
+  },
+  {id: 4, name: 'Анна Сидоренко', lessonsLeft: 15, direction: 'speech_therapy', progress: {completed: 30, total: 50}},
+  {id: 5, name: 'Павло Шевченко', lessonsLeft: 2, direction: 'mathematics', progress: {completed: 5, total: 50}},
+  {id: 6, name: 'Софія Гриценко', lessonsLeft: 10, direction: 'it_gelios_start', progress: {completed: 15, total: 50}},
+  {
+    id: 7,
+    name: 'Дмитро Лисенко',
+    lessonsLeft: 8,
+    direction: 'multiplication_division',
+    progress: {completed: 25, total: 50}
+  },
+  {
+    id: 8,
+    name: 'Олена Бондаренко',
+    lessonsLeft: 12,
+    direction: 'school_preparation',
+    progress: {completed: 35, total: 50}
+  },
 ];
 
 const directions: Direction[] = [
-  { id: 1, name_key: 'all', abbreviation: t('homework.directions.abbreviations.all') },
-  { id: 2, name_key: 'speed_reading', abbreviation: t('homework.directions.abbreviations.speed_reading') },
-  { id: 3, name_key: 'mental_arithmetic', abbreviation: t('homework.directions.abbreviations.mental_arithmetic') },
-  { id: 4, name_key: 'ukrainian_language', abbreviation: t('homework.directions.abbreviations.ukrainian_language') },
-  { id: 5, name_key: 'speech_therapy', abbreviation: t('homework.directions.abbreviations.speech_therapy') },
-  { id: 6, name_key: 'mathematics', abbreviation: t('homework.directions.abbreviations.mathematics') },
-  { id: 7, name_key: 'it_gelios_start', abbreviation: t('homework.directions.abbreviations.it_gelios_start') },
-  { id: 8, name_key: 'multiplication_division', abbreviation: t('homework.directions.abbreviations.multiplication_division') },
-  { id: 9, name_key: 'school_preparation', abbreviation: t('homework.directions.abbreviations.school_preparation') },
+  {id: 1, name_key: 'all', abbreviation: t('homework.directions.abbreviations.all')},
+  {id: 2, name_key: 'speed_reading', abbreviation: t('homework.directions.abbreviations.speed_reading')},
+  {id: 3, name_key: 'mental_arithmetic', abbreviation: t('homework.directions.abbreviations.mental_arithmetic')},
+  {id: 4, name_key: 'ukrainian_language', abbreviation: t('homework.directions.abbreviations.ukrainian_language')},
+  {id: 5, name_key: 'speech_therapy', abbreviation: t('homework.directions.abbreviations.speech_therapy')},
+  {id: 6, name_key: 'mathematics', abbreviation: t('homework.directions.abbreviations.mathematics')},
+  {id: 7, name_key: 'it_gelios_start', abbreviation: t('homework.directions.abbreviations.it_gelios_start')},
+  {
+    id: 8,
+    name_key: 'multiplication_division',
+    abbreviation: t('homework.directions.abbreviations.multiplication_division')
+  },
+  {id: 9, name_key: 'school_preparation', abbreviation: t('homework.directions.abbreviations.school_preparation')},
 ];
 
 const selectedDirection = ref('all');
@@ -49,12 +71,12 @@ const activeTab = ref('МА');
 
 // Mock skills data
 const skills = ref([
-  { name: 'Кіберкішка', value: 32 },
-  { name: 'Флеш карти', value: 10 },
-  { name: 'Знайди пару', value: 6 },
-  { name: 'Splitz', value: -12 },
-  { name: 'Таблиця Шульте', value: 15 },
-  { name: 'Тексти', value: -16 },
+  {name: 'Кіберкішка', value: 32},
+  {name: 'Флеш карти', value: 10},
+  {name: 'Знайди пару', value: 6},
+  {name: 'Splitz', value: -12},
+  {name: 'Таблиця Шульте', value: 15},
+  {name: 'Тексти', value: -16},
 ]);
 
 const filteredStudents = computed(() => {
@@ -154,7 +176,9 @@ const closeSidebar = () => {
                 @click="activeTab = directions.find(d => d.name_key === selectedStudent?.direction)?.abbreviation || 'МА'">
               {{ directions.find(d => d.name_key === selectedStudent?.direction)?.abbreviation || 'МА' }}
             </button>
-            <button :class="['switch-btn', { active: activeTab === t('homework.directions.abbreviations.speed_reading') }]" @click="activeTab = t('homework.directions.abbreviations.speed_reading')">
+            <button
+                :class="['switch-btn', { active: activeTab === t('homework.directions.abbreviations.speed_reading') }]"
+                @click="activeTab = t('homework.directions.abbreviations.speed_reading')">
               {{ t('homework.directions.abbreviations.speed_reading') }}
             </button>
           </div>
@@ -179,17 +203,25 @@ const closeSidebar = () => {
           <div class="hw__title">{{ t('students_page.homework_title') }}</div>
           <div class="progress-bar">
             <div class="progress-bar__done"
-                 :style="{ width: selectedStudent?.progress ? `${(selectedStudent.progress.completed / selectedStudent.progress.total) * 100}%` : '0%' }"></div>
+                 :style="{ width: selectedStudent?.progress ? `${(selectedStudent.progress.completed / selectedStudent.progress.total) * 100}%` : '0%' }">
+              <span class="hw__done-num">{{ selectedStudent?.progress?.completed || 0 }}</span>
+            </div>
             <div class="progress-bar__fail"
-                 :style="{ width: selectedStudent?.progress ? `${((selectedStudent.progress.total - selectedStudent.progress.completed) / selectedStudent.progress.total) * 100}%` : '0%' }"></div>
+                 :style="{ width: selectedStudent?.progress ? `${((selectedStudent.progress.total - selectedStudent.progress.completed) / selectedStudent.progress.total) * 100}%` : '0%' }">
+              <span class="hw__fail-num">{{
+                  selectedStudent?.progress ? selectedStudent.progress.total - selectedStudent.progress.completed : 0
+                }}</span>
+            </div>
           </div>
           <div class="hw__legend">
-            <span class="hw__dot hw__dot--done"></span> {{ t('students_page.completed') }}
-            <span class="hw__dot hw__dot--fail"></span> {{ t('students_page.not_completed') }}
+            <div class="hw__dot-container">
+              <span class="hw__dot hw__dot--done"></span> <span class="hw__dot-text">{{ t('students_page.completed') }}</span>
+            </div>
+            <div class="hw__dot-container">
+              <span class="hw__dot hw__dot--fail"></span> <span class="hw__dot-text">{{ t('students_page.not_completed') }}</span>
+            </div>
           </div>
           <div class="hw__stats">
-            <span class="hw__done-num">{{ selectedStudent?.progress?.completed || 0 }}</span>
-            <span class="hw__fail-num">{{ selectedStudent?.progress ? selectedStudent.progress.total - selectedStudent.progress.completed : 0 }}</span>
           </div>
         </div>
 
@@ -197,16 +229,18 @@ const closeSidebar = () => {
           <div class="skills__title">{{ t('students_page.skills_title') }}</div>
           <div class="skills__list">
             <div class="skill-row" v-for="skill in skills" :key="skill.name">
-              <div class="skill__name">{{ skill.name }}</div>
+              <div class="skill-text">
+                <div class="skill__name">{{ skill.name }}</div>
+                <div class="skill__value" :class="{ minus: skill.value < 0 }">
+                  {{ skill.value > 0 ? '+' : '' }}{{ skill.value }}%
+                </div>
+              </div>
               <div class="skill__progress">
                 <div class="skill__bar-bg">
                   <div
                       class="skill__bar-fg"
                       :style="{ width: Math.abs(skill.value) + '%', background: skill.value >= 0 ? '#2377FC' : '#FF5050' }"
                   ></div>
-                </div>
-                <div class="skill__value" :class="{ minus: skill.value < 0 }">
-                  {{ skill.value > 0 ? '+' : '' }}{{ skill.value }}%
                 </div>
               </div>
             </div>
@@ -481,7 +515,7 @@ th, td {
 .dashboard__stats {
   display: flex;
   gap: 24px;
-  background: #fff;
+  background: #F2F2F2;
   border-radius: 14px;
   padding: 20px 0;
   margin-bottom: 24px;
@@ -509,47 +543,88 @@ th, td {
   line-height: 1.2;
 }
 
-.dashboard__hw {
-  margin-bottom: 24px;
-}
+.dashboard__hw {}
 
 .hw__title {
   font-size: 18px;
   font-weight: 500;
-  margin-bottom: 7px;
+  margin-bottom: 20px;
+  font-family: Onest;
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 100%;
+  letter-spacing: 0%;
 }
 
 .progress-bar {
   width: 100%;
-  height: 18px;
+  height: 24px;
   border-radius: 9px;
-  background: #eaeef2;
   display: flex;
+  gap: 8px;
   overflow: hidden;
-  margin-bottom: 8px;
 }
 
 .progress-bar__done {
   background: #42c848;
   height: 100%;
+  border-radius: 44px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: Onest;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 12px;
+  letter-spacing: 0%;
+  text-align: center;
+  vertical-align: middle;
 }
 
 .progress-bar__fail {
   background: #ff5050;
   height: 100%;
+  border-radius: 44px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: Onest;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 12px;
+  letter-spacing: 0%;
+  text-align: center;
+  vertical-align: middle;
 }
 
 .hw__legend {
+  display: flex;
+  gap: 24px;
   font-size: 13px;
-  margin-bottom: 2px;
+  margin-top: 16px;
+}
+
+.hw__dot-container {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .hw__dot {
-  display: inline-block;
-  width: 10px;
-  height: 10px;
+  display: flex;
+  flex-direction: row;
+  width: 22px;
+  height: 22px;
   border-radius: 50%;
-  margin: 0 4px 0 12px;
+}
+
+.hw__dot-text {
+  font-family: Onest;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 24px;
+  letter-spacing: 0%;
+  color: #30303D;
 }
 
 .hw__dot--done {
@@ -569,21 +644,32 @@ th, td {
 }
 
 .hw__done-num {
-  color: #42c848;
+  color: #fff;
 }
 
 .hw__fail-num {
-  color: #ff5050;
+  color: #fff;
 }
 
 .dashboard__skills {
-  margin-top: 14px;
+  margin-top: 36px;
 }
 
 .skills__title {
   font-size: 18px;
   font-weight: 500;
-  margin-bottom: 8px;
+  margin-bottom: 20px;
+  font-family: Onest;
+  font-weight: 500;
+  font-size: 24px;
+  line-height: 100%;
+  letter-spacing: 0%;
+}
+
+.skill-text {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .skills__list {
@@ -592,7 +678,7 @@ th, td {
 
 .skill-row {
   display: flex;
-  align-items: center;
+  flex-direction: column;
   margin-bottom: 10px;
   gap: 12px;
 }
@@ -600,6 +686,11 @@ th, td {
 .skill__name {
   flex: 0 0 120px;
   font-size: 15px;
+  font-family: Onest;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 24px;
+  letter-spacing: 0%;
 }
 
 .skill__progress {
@@ -610,7 +701,7 @@ th, td {
 }
 
 .skill__bar-bg {
-  width: 80px;
+  width: 100%;
   height: 10px;
   border-radius: 6px;
   background: #eaeef2;
