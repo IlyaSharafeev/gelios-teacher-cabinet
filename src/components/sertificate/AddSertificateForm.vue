@@ -190,10 +190,8 @@ watch(
     (newLanguage) => {
       console.log('Language changed to:', newLanguage);
       if (newLanguage === 'en') {
-        // Replace levels with English versions
         levels.splice(0, levels.length, ...englishLevels);
       } else {
-        // Revert to Ukrainian versions
         levels.splice(0, levels.length, ...baseLevels);
       }
       console.log('Updated levels:', JSON.stringify(levels, null, 2));
@@ -240,22 +238,109 @@ const resetForm = () => {
   selectedStudents.value = [];
 };
 
-const addCertificates = () => {
+// Function to generate and download certificates
+const generateCertificate = async (
+    studentName: string,
+    levelId: number,
+    levelName: string
+): Promise<void> => {
+  return new Promise((resolve, reject) => {
+    const level = levels.find((l) => l.id === levelId);
+    if (!level) {
+      console.error('Level not found for ID:', levelId);
+      reject(new Error('Level not found'));
+      return;
+    }
+
+    const img = new Image();
+    img.crossOrigin = 'anonymous'; // Handle cross-origin issues if needed
+    img.src = level.image;
+
+    img.onload = () => {
+      const canvas = document.createElement('canvas');
+      canvas.width = img.width; // Use actual image dimensions
+      canvas.height = img.height;
+      const ctx = canvas.getContext('2d');
+
+      if (!ctx) {
+        console.error('Failed to get canvas context');
+        reject(new Error('Failed to get canvas context'));
+        return;
+      }
+
+      // Draw the certificate image
+      ctx.drawImage(img, 0, 0);
+
+      // Set text styles
+      ctx.font = 'bold 40px Onest, sans-serif';
+      ctx.fillStyle = '#000000';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+
+      // Draw student name (adjust coordinates as needed)
+      const x = canvas.width / 2;
+      const y = canvas.height / 2; // Center vertically, adjust as needed
+      ctx.fillText(studentName, x, y);
+
+      // Generate file name
+      const fileName = `Certificate_${studentName}_${levelName}.png`;
+
+      // Convert canvas to data URL and trigger download
+      const dataUrl = canvas.toDataURL('image/png');
+      const link = document.createElement('a');
+      link.href = dataUrl;
+      link.download = fileName;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      resolve();
+    };
+
+    img.onerror = () => {
+      console.error('Failed to load image:', level.image);
+      reject(new Error('Failed to load image'));
+    };
+  });
+};
+
+const addCertificates = async () => {
   console.log('Form state:', {
     direction: selectedDirection.value,
     level: selectedLevel.value,
     language: selectedLanguage.value,
     students: selectedStudents.value,
   });
+
   if (isFormValid.value) {
-    currentStep.value = 3;
-    console.log('Certificates added:', {
-      direction: selectedDirection.value,
-      level: selectedLevel.value,
-      language: selectedLanguage.value,
-      students: selectedStudents.value,
-    });
-    setTimeout(resetForm, 2000);
+    try {
+      // Generate certificates for each student and each selected level
+      for (const studentId of selectedStudents.value) {
+        const student = students.find((s) => s.id === studentId);
+        if (!student) continue;
+
+        for (const levelId of selectedLevel.value) {
+          const level = levels.find((l) => l.id === levelId);
+          if (!level) continue;
+
+          await generateCertificate(student.name, levelId, level.name);
+        }
+      }
+
+      // Proceed to success step
+      currentStep.value = 3;
+      console.log('Certificates added:', {
+        direction: selectedDirection.value,
+        level: selectedLevel.value,
+        language: selectedLanguage.value,
+        students: selectedStudents.value,
+      });
+
+      // Reset form after a delay
+      setTimeout(resetForm, 2000);
+    } catch (error) {
+      console.error('Error generating certificates:', error);
+    }
   } else {
     console.log('Form is invalid');
   }
