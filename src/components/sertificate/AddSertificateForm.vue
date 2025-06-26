@@ -7,12 +7,20 @@ import SelectedDirection from './SelectedDirection.vue';
 import LanguageSelector from './LanguageSelector.vue';
 
 // Import images for levels
-import junior from '@/assets/backgrounds/certificate-level/junior.png';
-import base from '@/assets/backgrounds/certificate-level/base.png';
-import advanced from '@/assets/backgrounds/certificate-level/advanced.png';
-import polymath from '@/assets/backgrounds/certificate-level/polymath.png';
-import pro from '@/assets/backgrounds/certificate-level/pro.png';
-import full from '@/assets/backgrounds/certificate-level/full.png';
+import junior from '@/assets/backgrounds/certificate-level-uk/junior.png';
+import base from '@/assets/backgrounds/certificate-level-uk/base.png';
+import advanced from '@/assets/backgrounds/certificate-level-uk/advanced.png';
+import polymath from '@/assets/backgrounds/certificate-level-uk/polymath.png';
+import pro from '@/assets/backgrounds/certificate-level-uk/pro.png';
+import full from '@/assets/backgrounds/certificate-level-uk/full.png';
+
+import juniorEn from '@/assets/backgrounds/certificate-level-en/junior.png';
+import baseEn from '@/assets/backgrounds/certificate-level-en/base.png';
+import advancedEn from '@/assets/backgrounds/certificate-level-en/advanced.png';
+import polymathEn from '@/assets/backgrounds/certificate-level-en/polymath.png';
+import proEn from '@/assets/backgrounds/certificate-level-en/pro.png';
+import fullEn from '@/assets/backgrounds/certificate-level-en/full.png';
+
 // Import success image
 import successImage from '@/assets/backgrounds/certification/success.png';
 
@@ -60,8 +68,8 @@ const directions = [
   { id: 40, name: 'Кінематографія' },
 ];
 
-// Define levels with images
-const levels = [
+// Define base levels with Ukrainian images and names
+const baseLevels = [
   { id: 1, name: 'Джуніор', image: junior },
   { id: 2, name: 'Основний', image: base },
   { id: 3, name: 'Просунутий', image: advanced },
@@ -70,13 +78,26 @@ const levels = [
   { id: 6, name: 'Повний курс', image: full },
 ];
 
+// Define English levels with English images and names
+const englishLevels = [
+  { id: 1, name: 'Junior', image: juniorEn },
+  { id: 2, name: 'Basic', image: baseEn },
+  { id: 3, name: 'Advanced', image: advancedEn },
+  { id: 4, name: 'Polymath', image: polymathEn },
+  { id: 5, name: 'Pro', image: proEn },
+  { id: 6, name: 'Full Course', image: fullEn },
+];
+
+// Reactive levels array
+const levels = reactive([...baseLevels]);
+
 // Define languages
 const languages = [
   { id: 'uk', name: 'Українська' },
   { id: 'en', name: 'English' },
 ];
 
-// Define students with corrected IDs and names
+// Define students
 const students = [
   { id: 1, name: 'Олег Петренко' },
   { id: 2, name: 'Марія Іваненко' },
@@ -162,6 +183,23 @@ const hasUnsavedChanges = computed(() => {
       selectedStudents.value.length > 0
   );
 });
+
+// Watch for language changes and update levels accordingly
+watch(
+    () => selectedLanguage.value,
+    (newLanguage) => {
+      console.log('Language changed to:', newLanguage);
+      if (newLanguage === 'en') {
+        // Replace levels with English versions
+        levels.splice(0, levels.length, ...englishLevels);
+      } else {
+        // Revert to Ukrainian versions
+        levels.splice(0, levels.length, ...baseLevels);
+      }
+      console.log('Updated levels:', JSON.stringify(levels, null, 2));
+    },
+    { immediate: true }
+);
 
 watch(hasUnsavedChanges, (value) => {
   emit('has-unsaved-changes', value);
