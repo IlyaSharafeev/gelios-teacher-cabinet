@@ -5,6 +5,7 @@ import SelectedStudentsCertification from './SelectedStudentsCertification.vue';
 import SelectedLevelCertification from './SelectedLevelCertification.vue';
 import SelectedDirection from './SelectedDirection.vue';
 import LanguageSelector from './LanguageSelector.vue';
+import { jsPDF } from 'jspdf';
 
 // Import images for levels
 import junior from '@/assets/backgrounds/certificate-level-uk/junior.png';
@@ -21,80 +22,96 @@ import polymathEn from '@/assets/backgrounds/certificate-level-en/polymath.png';
 import proEn from '@/assets/backgrounds/certificate-level-en/pro.png';
 import fullEn from '@/assets/backgrounds/certificate-level-en/full.png';
 
-// Import success image
 import successImage from '@/assets/backgrounds/certification/success.png';
 
-// Define directions
+// Import custom font (adjust the path and filename as needed)
+import customFont from '@/assets/fonts/MarckScript-Regular.ttf';
+
+// Define directions with their specific levels
 const directions = [
-  { id: 1, name: 'Математика' },
-  { id: 2, name: 'Фізика' },
-  { id: 3, name: 'Хімія' },
-  { id: 4, name: 'Біологія' },
-  { id: 5, name: 'Географія' },
-  { id: 6, name: 'Історія' },
-  { id: 7, name: 'Література' },
-  { id: 8, name: 'Англійська мова' },
-  { id: 9, name: 'Українська мова' },
-  { id: 10, name: 'Інформатика' },
-  { id: 11, name: 'Програмування' },
-  { id: 12, name: 'Економіка' },
-  { id: 13, name: 'Філософія' },
-  { id: 14, name: 'Право' },
-  { id: 15, name: 'Соціологія' },
-  { id: 16, name: 'Психологія' },
-  { id: 17, name: 'Мистецтво' },
-  { id: 18, name: 'Музика' },
-  { id: 19, name: 'Фізична культура' },
-  { id: 20, name: 'Хореографія' },
-  { id: 21, name: 'Французька мова' },
-  { id: 22, name: 'Німецька мова' },
-  { id: 23, name: 'Іспанська мова' },
-  { id: 24, name: 'Астрономія' },
-  { id: 25, name: 'Екологія' },
-  { id: 26, name: 'Логіка' },
-  { id: 27, name: 'Етика' },
-  { id: 28, name: 'Культурологія' },
-  { id: 29, name: 'Журналістика' },
-  { id: 30, name: 'Дизайн' },
-  { id: 31, name: 'Архітектура' },
-  { id: 32, name: 'Медицина' },
-  { id: 33, name: 'Маркетинг' },
-  { id: 34, name: 'Фотографія' },
-  { id: 35, name: 'Театральне мистецтво' },
-  { id: 36, name: 'Китайська мова' },
-  { id: 37, name: 'Фінанси' },
-  { id: 38, name: 'Геологія' },
-  { id: 39, name: 'Робототехніка' },
-  { id: 40, name: 'Кінематографія' },
+  { id: 1, name: 'Логопедія', levels: [{ id: 1, name: 'Основний', image: base }] },
+  {
+    id: 2,
+    name: 'Ментальна арифметика',
+    levels: [
+      { id: 1, name: 'Рівень 1', image: junior },
+      { id: 2, name: 'Рівень 2', image: base },
+      { id: 3, name: 'Рівень 3', image: advanced },
+      { id: 4, name: 'Рівень 4', image: polymath },
+      { id: 5, name: 'Рівень 5', image: pro }
+    ]
+  },
+  { id: 3, name: 'Множення і ділення', levels: [{ id: 1, name: 'Основний', image: base }] },
+  { id: 4, name: 'Підготовка до школи', levels: [{ id: 1, name: 'Основний', image: base }] },
+  {
+    id: 5,
+    name: 'Швидкочитання',
+    levels: [
+      { id: 1, name: 'Рівень 1', image: junior },
+      { id: 2, name: 'Рівень 2', image: base },
+      { id: 3, name: 'Рівень 3', image: advanced },
+      { id: 4, name: 'Рівень 4', image: polymath },
+      { id: 5, name: 'Рівень 5', image: pro },
+      { id: 6, name: 'Рівень 6', image: full },
+      { id: 7, name: 'Рівень 7', image: junior },
+      { id: 8, name: 'Рівень 8', image: base },
+      { id: 9, name: 'Рівень 9', image: advanced },
+      { id: 10, name: 'Рівень 10', image: polymath },
+      { id: 11, name: 'Рівень 11', image: pro },
+      { id: 12, name: 'Рівень 12', image: full },
+      { id: 13, name: 'Рівень 13', image: junior },
+      { id: 14, name: 'Рівень 14', image: base }
+    ]
+  },
+  { id: 6, name: 'IT Gelios Start', levels: [{ id: 1, name: 'Основний', image: base }] }
 ];
 
-// Define base levels with Ukrainian images and names
-const baseLevels = [
-  { id: 1, name: 'Джуніор', image: junior },
-  { id: 2, name: 'Основний', image: base },
-  { id: 3, name: 'Просунутий', image: advanced },
-  { id: 4, name: 'Ерудит', image: polymath },
-  { id: 5, name: 'Профі', image: pro },
-  { id: 6, name: 'Повний курс', image: full },
-];
-
-// Define English levels with English images and names
-const englishLevels = [
-  { id: 1, name: 'Junior', image: juniorEn },
-  { id: 2, name: 'Basic', image: baseEn },
-  { id: 3, name: 'Advanced', image: advancedEn },
-  { id: 4, name: 'Polymath', image: polymathEn },
-  { id: 5, name: 'Pro', image: proEn },
-  { id: 6, name: 'Full Course', image: fullEn },
+// Define English level names for each direction
+const englishDirectionLevels = [
+  { id: 1, name: 'Speech Therapy', levels: [{ id: 1, name: 'Basic', image: baseEn }] },
+  {
+    id: 2,
+    name: 'Mental Arithmetic',
+    levels: [
+      { id: 1, name: 'Level 1', image: juniorEn },
+      { id: 2, name: 'Level 2', image: baseEn },
+      { id: 3, name: 'Level 3', image: advancedEn },
+      { id: 4, name: 'Level 4', image: polymathEn },
+      { id: 5, name: 'Level 5', image: proEn }
+    ]
+  },
+  { id: 3, name: 'Multiplication and Division', levels: [{ id: 1, name: 'Basic', image: baseEn }] },
+  { id: 4, name: 'School Preparation', levels: [{ id: 1, name: 'Basic', image: baseEn }] },
+  {
+    id: 5,
+    name: 'Speed Reading',
+    levels: [
+      { id: 1, name: 'Level 1', image: juniorEn },
+      { id: 2, name: 'Level 2', image: baseEn },
+      { id: 3, name: 'Level 3', image: advancedEn },
+      { id: 4, name: 'Level 4', image: polymathEn },
+      { id: 5, name: 'Level 5', image: proEn },
+      { id: 6, name: 'Level 6', image: fullEn },
+      { id: 7, name: 'Level 7', image: juniorEn },
+      { id: 8, name: 'Level 8', image: baseEn },
+      { id: 9, name: 'Level 9', image: advancedEn },
+      { id: 10, name: 'Level 10', image: polymathEn },
+      { id: 11, name: 'Level 11', image: proEn },
+      { id: 12, name: 'Level 12', image: fullEn },
+      { id: 13, name: 'Level 13', image: juniorEn },
+      { id: 14, name: 'Level 14', image: baseEn }
+    ]
+  },
+  { id: 6, name: 'IT Gelios Start', levels: [{ id: 1, name: 'Basic', image: baseEn }] }
 ];
 
 // Reactive levels array
-const levels = reactive([...baseLevels]);
+const levels = reactive([] as { id: number; name: string; image: string }[]);
 
 // Define languages
 const languages = [
   { id: 'uk', name: 'Українська' },
-  { id: 'en', name: 'English' },
+  { id: 'en', name: 'English' }
 ];
 
 // Define students
@@ -148,7 +165,7 @@ const students = [
   { id: 47, name: 'Олеся Турчин' },
   { id: 48, name: 'Ростислав Зварич' },
   { id: 49, name: 'Соломія Данилюк' },
-  { id: 50, name: 'Юрій Остапчук' },
+  { id: 50, name: 'Юрій Остапчук' }
 ];
 
 // Step navigation
@@ -156,7 +173,7 @@ const currentStep = reactive({ value: 1 });
 const steps = [
   { id: 1, name: 'Вибір напрямку, рівня, мови та учнів' },
   { id: 2, name: 'Ваш вибір' },
-  { id: 3, name: 'Сертифікати додані' },
+  { id: 3, name: 'Сертифікати додані' }
 ];
 
 const selectedDirection = reactive({ value: null as number | null });
@@ -184,17 +201,24 @@ const hasUnsavedChanges = computed(() => {
   );
 });
 
-// Watch for language changes and update levels accordingly
+// Watch for direction and language changes to update levels
 watch(
-    () => selectedLanguage.value,
-    (newLanguage) => {
-      console.log('Language changed to:', newLanguage);
-      if (newLanguage === 'en') {
-        levels.splice(0, levels.length, ...englishLevels);
-      } else {
-        levels.splice(0, levels.length, ...baseLevels);
+    [() => selectedDirection.value, () => selectedLanguage.value],
+    ([newDirection, newLanguage]) => {
+      console.log('Direction changed to:', newDirection, 'Language changed to:', newLanguage);
+      levels.splice(0, levels.length); // Clear current levels
+      if (newDirection !== null) {
+        const source = newLanguage === 'en' ? englishDirectionLevels : directions;
+        const direction = source.find(d => d.id === newDirection);
+        if (direction) {
+          levels.push(...direction.levels);
+        }
       }
       console.log('Updated levels:', JSON.stringify(levels, null, 2));
+      // Reset selected levels if they are no longer valid
+      selectedLevel.value = selectedLevel.value.filter(levelId =>
+          levels.some(level => level.id === levelId)
+      );
     },
     { immediate: true }
 );
@@ -213,14 +237,14 @@ const nextStep = () => {
       direction: selectedDirection.value,
       level: selectedLevel.value,
       language: selectedLanguage.value,
-      students: selectedStudents.value,
+      students: selectedStudents.value
     });
   } else {
     console.log('Form is invalid:', {
       direction: selectedDirection.value,
       level: selectedLevel.value,
       language: selectedLanguage.value,
-      students: selectedStudents.value,
+      students: selectedStudents.value
     });
   }
 };
@@ -238,7 +262,7 @@ const resetForm = () => {
   selectedStudents.value = [];
 };
 
-// Function to generate and download certificates
+// Function to generate and download certificates as PDF
 const generateCertificate = async (
     studentName: string,
     levelId: number,
@@ -253,12 +277,12 @@ const generateCertificate = async (
     }
 
     const img = new Image();
-    img.crossOrigin = 'anonymous'; // Handle cross-origin issues if needed
+    img.crossOrigin = 'anonymous';
     img.src = level.image;
 
     img.onload = () => {
       const canvas = document.createElement('canvas');
-      canvas.width = img.width; // Use actual image dimensions
+      canvas.width = img.width;
       canvas.height = img.height;
       const ctx = canvas.getContext('2d');
 
@@ -271,30 +295,50 @@ const generateCertificate = async (
       // Draw the certificate image
       ctx.drawImage(img, 0, 0);
 
-      // Set text styles
-      ctx.font = 'italic bold 40px Onest, sans-serif';
-      ctx.fillStyle = '#800080'; // Purple color
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
+      // Load custom font for canvas
+      const font = new FontFace('CustomFont', `url(${customFont})`);
+      font.load().then((loadedFont) => {
+        document.fonts.add(loadedFont);
 
-      // Draw student name (shifted 200 pixels to the right)
-      const x = canvas.width / 2 + 160;
-      const y = canvas.height / 2; // Center vertically, adjust as needed
-      ctx.fillText(studentName, x, y);
+        // Set text styles with custom font
+        ctx.font = 'italic bold 40px CustomFont, sans-serif';
+        ctx.fillStyle = '#F90A85';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
 
-      // Generate file name
-      const fileName = `Certificate_${studentName}_${levelName}.png`;
+        // Draw student name
+        const x = canvas.width / 2 + 160;
+        const y = canvas.height / 2;
+        ctx.fillText(studentName, x, y);
 
-      // Convert canvas to data URL and trigger download
-      const dataUrl = canvas.toDataURL('image/png');
-      const link = document.createElement('a');
-      link.href = dataUrl;
-      link.download = fileName;
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
+        // Create PDF
+        const pdf = new jsPDF({
+          orientation: img.width > img.height ? 'landscape' : 'portrait',
+          unit: 'px',
+          format: [img.width, img.height]
+        });
 
-      resolve();
+        // Add custom font to jsPDF
+        pdf.addFont(customFont, 'CustomFont', 'normal');
+        pdf.setFont('CustomFont');
+
+        // Convert canvas to image data URL
+        const dataUrl = canvas.toDataURL('image/png');
+
+        // Add image to PDF
+        pdf.addImage(dataUrl, 'PNG', 0, 0, img.width, img.height);
+
+        // Generate file name
+        const fileName = `Certificate_${studentName}_${levelName}.pdf`;
+
+        // Trigger PDF download
+        pdf.save(fileName);
+
+        resolve();
+      }).catch((error) => {
+        console.error('Failed to load custom font:', error);
+        reject(new Error('Failed to load custom font'));
+      });
     };
 
     img.onerror = () => {
@@ -309,12 +353,11 @@ const addCertificates = async () => {
     direction: selectedDirection.value,
     level: selectedLevel.value,
     language: selectedLanguage.value,
-    students: selectedStudents.value,
+    students: selectedStudents.value
   });
 
   if (isFormValid.value) {
     try {
-      // Generate certificates for each student and each selected level
       for (const studentId of selectedStudents.value) {
         const student = students.find((s) => s.id === studentId);
         if (!student) continue;
@@ -327,16 +370,14 @@ const addCertificates = async () => {
         }
       }
 
-      // Proceed to success step
       currentStep.value = 3;
       console.log('Certificates added:', {
         direction: selectedDirection.value,
         level: selectedLevel.value,
         language: selectedLanguage.value,
-        students: selectedStudents.value,
+        students: selectedStudents.value
       });
 
-      // Reset form after a delay
       setTimeout(resetForm, 2000);
     } catch (error) {
       console.error('Error generating certificates:', error);
