@@ -6,18 +6,150 @@ import SelectedLevelCertification from './SelectedLevelCertification.vue';
 import SelectedDirection from './SelectedDirection.vue';
 import LanguageSelector from './LanguageSelector.vue';
 import { jsPDF } from 'jspdf';
+
 import itGeliosStartEn from "@/assets/backgrounds/certificate-level-en/IT Gelios Start.png";
+import SchooolPreparationEn from "@/assets/backgrounds/certificate-level-en/Підготовка до школи.png";
+import SpeechTherapyEn from "@/assets/backgrounds/certificate-level-en/Логопедія.png";
+import MentalArithmeticEn from "@/assets/backgrounds/certificate-level-en/Ментальна арифметика.png";
+import MentalArithmeticEn1 from "@/assets/backgrounds/certificate-level-en/Ментальна арифметика - 1.png";
+import MentalArithmeticEn2 from "@/assets/backgrounds/certificate-level-en/Ментальна арифметика - 2.png";
+import MentalArithmeticEn3 from "@/assets/backgrounds/certificate-level-en/Ментальна арифметика - 3.png";
+import MentalArithmeticEn4 from "@/assets/backgrounds/certificate-level-en/Ментальна арифметика - 4.png";
+import MultiplicationandDivisionEn from "@/assets/backgrounds/certificate-level-en/Множення і ділення.png";
+
+import SpeedReadingEn from "@/assets/backgrounds/certificate-level-en/Швидкочитання.png";
+import SpeedReadingEn1 from "@/assets/backgrounds/certificate-level-en/Швидкочитання - 1.png";
+import SpeedReadingEn2 from "@/assets/backgrounds/certificate-level-en/Швидкочитання - 2.png";
+import SpeedReadingEn3 from "@/assets/backgrounds/certificate-level-en/Швидкочитання - 3.png";
+import SpeedReadingEn4 from "@/assets/backgrounds/certificate-level-en/Швидкочитання - 4.png";
+import SpeedReadingEn5 from "@/assets/backgrounds/certificate-level-en/Швидкочитання - 5.png";
+import SpeedReadingEn6 from "@/assets/backgrounds/certificate-level-en/Швидкочитання - 6.png";
+
+import SpeedReadingSpeechTherapyEn1 from "@/assets/backgrounds/certificate-level-en/Швидкочитання+Логопедія - 1.png";
+import SpeedReadingSpeechTherapyEn2 from "@/assets/backgrounds/certificate-level-en/Швидкочитання+Логопедія - 2.png";
+import SpeedReadingSpeechTherapyEn3 from "@/assets/backgrounds/certificate-level-en/Швидкочитання+Логопедія - 3.png";
+import SpeedReadingSpeechTherapyEn4 from "@/assets/backgrounds/certificate-level-en/Швидкочитання+Логопедія - 4.png";
+import SpeedReadingSpeechTherapyEn5 from "@/assets/backgrounds/certificate-level-en/Швидкочитання+Логопедія - 5.png";
+import SpeedReadingSpeechTherapyEn6 from "@/assets/backgrounds/certificate-level-en/Швидкочитання+Логопедія - 6.png";
+import SpeedReadingSpeechTherapyEn from "@/assets/backgrounds/certificate-level-en/Швидкочитання+Логопедія.png";
+
+
+
 import itGeliosStartUk from "@/assets/backgrounds/certificate-level-uk/IT Gelios Start.png";
+import SchooolPreparationUk from "@/assets/backgrounds/certificate-level-uk/Підготовка до школи.png";
+import SpeechTherapyUk from "@/assets/backgrounds/certificate-level-uk/Логопедія.png";
+import MentalArithmeticUk from "@/assets/backgrounds/certificate-level-uk/Ментальна арифметика.png";
+import MentalArithmeticUk1 from "@/assets/backgrounds/certificate-level-uk/Ментальна арифметика - 1.png";
+import MentalArithmeticUk2 from "@/assets/backgrounds/certificate-level-uk/Ментальна арифметика - 2.png";
+import MentalArithmeticUk3 from "@/assets/backgrounds/certificate-level-uk/Ментальна арифметика - 3.png";
+import MentalArithmeticUk4 from "@/assets/backgrounds/certificate-level-uk/Ментальна арифметика - 4.png";
+import MultiplicationandDivisionUkr from "@/assets/backgrounds/certificate-level-uk/Множення і ділення.png";
+import SpeedReadingUk from "@/assets/backgrounds/certificate-level-uk/Швидкочитання.png";
+import SpeedReadingUk1 from "@/assets/backgrounds/certificate-level-uk/Швидкочитання - 1.png";
+import SpeedReadingUk2 from "@/assets/backgrounds/certificate-level-uk/Швидкочитання - 2.png";
+import SpeedReadingUk3 from "@/assets/backgrounds/certificate-level-uk/Швидкочитання - 3.png";
+import SpeedReadingUk4 from "@/assets/backgrounds/certificate-level-uk/Швидкочитання - 4.png";
+import SpeedReadingUk5 from "@/assets/backgrounds/certificate-level-uk/Швидкочитання - 5.png";
+import SpeedReadingUk6 from "@/assets/backgrounds/certificate-level-uk/Швидкочитання - 6.png";
+
+import SpeedReadingSpeechTherapyUk1 from "@/assets/backgrounds/certificate-level-uk/Швидкочитання+Логопедія - 1.png";
+import SpeedReadingSpeechTherapyUk2 from "@/assets/backgrounds/certificate-level-uk/Швидкочитання+Логопедія - 2.png";
+// import SpeedReadingSpeechTherapyUk3 from "@/assets/backgrounds/certificate-level-uk/Швидкочитання+Логопедія - 3.png";
+import SpeedReadingSpeechTherapyUk4 from "@/assets/backgrounds/certificate-level-uk/Швидкочитання+Логопедія - 4.png";
+import SpeedReadingSpeechTherapyUk5 from "@/assets/backgrounds/certificate-level-uk/Швидкочитання+Логопедія - 5.png";
+import SpeedReadingSpeechTherapyUk6 from "@/assets/backgrounds/certificate-level-uk/Швидкочитання+Логопедія - 6.png";
+import SpeedReadingSpeechTherapyUk from "@/assets/backgrounds/certificate-level-uk/Швидкочитання+Логопедія.png";
+
 import successImage from '@/assets/backgrounds/certification/success.png';
 import NunitoFont from '@/assets/fonts/Nunito-VariableFont_wght.ttf';
 import MarckScriptFont from '@/assets/fonts/MarckScript-Regular.ttf';
 
-const directions = [
-  { id: 6, name: 'IT Gelios Start', levels: [{ id: 1, name: 'Основний', image: itGeliosStartUk }] }
+const ukrainianDirectionLevels = [
+  { id: 1, name: 'Логопедія', levels: [{ id: 1, name: 'Basic', image: SpeechTherapyUk }] },
+  {
+    id: 2,
+    name: 'Ментальна арифметика',
+    levels: [
+      { id: 1, name: 'Джуніор', image: MentalArithmeticUk1 },
+      { id: 2, name: 'Базовий', image: MentalArithmeticUk2 },
+      { id: 3, name: 'Основний', image: MentalArithmeticUk3 },
+      { id: 4, name: 'Просунутий', image: MentalArithmeticUk4 },
+      { id: 5, name: 'Повний курс', image: MentalArithmeticUk }
+    ]
+  },
+  { id: 3, name: 'Множення і ділення', levels: [{ id: 1, name: 'Повний курс', image: MultiplicationandDivisionUkr }] },
+  { id: 4, name: 'Підготовка до школи', levels: [{ id: 1, name: 'Повний курс', image: SchooolPreparationEn }] },
+  {
+    id: 5,
+    name: 'Швидкочитання',
+    levels: [
+      { id: 1, name: 'Джуніор', image: SpeedReadingUk1 },
+      { id: 2, name: 'Базовий', image: SpeedReadingUk2 },
+      { id: 3, name: 'Основний', image: SpeedReadingUk3 },
+      { id: 4, name: 'Просунутий', image: SpeedReadingUk4 },
+      { id: 5, name: 'Ерудит', image: SpeedReadingUk5 },
+      { id: 6, name: 'Профі', image: SpeedReadingUk6 },
+      { id: 7, name: 'Повний курс', image: SpeedReadingUk }
+    ]
+  },
+  {
+    id: 6,
+    name: 'Speed Reading + Speech Therapy',
+    levels: [
+      { id: 1, name: 'Джуніор', image: SpeedReadingSpeechTherapyUk1 },
+      { id: 2, name: 'Базовий', image: SpeedReadingSpeechTherapyUk2 },
+      // { id: 3, name: 'Основний', image: SpeedReadingSpeechTherapyUk3 },
+      { id: 4, name: 'Просунутий', image: SpeedReadingSpeechTherapyUk4 },
+      { id: 5, name: 'Ерудит', image: SpeedReadingSpeechTherapyUk5 },
+      { id: 6, name: 'Профі', image: SpeedReadingSpeechTherapyUk6 },
+      { id: 7, name: 'Повний курс', image: SpeedReadingSpeechTherapyUk },
+    ]
+  },
+  { id: 7, name: 'IT Gelios Start', levels: [{ id: 1, name: 'Повний курс', image: itGeliosStartEn }] }
 ];
 
 const englishDirectionLevels = [
-  { id: 6, name: 'IT Gelios Start', levels: [{ id: 1, name: 'Basic', image: itGeliosStartEn }] }
+  { id: 1, name: 'Speech Therapy', levels: [{ id: 1, name: 'Basic', image: SpeechTherapyEn }] },
+  {
+    id: 2,
+    name: 'Mental Arithmetic',
+    levels: [
+      { id: 1, name: 'Junior', image: MentalArithmeticEn1 },
+      { id: 2, name: 'Basic', image: MentalArithmeticEn2 },
+      { id: 3, name: 'Elementary', image: MentalArithmeticEn3 },
+      { id: 4, name: 'Advanced', image: MentalArithmeticEn4 },
+      { id: 5, name: 'Full Course', image: MentalArithmeticEn }
+    ]
+  },
+  { id: 3, name: 'Multiplication and Division', levels: [{ id: 1, name: 'Basic', image: MultiplicationandDivisionUkr }] },
+  { id: 4, name: 'School Preparation', levels: [{ id: 1, name: 'Basic', image: SchooolPreparationEn }] },
+  {
+    id: 5,
+    name: 'Speed Reading',
+    levels: [
+      { id: 1, name: 'Junior', image: SpeedReadingEn1 },
+      { id: 2, name: 'Basic', image: SpeedReadingEn2 },
+      { id: 3, name: 'Elementary', image: SpeedReadingEn3 },
+      { id: 4, name: 'Advanced', image: SpeedReadingEn4 },
+      { id: 5, name: 'Erudite', image: SpeedReadingEn5 },
+      { id: 6, name: 'Pro', image: SpeedReadingEn6 },
+      { id: 7, name: 'Full Course', image: SpeedReadingEn }
+    ]
+  },
+  {
+    id: 6,
+    name: 'Speed Reading + Speech Therapy',
+    levels: [
+      { id: 1, name: 'Junior', image: SpeedReadingSpeechTherapyEn1 },
+      { id: 2, name: 'Basic', image: SpeedReadingSpeechTherapyEn2 },
+      // { id: 3, name: 'Elementary', image: SpeedReadingSpeechTherapyEn3 },
+      { id: 4, name: 'Advanced', image: SpeedReadingSpeechTherapyEn4 },
+      { id: 5, name: 'Erudite', image: SpeedReadingSpeechTherapyEn5 },
+      { id: 6, name: 'Pro', image: SpeedReadingSpeechTherapyEn6 },
+      { id: 7, name: 'Full Course', image: SpeedReadingSpeechTherapyEn },
+    ]
+  },
+  { id: 7, name: 'IT Gelios Start', levels: [{ id: 1, name: 'Basic', image: itGeliosStartEn }] }
 ];
 
 const levels = reactive([] as { id: number; name: string; image: string }[]);
@@ -118,7 +250,7 @@ watch(
       console.log('Direction changed to:', newDirection, 'Language changed to:', newLanguage);
       levels.splice(0, levels.length);
       if (newDirection !== null) {
-        const source = newLanguage === 'en' ? englishDirectionLevels : directions;
+        const source = newLanguage === 'en' ? englishDirectionLevels : ukrainianDirectionLevels;
         const direction = source.find(d => d.id === newDirection);
         if (direction) {
           levels.push(...direction.levels);
@@ -333,7 +465,7 @@ const addCertificates = async () => {
 
     <div v-if="currentStep.value === 1" class="certificate-form__content">
       <StudentSelector
-          :items="directions"
+          :items="ukrainianDirectionLevels"
           v-model="selectedDirection.value"
           title="Напрямок"
           search-placeholder="Шукати напрямок"
@@ -369,7 +501,7 @@ const addCertificates = async () => {
 
     <div v-if="currentStep.value === 2" class="certificate-form__content step-confirmation">
       <div class="confirmation-step">
-        <SelectedDirection :directions="directions" v-model="selectedDirection.value" />
+        <SelectedDirection :directions="ukrainianDirectionLevels" v-model="selectedDirection.value" />
         <div class="confirmation-item">
           <strong>Мова сертифіката</strong>
           <span>{{ languages.find(l => l.id === selectedLanguage.value)?.name || 'Мова не вибрана' }}</span>
