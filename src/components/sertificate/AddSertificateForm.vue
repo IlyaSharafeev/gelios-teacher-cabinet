@@ -492,6 +492,7 @@ const addCertificates = async () => {
           select-all-text="Вибрати всіх"
       />
       <LanguageSelector
+          style="margin-top: -160px"
           :items="languages"
           v-model="selectedLanguage.value"
           title="Мова"
