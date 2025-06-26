@@ -272,13 +272,13 @@ const generateCertificate = async (
       ctx.drawImage(img, 0, 0);
 
       // Set text styles
-      ctx.font = 'bold 40px Onest, sans-serif';
-      ctx.fillStyle = '#000000';
+      ctx.font = 'italic bold 40px Onest, sans-serif';
+      ctx.fillStyle = '#800080'; // Purple color
       ctx.textAlign = 'center';
       ctx.textBaseline = 'middle';
 
-      // Draw student name (adjust coordinates as needed)
-      const x = canvas.width / 2;
+      // Draw student name (shifted 200 pixels to the right)
+      const x = canvas.width / 2 + 160;
       const y = canvas.height / 2; // Center vertically, adjust as needed
       ctx.fillText(studentName, x, y);
 
