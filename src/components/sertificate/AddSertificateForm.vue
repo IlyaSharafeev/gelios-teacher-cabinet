@@ -6,118 +6,30 @@ import SelectedLevelCertification from './SelectedLevelCertification.vue';
 import SelectedDirection from './SelectedDirection.vue';
 import LanguageSelector from './LanguageSelector.vue';
 import { jsPDF } from 'jspdf';
-
-// Import images for levels
-import junior from '@/assets/backgrounds/certificate-level-uk/junior.png';
-import base from '@/assets/backgrounds/certificate-level-uk/base.png';
-import advanced from '@/assets/backgrounds/certificate-level-uk/advanced.png';
-import polymath from '@/assets/backgrounds/certificate-level-uk/polymath.png';
-import pro from '@/assets/backgrounds/certificate-level-uk/pro.png';
-import full from '@/assets/backgrounds/certificate-level-uk/full.png';
-
-import juniorEn from '@/assets/backgrounds/certificate-level-en/junior.png';
-import baseEn from '@/assets/backgrounds/certificate-level-en/base.png';
-import advancedEn from '@/assets/backgrounds/certificate-level-en/advanced.png';
-import polymathEn from '@/assets/backgrounds/certificate-level-en/polymath.png';
-import proEn from '@/assets/backgrounds/certificate-level-en/pro.png';
-import fullEn from '@/assets/backgrounds/certificate-level-en/full.png';
-
+import itGeliosStartEn from "@/assets/backgrounds/certificate-level-en/IT Gelios Start.png";
+import itGeliosStartUk from "@/assets/backgrounds/certificate-level-uk/IT Gelios Start.png";
 import successImage from '@/assets/backgrounds/certification/success.png';
+import NunitoFont from '@/assets/fonts/Nunito-VariableFont_wght.ttf';
+import MarckScriptFont from '@/assets/fonts/MarckScript-Regular.ttf';
 
-// Import custom font (adjust the path and filename as needed)
-import customFont from '@/assets/fonts/MarckScript-Regular.ttf';
-
-// Define directions with their specific levels
 const directions = [
-  { id: 1, name: 'Логопедія', levels: [{ id: 1, name: 'Основний', image: base }] },
-  {
-    id: 2,
-    name: 'Ментальна арифметика',
-    levels: [
-      { id: 1, name: 'Рівень 1', image: junior },
-      { id: 2, name: 'Рівень 2', image: base },
-      { id: 3, name: 'Рівень 3', image: advanced },
-      { id: 4, name: 'Рівень 4', image: polymath },
-      { id: 5, name: 'Рівень 5', image: pro }
-    ]
-  },
-  { id: 3, name: 'Множення і ділення', levels: [{ id: 1, name: 'Основний', image: base }] },
-  { id: 4, name: 'Підготовка до школи', levels: [{ id: 1, name: 'Основний', image: base }] },
-  {
-    id: 5,
-    name: 'Швидкочитання',
-    levels: [
-      { id: 1, name: 'Рівень 1', image: junior },
-      { id: 2, name: 'Рівень 2', image: base },
-      { id: 3, name: 'Рівень 3', image: advanced },
-      { id: 4, name: 'Рівень 4', image: polymath },
-      { id: 5, name: 'Рівень 5', image: pro },
-      { id: 6, name: 'Рівень 6', image: full },
-      { id: 7, name: 'Рівень 7', image: junior },
-      { id: 8, name: 'Рівень 8', image: base },
-      { id: 9, name: 'Рівень 9', image: advanced },
-      { id: 10, name: 'Рівень 10', image: polymath },
-      { id: 11, name: 'Рівень 11', image: pro },
-      { id: 12, name: 'Рівень 12', image: full },
-      { id: 13, name: 'Рівень 13', image: junior },
-      { id: 14, name: 'Рівень 14', image: base }
-    ]
-  },
-  { id: 6, name: 'IT Gelios Start', levels: [{ id: 1, name: 'Основний', image: base }] }
+  { id: 6, name: 'IT Gelios Start', levels: [{ id: 1, name: 'Основний', image: itGeliosStartUk }] }
 ];
 
-// Define English level names for each direction
 const englishDirectionLevels = [
-  { id: 1, name: 'Speech Therapy', levels: [{ id: 1, name: 'Basic', image: baseEn }] },
-  {
-    id: 2,
-    name: 'Mental Arithmetic',
-    levels: [
-      { id: 1, name: 'Level 1', image: juniorEn },
-      { id: 2, name: 'Level 2', image: baseEn },
-      { id: 3, name: 'Level 3', image: advancedEn },
-      { id: 4, name: 'Level 4', image: polymathEn },
-      { id: 5, name: 'Level 5', image: proEn }
-    ]
-  },
-  { id: 3, name: 'Multiplication and Division', levels: [{ id: 1, name: 'Basic', image: baseEn }] },
-  { id: 4, name: 'School Preparation', levels: [{ id: 1, name: 'Basic', image: baseEn }] },
-  {
-    id: 5,
-    name: 'Speed Reading',
-    levels: [
-      { id: 1, name: 'Level 1', image: juniorEn },
-      { id: 2, name: 'Level 2', image: baseEn },
-      { id: 3, name: 'Level 3', image: advancedEn },
-      { id: 4, name: 'Level 4', image: polymathEn },
-      { id: 5, name: 'Level 5', image: proEn },
-      { id: 6, name: 'Level 6', image: fullEn },
-      { id: 7, name: 'Level 7', image: juniorEn },
-      { id: 8, name: 'Level 8', image: baseEn },
-      { id: 9, name: 'Level 9', image: advancedEn },
-      { id: 10, name: 'Level 10', image: polymathEn },
-      { id: 11, name: 'Level 11', image: proEn },
-      { id: 12, name: 'Level 12', image: fullEn },
-      { id: 13, name: 'Level 13', image: juniorEn },
-      { id: 14, name: 'Level 14', image: baseEn }
-    ]
-  },
-  { id: 6, name: 'IT Gelios Start', levels: [{ id: 1, name: 'Basic', image: baseEn }] }
+  { id: 6, name: 'IT Gelios Start', levels: [{ id: 1, name: 'Basic', image: itGeliosStartEn }] }
 ];
 
-// Reactive levels array
 const levels = reactive([] as { id: number; name: string; image: string }[]);
 
-// Define languages
 const languages = [
   { id: 'uk', name: 'Українська' },
   { id: 'en', name: 'English' }
 ];
 
-// Define students
 const students = [
   { id: 1, name: 'Олег Петренко' },
-  { id: 2, name: 'Марія Іваненко' },
+  { id: 2, name: 'Марія Іван Arctic' },
   { id: 3, name: 'Іван Коваленко' },
   { id: 4, name: 'Анна Сидоренко' },
   { id: 5, name: 'Павло Шевченко' },
@@ -168,7 +80,6 @@ const students = [
   { id: 50, name: 'Юрій Остапчук' }
 ];
 
-// Step navigation
 const currentStep = reactive({ value: 1 });
 const steps = [
   { id: 1, name: 'Вибір напрямку, рівня, мови та учнів' },
@@ -201,12 +112,11 @@ const hasUnsavedChanges = computed(() => {
   );
 });
 
-// Watch for direction and language changes to update levels
 watch(
     [() => selectedDirection.value, () => selectedLanguage.value],
     ([newDirection, newLanguage]) => {
       console.log('Direction changed to:', newDirection, 'Language changed to:', newLanguage);
-      levels.splice(0, levels.length); // Clear current levels
+      levels.splice(0, levels.length);
       if (newDirection !== null) {
         const source = newLanguage === 'en' ? englishDirectionLevels : directions;
         const direction = source.find(d => d.id === newDirection);
@@ -215,7 +125,6 @@ watch(
         }
       }
       console.log('Updated levels:', JSON.stringify(levels, null, 2));
-      // Reset selected levels if they are no longer valid
       selectedLevel.value = selectedLevel.value.filter(levelId =>
           levels.some(level => level.id === levelId)
       );
@@ -262,7 +171,13 @@ const resetForm = () => {
   selectedStudents.value = [];
 };
 
-// Function to generate and download certificates as PDF
+const formatDate = (date: Date): string => {
+  const day = String(date.getDate()).padStart(2, '0');
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const year = date.getFullYear();
+  return `${day}.${month}\n${year}`;
+};
+
 const generateCertificate = async (
     studentName: string,
     levelId: number,
@@ -292,53 +207,64 @@ const generateCertificate = async (
         return;
       }
 
-      // Draw the certificate image
       ctx.drawImage(img, 0, 0);
 
-      // Load custom font for canvas
-      const font = new FontFace('CustomFont', `url(${customFont})`);
-      font.load().then((loadedFont) => {
-        document.fonts.add(loadedFont);
+      const marckScriptFont = new FontFace('MarckScript', `url(${MarckScriptFont})`);
+      const nunitoFont = new FontFace('Nunito', `url(${NunitoFont})`);
 
-        // Set text styles with custom font
-        ctx.font = 'italic bold 40px CustomFont, sans-serif';
-        ctx.fillStyle = '#F90A85';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
+      Promise.all([marckScriptFont.load(), nunitoFont.load()])
+          .then(([loadedMarckScript, loadedNunito]) => {
+            document.fonts.add(loadedMarckScript);
+            document.fonts.add(loadedNunito);
 
-        // Draw student name
-        const x = canvas.width / 2 + 160;
-        const y = canvas.height / 2;
-        ctx.fillText(studentName, x, y);
+            // Set text styles for student name
+            ctx.font = 'italic bold 100px MarckScript, sans-serif';
+            ctx.fillStyle = '#800080';
+            ctx.textAlign = 'center';
+            ctx.textBaseline = 'middle';
 
-        // Create PDF
-        const pdf = new jsPDF({
-          orientation: img.width > img.height ? 'landscape' : 'portrait',
-          unit: 'px',
-          format: [img.width, img.height]
-        });
+            // Draw student name
+            const x = canvas.width / 2 + 500;
+            const y = canvas.height / 2 - 15;
+            ctx.fillText(studentName, x, y);
 
-        // Add custom font to jsPDF
-        pdf.addFont(customFont, 'CustomFont', 'normal');
-        pdf.setFont('CustomFont');
+            // Set text styles for date (white and bold)
+            ctx.font = 'bold 55px Nunito, sans-serif'; // Changed to bold
+            ctx.fillStyle = '#FFFFFF'; // Changed to white
+            ctx.textAlign = 'right';
+            ctx.textBaseline = 'bottom';
 
-        // Convert canvas to image data URL
-        const dataUrl = canvas.toDataURL('image/png');
+            // Draw current date
+            const currentDate = new Date('2025-06-26');
+            const dateText = formatDate(currentDate);
+            const dateLines = dateText.split('\n');
+            const dateX = canvas.width - 480;
+            const dateY = canvas.height - 235;
+            ctx.fillText(dateLines[0], dateX, dateY - 65);
+            ctx.fillText(dateLines[1], dateX, dateY);
 
-        // Add image to PDF
-        pdf.addImage(dataUrl, 'PNG', 0, 0, img.width, img.height);
+            const pdf = new jsPDF({
+              orientation: img.width > img.height ? 'landscape' : 'portrait',
+              unit: 'px',
+              format: [img.width, img.height]
+            });
 
-        // Generate file name
-        const fileName = `Certificate_${studentName}_${levelName}.pdf`;
+            pdf.addFont(MarckScriptFont, 'MarckScript', 'normal');
+            pdf.addFont(NunitoFont, 'Nunito', 'normal');
+            pdf.setFont('MarckScript');
 
-        // Trigger PDF download
-        pdf.save(fileName);
+            const dataUrl = canvas.toDataURL('image/png');
+            pdf.addImage(dataUrl, 'PNG', 0, 0, img.width, img.height);
 
-        resolve();
-      }).catch((error) => {
-        console.error('Failed to load custom font:', error);
-        reject(new Error('Failed to load custom font'));
-      });
+            const fileName = `Certificate_${studentName}_${levelName}.pdf`;
+            pdf.save(fileName);
+
+            resolve();
+          })
+          .catch((error) => {
+            console.error('Failed to load custom fonts:', error);
+            reject(new Error('Failed to load custom fonts'));
+          });
     };
 
     img.onerror = () => {
