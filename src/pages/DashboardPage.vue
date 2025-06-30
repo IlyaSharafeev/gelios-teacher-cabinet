@@ -66,7 +66,7 @@ const { t } = useI18n();
             {{ t('dashboard.statistics.title') }}
           </div>
           <div class="statistic_blocks">
-            <div v-for="(stat, index) in statistics" :key="index" class="statistic_block">
+            <div v-for="(stat, index) in statistics" :key="index" class="statistic_block" :class="`statistic_block--${stat.description_key}`">
               <div class="statistic_block-title">{{ stat.title }}</div>
               <div class="statistic_block-description">{{ t(`dashboard.statistics.${stat.description_key}`) }}</div>
             </div>
@@ -224,6 +224,24 @@ const { t } = useI18n();
             letter-spacing: 0%;
             color: #30303d;
             opacity: 0.5;
+          }
+
+          &--students_count {
+            .statistic_block-title {
+              color: #0066FF;
+            }
+          }
+
+          &--homework_count {
+            .statistic_block-title {
+              color: #1FAC08;
+            }
+          }
+
+          &--lessons_count {
+            .statistic_block-title {
+              color: #FF7B7B;
+            }
           }
         }
       }
