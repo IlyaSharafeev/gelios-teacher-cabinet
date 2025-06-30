@@ -39,22 +39,22 @@ const students = [
 ];
 
 const trainers = [
-  { id: 1, name: 'Знайди пару', image: trainer1, iframeUrl: 'https://gelios-abacus.netlify.app/?config=%7B%22rods%22%3A1%2C%22isTimerDisabled%22%3Atrue%7D&isTeacherCabinet=true' },
-  { id: 2, name: 'Техніка швидкості читання', image: trainer2, iframeUrl: 'https://gelios-alphabet.netlify.app/?config=%7B%22mode%22%3A%22WORDS%22%2C%22words%22%3A5%2C%22speed%22%3A1%2C%22tableSize%22%3A3%2C%22handsAndLegs%22%3Afalse%2C%22isTimerDisabled%22%3Atrue%7D&isTeacherCabinet=true' },
-  { id: 3, name: 'Таблиця Шульте', image: trainer3, iframeUrl: 'https://gelios-schulte-table.netlify.app/?config=%7B%22mode%22%3A%22NUMBERS%22%2C%22size%22%3A3%2C%22order%22%3A%22DIRECT%22%2C%22rotation%22%3A0%2C%22shuffleWhenClicked%22%3Afalse%2C%22hideTooltips%22%3Afalse%2C%22timerDuration%22%3A0%2C%22isTimerDisabled%22%3Atrue%7D&isTeacherCabinet=true' },
-  { id: 4, name: 'Splitz', image: trainer4, iframeUrl: 'https://gelios-spritz.netlify.app/?config=%7B%22speed%22%3A100%2C%22isTimerDisabled%22%3Atrue%7D&isTeacherCabinet=true' },
-  { id: 5, name: 'Ментальний рахунок', image: trainer5, iframeUrl: 'https://gelios-speed-math.netlify.app/?config=%7B%22formula%22%3A%22DIRECT_COUNT%22%2C%22selectedNumbers%22%3A%224%22%2C%22digitNumber%22%3A%221%22%2C%22actions%22%3A2%2C%22correctAnswersGoal%22%3A10%2C%22speed%22%3A0.5%2C%22isSoundEnabled%22%3Afalse%2C%22isTimerDisabled%22%3Atrue%7D&isTeacherCabinet=true' },
-  { id: 6, name: 'Філворди', image: trainer6, iframeUrl: 'https://gelios-fillwords.netlify.app/?config=%7B%22size%22%3A5%2C%22numberOfFields%22%3A1%2C%22timerDuration%22%3A0%2C%22isTimerDisabled%22%3Atrue%7D&isTeacherCabinet=true' },
-  { id: 7, name: 'Тест Струпа', image: trainer7, iframeUrl: 'https://gelios-stroop-test.netlify.app/?config=%7B%22mode%22%3A%22WORDS%22%2C%22words%22%3A50%2C%22speed%22%3A0.5%2C%22isSoundEnabled%22%3Atrue%2C%22isTimerDisabled%22%3Atrue%7D&isTeacherCabinet=true' },
-  { id: 8, name: 'Алфавіт', image: trainer8, iframeUrl: 'https://gelios-alphabet.netlify.app/?config=%7B%22mode%22%3A%22WORDS%22%2C%22words%22%3A5%2C%22speed%22%3A1%2C%22tableSize%22%3A3%2C%22handsAndLegs%22%3Afalse%2C%22isTimerDisabled%22%3Atrue%7D&isTeacherCabinet=true' },
-  { id: 9, name: 'Знайди слово', image: trainer9, iframeUrl: 'https://gelios-find-the-word.netlify.app/?config=%7B%22mode%22%3A%22FIND_LETTER%22%2C%22size%22%3A3%2C%22numberOfTables%22%3A1%2C%22isTimerDisabled%22%3Atrue%7D&isTeacherCabinet=true' },
-  { id: 10, name: 'Тексти', image: trainer10, iframeUrl: 'https://gelios-texts.netlify.app/?config=%7B%22mode%22%3A%22NO_CHANGES%22%2C%22speed%22%3A1%2C%22frequency%22%3A20%2C%22height%22%3A40%2C%22offset%22%3A0%2C%22LETTER_REPLACEMENTS%22%3A%5B%5D%2C%22isTimerDisabled%22%3Atrue%&isTeacherCabinet=true' },
-  { id: 11, name: 'Кіберкішка', image: trainer11, iframeUrl: 'https://gelios-dino.netlify.app/?config=%7B%22speed%22%3A2%2C%22obstacles%22%3A2%2C%22isSoundEnabled%22%3Atrue%2C%22isCoinsEnabled%22%3Afalse%2C%22isSpeedScaleEnabled%22%3Afalse%2C%22isTimerDisabled%22%3Atrue%7D&isTeacherCabinet=true' },
-  { id: 12, name: 'Флешкартки', image: trainer12, iframeUrl: 'https://gelios-flash-cards.netlify.app/?config=%7B%22rods%22%3A1%2C%22numberLimit%22%3A9%2C%22directions%22%3A%22NUMBER_ABACUS%22%2C%22mode%22%3A%22TRAINING%22%2C%22speed%22%3A1%2C%22impulses%22%3A1%2C%22correctAnswersGoal%22%3A20%2C%22isTimerDisabled%22%3Atrue%7D&isTeacherCabinet=true' },
-  { id: 13, name: 'Абакус', image: trainer13, iframeUrl: 'https://gelios-abacus.netlify.app/?config=%7B%22rods%22%3A1%2C%22isTimerDisabled%22%3Atrue%7D&isTeacherCabinet=true' },
-  { id: 14, name: 'Знайди кіберкішка', image: trainer14, iframeUrl: 'https://gelios-find-the-cyber-cat.netlify.app/?config=%7B%22size%22%3A3%2C%22steps%22%3A3%2C%22speed%22%3A0.5%2C%22isSoundEnabled%22%3Atrue%2C%22isTimerDisabled%22%3Atrue%7D&isTeacherCabinet=true' },
-  { id: 15, name: 'Мнемотехніка', image: trainer15, iframeUrl: 'https://gelios-mnemonics.netlify.app/?config=%7B%22size%22%3A3%2C%22mode%22%3Afalse%2C%22picturesEnabled%22%3Afalse%2C%22wordsEnabled%22%3Afalse%2C%22numbersEnabled%22%3Afalse%2C%22colorsEnabled%22%3Afalse%2C%22timerDuration%22%3A0%2C%22digitNumber%22%3A2%2C%22isTimerDisabled%22%3Atrue%&isTeacherCabinet=true' },
-  { id: 16, name: 'Стовпчики', image: trainer16, iframeUrl: 'https://gelios-columns.netlify.app/?config=%7B%22formula%22%3A%22DIRECT_COUNT%22%2C%22selectedNumbers%22%3A%224%22%2C%22term_size%22%3A%221%22%2C%22actions_amount%22%3A10%2C%22correctAnswersGoal%22%3A10%2C%22isTimerDisabled%22%3Atrue%7D&isTeacherCabinet=true' },
+  { id: 1, name: 'Знайди пару', image: trainer1, iframeUrl: import.meta.env.VITE_ABACUS_URL },
+  { id: 2, name: 'Техніка швидкості читання', image: trainer2, iframeUrl: import.meta.env.VITE_ALPHABET_URL },
+  { id: 3, name: 'Таблиця Шульте', image: trainer3, iframeUrl: import.meta.env.VITE_SCHULTE_TABLE_URL },
+  { id: 4, name: 'Splitz', image: trainer4, iframeUrl: import.meta.env.VITE_SPRITZ_URL },
+  { id: 5, name: 'Ментальний рахунок', image: trainer5, iframeUrl: import.meta.env.VITE_SPEED_MATH_URL },
+  { id: 6, name: 'Філворди', image: trainer6, iframeUrl: import.meta.env.VITE_FILLWORDS_URL },
+  { id: 7, name: 'Тест Струпа', image: trainer7, iframeUrl: import.meta.env.VITE_STROOP_TEST_URL },
+  { id: 8, name: 'Алфавіт', image: trainer8, iframeUrl: import.meta.env.VITE_ALPHABET_URL },
+  { id: 9, name: 'Знайди слово', image: trainer9, iframeUrl: import.meta.env.VITE_FIND_THE_WORD_URL },
+  { id: 10, name: 'Тексти', image: trainer10, iframeUrl: import.meta.env.VITE_TEXTS_URL },
+  { id: 11, name: 'Кіберкішка', image: trainer11, iframeUrl: import.meta.env.VITE_DINO_URL },
+  { id: 12, name: 'Флешкартки', image: trainer12, iframeUrl: import.meta.env.VITE_FLASH_CARDS_URL },
+  { id: 13, name: 'Абакус', image: trainer13, iframeUrl: import.meta.env.VITE_ABACUS_URL },
+  { id: 14, name: 'Знайди кіберкішка', image: trainer14, iframeUrl: import.meta.env.VITE_FIND_THE_CYBER_CAT_URL },
+  { id: 15, name: 'Мнемотехніка', image: trainer15, iframeUrl: import.meta.env.VITE_MNEMONICS_URL },
+  { id: 16, name: 'Стовпчики', image: trainer16, iframeUrl: import.meta.env.VITE_COLUMNS_URL },
 ];
 
 const selectedStudents = reactive({ value: [] as number[] });
