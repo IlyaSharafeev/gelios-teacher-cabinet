@@ -31,6 +31,7 @@ const upcomingClasses: UpcomingClass[] = [
   { name: "Засядько I.О.", date: "12.01 14:00" },
   { name: "Азарко А.Б.", date: "12.01 14:00" },
   { name: "Азарко А.Б.", date: "12.01 14:00" },
+  { name: "Азарко А.Б.", date: "12.01 14:00" },
 ];
 
 const homeworks: Homework[] = [
@@ -80,8 +81,8 @@ const { t } = useI18n();
               <div class="homework-date">{{ homework.date }}</div>
             </div>
           </div>
+          <router-link to="homework" class="button btn-watch-all">{{ t('dashboard.view_all') }}</router-link>
         </div>
-        <router-link to="homework" class="button btn-watch-all">{{ t('dashboard.view_all') }}</router-link>
       </div>
       <div class="content-right">
         <div class="upcoming-classes">
@@ -177,6 +178,10 @@ const { t } = useI18n();
 
       .statistic {
         border-radius: 12px;
+        backdrop-filter: blur(12px);
+        background: #FFFFFF82;
+        border-radius: 28px;
+        padding: 24px;
 
         .statistic_title {
           font-family: "Onest", sans-serif;
@@ -184,7 +189,7 @@ const { t } = useI18n();
           font-size: 20px;
           line-height: 100%;
           letter-spacing: 0%;
-          color: #a4b9d4;
+          color: #2C2C3A;
         }
 
         .statistic_blocks {
@@ -218,13 +223,18 @@ const { t } = useI18n();
             line-height: 100%;
             letter-spacing: 0%;
             color: #30303d;
+            opacity: 0.5;
           }
         }
       }
 
       .homework {
-        margin-top: 60px;
+        margin-top: 22px;
         border-radius: 12px;
+        backdrop-filter: blur(12px);
+        background: #FFFFFF82;
+        border-radius: 28px;
+        padding: 24px;
 
         .homework__title {
           font-family: "Onest", sans-serif;
@@ -232,7 +242,7 @@ const { t } = useI18n();
           font-size: 20px;
           line-height: 100%;
           letter-spacing: 0%;
-          color: #a4b9d4;
+          color: #2C2C3A;
           margin-bottom: 24px;
         }
 
@@ -306,6 +316,10 @@ const { t } = useI18n();
 
       .upcoming-classes {
         border-radius: 12px;
+        backdrop-filter: blur(12px);
+        background: #FFFFFF82;
+        border-radius: 28px;
+        padding: 24px;
 
         .upcoming-classes__title {
           font-family: "Onest", sans-serif;
@@ -313,7 +327,7 @@ const { t } = useI18n();
           font-size: 20px;
           line-height: 100%;
           letter-spacing: 0%;
-          color: #a4b9d4;
+          color: #2C2C3A;
           margin-bottom: 24px;
         }
 
