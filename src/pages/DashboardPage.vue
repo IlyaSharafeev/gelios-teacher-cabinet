@@ -31,7 +31,6 @@ const upcomingClasses: UpcomingClass[] = [
   { name: "Засядько I.О.", date: "12.01 14:00" },
   { name: "Азарко А.Б.", date: "12.01 14:00" },
   { name: "Азарко А.Б.", date: "12.01 14:00" },
-  { name: "Азарко А.Б.", date: "12.01 14:00" },
 ];
 
 const homeworks: Homework[] = [
@@ -182,6 +181,7 @@ const { t } = useI18n();
         background: #FFFFFF82;
         border-radius: 28px;
         padding: 24px;
+        max-height: 251px;
 
         .statistic_title {
           font-family: "Onest", sans-serif;
@@ -331,13 +331,16 @@ const { t } = useI18n();
       flex: 1;
       min-height: 400px;
       border-radius: 12px;
+      backdrop-filter: blur(12px);
+      background: #FFFFFF82;
+      border-radius: 28px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
 
       .upcoming-classes {
         border-radius: 12px;
-        backdrop-filter: blur(12px);
-        background: #FFFFFF82;
-        border-radius: 28px;
-        padding: 24px;
 
         .upcoming-classes__title {
           font-family: "Onest", sans-serif;
@@ -352,7 +355,7 @@ const { t } = useI18n();
         .upcoming-classes__items {
           display: flex;
           flex-direction: column;
-          gap: 16px;
+          gap: 12px;
         }
 
         .upcoming-classes__item {
@@ -398,9 +401,8 @@ const { t } = useI18n();
       }
 
       .btn-watch-all {
-        margin-top: 32px;
-      }
+        width: 100%;
     }
-  }
+  }}
 }
 </style>
