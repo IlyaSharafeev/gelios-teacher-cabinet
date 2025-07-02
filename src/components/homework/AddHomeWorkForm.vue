@@ -27,7 +27,7 @@ import trainer14 from '@/assets/backgrounds/trainers/14.png';
 import trainer15 from '@/assets/backgrounds/trainers/15.png';
 import trainer16 from '@/assets/backgrounds/trainers/16.png';
 
-const { t } = useI18n();
+const { t, locale } = useI18n();
 
 const currentStep = reactive({ value: 1 });
 const steps = [
@@ -286,7 +286,7 @@ const handleIframeLoad = () => {
     </div>
 
     <div v-if="currentStep.value === 3" class="step-content">
-      <DatePicker class="datepicker-container" v-model="deadline.value" />
+      <DatePicker class="datepicker-container" v-model="deadline.value" :locale="locale" />
     </div>
 
     <div v-if="currentStep.value === 4" class="step-content step-success">
