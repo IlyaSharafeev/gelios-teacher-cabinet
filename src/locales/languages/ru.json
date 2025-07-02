@@ -119,5 +119,17 @@
   "students_page.homework_title": "Домашние задания",
   "students_page.completed": "Выполнено",
   "students_page.not_completed": "Не выполнено",
-  "students_page.skills_title": "Навыки"
+  "students_page.skills_title": "Навыки",
+  "add_homework.step1_title": "Выбор тренажера",
+  "add_homework.step2_title": "Настройки",
+  "add_homework.step3_title": "Срок выполнения",
+  "add_homework.success_title": "Задание успешно добавлено!",
+  "add_homework.add_more_button": "Добавить еще больше",
+  "add_homework.back_button": "Назад",
+  "add_homework.next_button": "Далее",
+  "add_homework.trainer_title": "Тренажеры",
+  "add_homework.no_trainers_found": "Тренажеров не найдено",
+  "add_homework.select_all_students": "Выбрать всех",
+  "add_homework.no_students_found": "Учеников не найдено",
+  "add_homework.deadline_placeholder": "Выберите дату и время"
 }

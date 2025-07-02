@@ -156,5 +156,17 @@
   "students_page.homework_title": "Homework",
   "students_page.completed": "Completed",
   "students_page.not_completed": "Not Completed",
-  "students_page.skills_title": "Skills"
+  "students_page.skills_title": "Skills",
+  "add_homework.step1_title": "Trainer Selection",
+  "add_homework.step2_title": "Settings",
+  "add_homework.step3_title": "Deadline",
+  "add_homework.success_title": "Homework Successfully Added!",
+  "add_homework.add_more_button": "Add More",
+  "add_homework.back_button": "Back",
+  "add_homework.next_button": "Next",
+  "add_homework.trainer_title": "Trainers",
+  "add_homework.no_trainers_found": "No trainers found",
+  "add_homework.select_all_students": "Select All",
+  "add_homework.no_students_found": "No students found",
+  "add_homework.deadline_placeholder": "Select date and time"
 }

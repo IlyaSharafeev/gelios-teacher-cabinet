@@ -157,5 +157,17 @@
   "students_page.homework_title": "Домашні завдання",
   "students_page.completed": "Виконано",
   "students_page.not_completed": "Не виконано",
-  "students_page.skills_title": "Навички"
+  "students_page.skills_title": "Навички",
+  "add_homework.step1_title": "Вибір тренажера",
+  "add_homework.step2_title": "Налаштування",
+  "add_homework.step3_title": "Термін виконання",
+  "add_homework.success_title": "Завдання успішно додане!",
+  "add_homework.add_more_button": "Додати ще більше",
+  "add_homework.back_button": "Назад",
+  "add_homework.next_button": "Далі",
+  "add_homework.trainer_title": "Тренажери",
+  "add_homework.no_trainers_found": "Тренажерів не знайдено",
+  "add_homework.select_all_students": "Вибрати всіх",
+  "add_homework.no_students_found": "Учнів не знайдено",
+  "add_homework.deadline_placeholder": "Оберіть дату і час"
 }

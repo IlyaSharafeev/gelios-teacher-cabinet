@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { reactive, computed, watch } from 'vue';
+import { useI18n } from 'vue-i18n';
 import StepNavigator from './StepNavigator.vue';
 import StudentSelector from './StudentSelector.vue';
 import TrainerSelector from './TrainerSelector.vue';
@@ -25,12 +26,13 @@ import trainer14 from '@/assets/backgrounds/trainers/14.png';
 import trainer15 from '@/assets/backgrounds/trainers/15.png';
 import trainer16 from '@/assets/backgrounds/trainers/16.png';
 
+const { t } = useI18n();
+
 const currentStep = reactive({ value: 1 });
 const steps = [
-  { id: 1, name: 'Вибір тренажера' },
-  { id: 2, name: 'Налаштування' },
-  { id: 3, name: 'Термін виконання' },
-  // Step 4 (Success) is handled separately and doesn't need a name here for the navigator
+  { id: 1, name: t('add_homework.step1_title') },
+  { id: 2, name: t('add_homework.step2_title') },
+  { id: 3, name: t('add_homework.step3_title') },
 ];
 
 const students = [
@@ -82,7 +84,7 @@ const students = [
   { id: 46, name: 'Анатолій Вознюк' },
   { id: 47, name: 'Лариса Бондарчук' },
   { id: 48, name: 'Григорій Морозюк' },
-  { id: 49, 'name': 'Світлана Олійник' },
+  { id: 49, name: 'Світлана Олійник' },
   { id: 50, name: 'Юрій Шевчук' },
 ];
 
@@ -114,7 +116,6 @@ const isStep1Valid = computed(() => {
 });
 
 const isStep3Valid = computed(() => {
-  // DeadlinePicker now ensures a valid ISO string if date and time are selected
   return deadline.value !== '';
 });
 
@@ -138,13 +139,12 @@ const resetForm = () => {
   currentStep.value = 1;
 };
 
-// New computed property for the backend object
 const homeworkDataForBackend = computed(() => {
   if (isStep1Valid.value && isStep3Valid.value) {
     return {
       studentIds: selectedStudents.value,
       trainerId: selectedTrainer.value?.id,
-      deadline: deadline.value, // This will be the ISO string from DeadlinePicker
+      deadline: deadline.value,
     };
   }
   return null;
@@ -152,11 +152,10 @@ const homeworkDataForBackend = computed(() => {
 
 const addHomework = () => {
   if (isStep3Valid.value) {
-    currentStep.value = 4; // Move to the success screen
+    currentStep.value = 4;
   }
 };
 
-// Watch for currentStep becoming 4 to log the data
 watch(() => currentStep.value, (newVal) => {
   if (newVal === 4 && homeworkDataForBackend.value) {
     console.log('Homework Data for Backend:', homeworkDataForBackend.value);
@@ -168,12 +167,11 @@ const addMoreHomework = () => {
 };
 
 const nextStep = () => {
-  // For the final step (Step 3), the "Next" button should trigger addHomework
   if (currentStep.value === 3) {
     addHomework();
   } else if (currentStep.value === 1 && !isStep1Valid.value) {
     return;
-  } else if (currentStep.value < 3) { // Only increment up to step 3
+  } else if (currentStep.value < 3) {
     currentStep.value++;
   }
 };
@@ -200,17 +198,17 @@ const prevStep = () => {
       <StudentSelector
           :items="students"
           v-model="selectedStudents.value"
-          title="Мої учні"
-          search-placeholder="Шукати учня"
-          no-items-text="Учнів не знайдено"
-          select-all-text="Вибрати всіх"
+          :title="$t('students_page.title')"
+          :search-placeholder="$t('students_page.search_placeholder')"
+          :no-items-text="$t('add_homework.no_students_found')"
+          :select-all-text="$t('add_homework.select_all_students')"
       />
       <TrainerSelector
           :items="trainers"
           v-model="selectedTrainer.value"
-          title="Тренажери"
-          search-placeholder="Шукати тренажер"
-          no-items-text="Тренажерів не знайдено"
+          :title="$t('add_homework.trainer_title')"
+          :search-placeholder="$t('students_page.search_placeholder')"
+          :no-items-text="$t('add_homework.no_trainers_found')"
       >
         <template #option="{ item }">
           <div class="trainer-option">
@@ -251,9 +249,9 @@ const prevStep = () => {
     <div v-if="currentStep.value === 4" class="step-content step-success">
       <div class="success-step">
         <img :src="successImage" alt="Success" class="success-image" />
-        <h2>Завдання успішно додане!</h2>
+        <h2>{{ $t('add_homework.success_title') }}</h2>
         <button class="add-more-button" @click="addMoreHomework">
-          Додати ще більше
+          {{ $t('add_homework.add_more_button') }}
         </button>
       </div>
     </div>
