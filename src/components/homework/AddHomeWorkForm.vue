@@ -4,6 +4,7 @@ import StepNavigator from './StepNavigator.vue';
 import StudentSelector from './StudentSelector.vue';
 import TrainerSelector from './TrainerSelector.vue';
 import DeadlinePicker from './DeadlinePicker.vue';
+import StudentTag from './StudentTag.vue'; // Import the new StudentTag component
 import successImage from '@/assets/backgrounds/certification/success.png';
 
 // Import images for trainers
@@ -34,7 +35,54 @@ const steps = [
 
 const students = [
   { id: 1, name: 'Олег Петренко' },
-  // ... остальные студенты остаются без изменений
+  { id: 2, name: 'Анна Ковальчук' },
+  { id: 3, name: 'Іван Мельник' },
+  { id: 4, name: 'Марія Сидоренко' },
+  { id: 5, name: 'Віктор Бондаренко' },
+  { id: 6, name: 'Наталія Мороз' },
+  { id: 7, name: 'Андрій Ткаченко' },
+  { id: 8, name: 'Олена Савченко' },
+  { id: 9, name: 'Сергій Кравчук' },
+  { id: 10, name: 'Юлія Поліщук' },
+  { id: 11, name: 'Дмитро Шевченко' },
+  { id: 12, name: 'Ірина Марченко' },
+  { id: 13, name: 'Володимир Коваленко' },
+  { id: 14, name: 'Тетяна Лисенко' },
+  { id: 15, name: 'Олексій Клименко' },
+  { id: 16, name: 'Ольга Іванова' },
+  { id: 17, name: 'Михайло Гончаренко' },
+  { id: 18, name: 'Людмила Федорова' },
+  { id: 19, name: 'Павло Руденко' },
+  { id: 20, name: 'Галина Степаненко' },
+  { id: 21, name: 'Євген Колесник' },
+  { id: 22, name: 'Валентина Кузьменко' },
+  { id: 23, name: 'Роман Бойко' },
+  { id: 24, name: 'Софія Самойленко' },
+  { id: 25, name: 'Артем Василенко' },
+  { id: 26, name: 'Вікторія Демченко' },
+  { id: 27, name: 'Максим Соколов' },
+  { id: 28, name: 'Катерина Прокопенко' },
+  { id: 29, name: 'Денис Литвиненко' },
+  { id: 30, name: 'Христина Романенко' },
+  { id: 31, name: 'Богдан Коробко' },
+  { id: 32, name: 'Зоряна Мельник' },
+  { id: 33, name: 'Тарас Савчук' },
+  { id: 34, name: 'Надія Пасічник' },
+  { id: 35, name: 'Остап Гнатюк' },
+  { id: 36, name: 'Яна Левченко' },
+  { id: 37, name: 'Юрій Бондар' },
+  { id: 38, name: 'Людмила Костюк' },
+  { id: 39, name: 'Андріана Іванченко' },
+  { id: 40, name: 'Олег Садовий' },
+  { id: 41, name: 'Христина Козак' },
+  { id: 42, name: 'Віталій Семенюк' },
+  { id: 43, name: 'Марта Білоус' },
+  { id: 44, name: 'Ігор Ткачук' },
+  { id: 45, name: 'Дарина Коваль' },
+  { id: 46, name: 'Анатолій Вознюк' },
+  { id: 47, name: 'Лариса Бондарчук' },
+  { id: 48, name: 'Григорій Морозюк' },
+  { id: 49, name: 'Світлана Олійник' },
   { id: 50, name: 'Юрій Шевчук' },
 ];
 
@@ -69,12 +117,18 @@ const isStep3Valid = computed(() => {
   return deadline.value !== '';
 });
 
-const selectedStudentsNames = computed(() => {
+const selectedStudentsWithNames = computed(() => {
   return selectedStudents.value
-      .map(id => students.find(student => student.id === id)?.name)
-      .filter(name => name !== undefined)
-      .join(', ');
+      .map(id => {
+        const student = students.find(s => s.id === id);
+        return student ? { id: student.id, name: student.name } : undefined;
+      })
+      .filter((student): student is { id: number; name: string } => student !== undefined);
 });
+
+const removeStudent = (studentId: number) => {
+  selectedStudents.value = selectedStudents.value.filter(id => id !== studentId);
+};
 
 const resetForm = () => {
   selectedStudents.value = [];
@@ -151,8 +205,13 @@ const prevStep = () => {
     </div>
 
     <div v-if="currentStep.value === 2" class="step-content">
-      <div class="selected-students">
-        <p>{{ selectedStudentsNames }}</p>
+      <div class="selected-students-tags">
+        <StudentTag
+            v-for="student in selectedStudentsWithNames"
+            :key="student.id"
+            :student="student"
+            @remove="removeStudent"
+        />
       </div>
       <iframe
           v-if="selectedTrainer.value?.iframeUrl"
@@ -219,22 +278,12 @@ const prevStep = () => {
   margin-bottom: 32px;
 }
 
-.selected-students {
+.selected-students-tags { /* Changed from .selected-students */
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
   margin-bottom: 20px;
-}
-
-.selected-students__title {
-  font-family: 'Onest', sans-serif;
-  font-weight: 500;
-  font-size: 24px;
-  color: #333;
-  margin-bottom: 8px;
-}
-
-.selected-students p {
-  font-family: 'Onest', sans-serif;
-  font-size: 16px;
-  color: #333;
+  margin-top: 38px;
 }
 
 .trainer-iframe {
