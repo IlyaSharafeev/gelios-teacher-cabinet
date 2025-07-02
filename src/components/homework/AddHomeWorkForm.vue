@@ -286,7 +286,7 @@ const handleIframeLoad = () => {
     </div>
 
     <div v-if="currentStep.value === 3" class="step-content">
-      <DatePicker v-model="deadline.value" />
+      <DatePicker class="datepicker-container" v-model="deadline.value" />
     </div>
 
     <div v-if="currentStep.value === 4" class="step-content step-success">
@@ -434,6 +434,10 @@ const handleIframeLoad = () => {
   align-items: center;
   gap: 16px;
   width: 100%;
+}
+
+.datepicker-container {
+  margin-top: 31px;
 }
 
 .success-step h2 {
