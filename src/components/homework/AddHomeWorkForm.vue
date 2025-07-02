@@ -162,10 +162,44 @@ const addHomework = () => {
   }
 };
 
+// В файле AddHomeWorkForm.vue
+
 const handleIframeMessage = (event: MessageEvent) => {
+  // Проверка origin для безопасности
   if (selectedTrainer.value && event.origin === new URL(selectedTrainer.value.iframeUrl).origin) {
-    console.log('Received message from iframe:', JSON.parse(event.data.payload.current));
-    iframeData.value = JSON.parse(event.data.payload.current);
+    const receivedData = event.data; // Получаем весь объект данных, отправленный из iframe
+    const payload = receivedData.payload;
+    const messageType = receivedData.type; // Получаем тип сообщения, например, 'initialSettingsLoaded' или 'gamePlayed'
+
+    // Проверяем наличие payload и gameId в payload
+    if (!payload || !payload.gameId) {
+      console.warn('Получено сообщение, но отсутствует payload или gameId.', receivedData);
+      return;
+    }
+
+    // Извлекаем gameName из payload.gameId, например, "VOOP:Gelios:flashCards" -> "flashCards"
+    const gameIdParts = payload.gameId.split(':');
+    const iframeGameName = gameIdParts[gameIdParts.length - 1]; // Получаем 'flashCards'
+
+    // Формируем ключ для конфигурации, используя имя игры, полученное из iframe
+    const configKey = `VOOP:Gelios:${iframeGameName}:Config`;
+
+    // Если это сообщение с первоначальными настройками
+    if (messageType === 'initialSettingsLoaded') {
+      const settingsFromIframe = payload[configKey]; // Получаем настройки по динамическому ключу
+      if (settingsFromIframe) {
+        console.log('Получены первоначальные настройки из iframe:', settingsFromIframe);
+        // Данные уже являются объектом (благодаря mapToObject в iframe), поэтому JSON.parse не нужен
+        iframeData.value = settingsFromIframe;
+      } else {
+        console.warn('Получено сообщение initialSettingsLoaded, но конфигурация не найдена по ключу:', configKey, payload);
+      }
+    } else if (messageType === 'gamePlayed') {
+      // Это часть для обработки результатов игры.
+      console.log('Получено сообщение gamePlayed из iframe:', payload);
+      // Здесь вы можете обработать результаты игры, если это необходимо,
+      // но это не должно обновлять iframeData.value, которое предназначено для настроек.
+    }
   }
 };
 
