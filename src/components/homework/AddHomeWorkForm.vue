@@ -4,9 +4,10 @@ import { useI18n } from 'vue-i18n';
 import StepNavigator from './StepNavigator.vue';
 import StudentSelector from './StudentSelector.vue';
 import TrainerSelector from './TrainerSelector.vue';
-import DeadlinePicker from './DeadlinePicker.vue';
 import StudentTag from './StudentTag.vue';
 import successImage from '@/assets/backgrounds/certification/success.png';
+import DatePicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css';
 
 // Import images for trainers
 import trainer1 from '@/assets/backgrounds/trainers/1.png';
@@ -109,9 +110,9 @@ const trainers = [
 
 const selectedStudents = reactive({ value: [] as number[] });
 const selectedTrainer = reactive({ value: null as { id: number; name: string; image?: string; iframeUrl: string } | null });
-const deadline = reactive({ value: '' });
+const deadline = reactive({ value: '' as string | Date });
 const isLoadingIframe = ref(false);
-const iframeData = reactive({ value: null as any }); // New state to store iframe data
+const iframeData = reactive({ value: null as any });
 
 const isStep1Valid = computed(() => {
   return selectedStudents.value.length > 0 && selectedTrainer.value !== null;
@@ -139,7 +140,7 @@ const resetForm = () => {
   selectedStudents.value = [];
   selectedTrainer.value = null;
   deadline.value = '';
-  iframeData.value = null; // Reset iframe data
+  iframeData.value = null;
   currentStep.value = 1;
 };
 
@@ -148,8 +149,8 @@ const homeworkDataForBackend = computed(() => {
     return {
       studentIds: selectedStudents.value,
       trainerId: selectedTrainer.value?.id,
-      deadline: deadline.value,
-      homeWorkSettings: iframeData.value, // Include iframe data
+      deadline: deadline.value instanceof Date ? deadline.value.toISOString() : deadline.value,
+      homeWorkSettings: iframeData.value,
     };
   }
   return null;
@@ -161,19 +162,15 @@ const addHomework = () => {
   }
 };
 
-// Handle messages from iframe
 const handleIframeMessage = (event: MessageEvent) => {
-  // Verify the origin of the message for security
   if (selectedTrainer.value && event.origin === new URL(selectedTrainer.value.iframeUrl).origin) {
     console.log('Received message from iframe:', JSON.parse(event.data.payload.current));
     iframeData.value = JSON.parse(event.data.payload.current);
   }
 };
 
-// Add event listener for iframe messages
 window.addEventListener('message', handleIframeMessage);
 
-// Cleanup event listener on component unmount
 onUnmounted(() => {
   window.removeEventListener('message', handleIframeMessage);
 });
@@ -289,7 +286,7 @@ const handleIframeLoad = () => {
     </div>
 
     <div v-if="currentStep.value === 3" class="step-content">
-      <DeadlinePicker v-model="deadline.value" />
+      <DatePicker v-model="deadline.value" />
     </div>
 
     <div v-if="currentStep.value === 4" class="step-content step-success">
@@ -446,7 +443,6 @@ const handleIframeLoad = () => {
   line-height: 120%;
   letter-spacing: -2%;
   text-align: center;
-
 }
 
 .add-more-button {
