@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { reactive, computed, watch } from 'vue';
+import { reactive, computed, watch, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import StepNavigator from './StepNavigator.vue';
 import StudentSelector from './StudentSelector.vue';
@@ -110,6 +110,7 @@ const trainers = [
 const selectedStudents = reactive({ value: [] as number[] });
 const selectedTrainer = reactive({ value: null as { id: number; name: string; image?: string; iframeUrl: string } | null });
 const deadline = reactive({ value: '' });
+const isLoadingIframe = ref(false); // New state for spinner
 
 const isStep1Valid = computed(() => {
   return selectedStudents.value.length > 0 && selectedTrainer.value !== null;
@@ -160,6 +161,12 @@ watch(() => currentStep.value, (newVal) => {
   if (newVal === 4 && homeworkDataForBackend.value) {
     console.log('Homework Data for Backend:', homeworkDataForBackend.value);
   }
+  // When navigating to step 2 (iframe step), set loading to true
+  if (newVal === 2 && selectedTrainer.value?.iframeUrl) {
+    isLoadingIframe.value = true;
+  } else {
+    isLoadingIframe.value = false;
+  }
 });
 
 const addMoreHomework = () => {
@@ -181,6 +188,10 @@ const prevStep = () => {
     currentStep.value--;
   }
 };
+
+const handleIframeLoad = () => {
+  isLoadingIframe.value = false; // Set loading to false when iframe is loaded
+};
 </script>
 
 <template>
@@ -188,7 +199,7 @@ const prevStep = () => {
     <div class="homework-form__header" v-if="currentStep.value > 1 && currentStep.value < 4">
       <span class="homework-form__back-arrow" @click="prevStep">
         <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M15 10H5M5 10L10 5M5 10L10 15" stroke="#0066FF" stroke-width="1.5" stroke-linecap="round sitcom:round" stroke-linejoin="round"/>
+          <path d="M15 10H5M5 10L10 5M5 10L10 15" stroke="#0066FF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </span>
       <h1 class="homework-form__header-title">{{ steps[currentStep.value - 1].name }}</h1>
@@ -233,13 +244,20 @@ const prevStep = () => {
             @remove="removeStudent"
         />
       </div>
-      <iframe
-          v-if="selectedTrainer.value?.iframeUrl"
-          :src="selectedTrainer.value.iframeUrl"
-          class="trainer-iframe"
-          frameborder="0"
-          allowfullscreen
-      ></iframe>
+      <div class="iframe-container">
+        <div v-if="isLoadingIframe" class="spinner-overlay">
+          <div class="spinner"></div>
+        </div>
+        <iframe
+            v-if="selectedTrainer.value?.iframeUrl"
+            :src="selectedTrainer.value.iframeUrl"
+            class="trainer-iframe"
+            frameborder="0"
+            allowfullscreen
+            @load="handleIframeLoad"
+            :class="{ 'iframe-hidden': isLoadingIframe }"
+        ></iframe>
+      </div>
     </div>
 
     <div v-if="currentStep.value === 3" class="step-content">
@@ -307,10 +325,50 @@ const prevStep = () => {
   margin-top: 38px;
 }
 
+.iframe-container {
+  position: relative;
+  width: 100%;
+  height: 600px; /* Same height as your iframe */
+  border-radius: 8px;
+  overflow: hidden; /* Ensure spinner doesn't overflow */
+}
+
 .trainer-iframe {
   width: 100%;
-  height: 600px;
+  height: 100%; /* Take full height of container */
   border-radius: 8px;
+}
+
+.iframe-hidden {
+  visibility: hidden; /* Hide iframe while loading, but maintain its space */
+}
+
+.spinner-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(255, 255, 255, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10; /* Ensure spinner is above iframe */
+  border-radius: 8px;
+}
+
+.spinner {
+  border: 4px solid #f3f3f3; /* Light grey */
+  border-top: 4px solid #3498db; /* Blue */
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 .step-success {
