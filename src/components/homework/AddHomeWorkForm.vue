@@ -89,22 +89,22 @@ const students = [
 ];
 
 const trainers = [
-  { id: 1, name: 'Знайди пару', image: trainer1, iframeUrl: import.meta.env.VITE_ABACUS_URL },
-  { id: 2, name: 'Техніка швидкості читання', image: trainer2, iframeUrl: import.meta.env.VITE_ALPHABET_URL },
-  { id: 3, name: 'Таблиця Шульте', image: trainer3, iframeUrl: import.meta.env.VITE_SCHULTE_TABLE_URL },
-  { id: 4, name: 'Splitz', image: trainer4, iframeUrl: import.meta.env.VITE_SPRITZ_URL },
-  { id: 5, name: 'Ментальний рахунок', image: trainer5, iframeUrl: import.meta.env.VITE_SPEED_MATH_URL },
-  { id: 6, name: 'Філворди', image: trainer6, iframeUrl: import.meta.env.VITE_FILLWORDS_URL },
-  { id: 7, name: 'Тест Струпа', image: trainer7, iframeUrl: import.meta.env.VITE_STROOP_TEST_URL },
-  { id: 8, name: 'Алфавіт', image: trainer8, iframeUrl: import.meta.env.VITE_ALPHABET_URL },
-  { id: 9, name: 'Знайди слово', image: trainer9, iframeUrl: import.meta.env.VITE_FIND_THE_WORD_URL },
-  { id: 10, name: 'Тексти', image: trainer10, iframeUrl: import.meta.env.VITE_TEXTS_URL },
-  { id: 11, name: 'Кіберкішка', image: trainer11, iframeUrl: import.meta.env.VITE_DINO_URL },
-  { id: 12, name: 'Флешкартки', image: trainer12, iframeUrl: import.meta.env.VITE_FLASH_CARDS_URL },
-  { id: 13, name: 'Абакус', image: trainer13, iframeUrl: import.meta.env.VITE_ABACUS_URL },
-  { id: 14, name: 'Знайди кіберкішка', image: trainer14, iframeUrl: import.meta.env.VITE_FIND_THE_CYBER_CAT_URL },
-  { id: 15, name: 'Мнемотехніка', image: trainer15, iframeUrl: import.meta.env.VITE_MNEMONICS_URL },
-  { id: 16, name: 'Стовпчики', image: trainer16, iframeUrl: import.meta.env.VITE_COLUMNS_URL },
+  { id: 1, name: t('add_homework.trainers.find_pair'), image: trainer1, iframeUrl: import.meta.env.VITE_ABACUS_URL },
+  { id: 2, name: t('add_homework.trainers.speed_reading_technique'), image: trainer2, iframeUrl: import.meta.env.VITE_ALPHABET_URL },
+  { id: 3, name: t('add_homework.trainers.schulte_table'), image: trainer3, iframeUrl: import.meta.env.VITE_SCHULTE_TABLE_URL },
+  { id: 4, name: t('add_homework.trainers.spritz'), image: trainer4, iframeUrl: import.meta.env.VITE_SPRITZ_URL },
+  { id: 5, name: t('add_homework.trainers.mental_arithmetic'), image: trainer5, iframeUrl: import.meta.env.VITE_SPEED_MATH_URL },
+  { id: 6, name: t('add_homework.trainers.fillwords'), image: trainer6, iframeUrl: import.meta.env.VITE_FILLWORDS_URL },
+  { id: 7, name: t('add_homework.trainers.stroop_test'), image: trainer7, iframeUrl: import.meta.env.VITE_STROOP_TEST_URL },
+  { id: 8, name: t('add_homework.trainers.alphabet'), image: trainer8, iframeUrl: import.meta.env.VITE_ALPHABET_URL },
+  { id: 9, name: t('add_homework.trainers.find_word'), image: trainer9, iframeUrl: import.meta.env.VITE_FIND_THE_WORD_URL },
+  { id: 10, name: t('add_homework.trainers.texts'), image: trainer10, iframeUrl: import.meta.env.VITE_TEXTS_URL },
+  { id: 11, name: t('add_homework.trainers.cybercat'), image: trainer11, iframeUrl: import.meta.env.VITE_DINO_URL },
+  { id: 12, name: t('add_homework.trainers.flashcards'), image: trainer12, iframeUrl: import.meta.env.VITE_FLASH_CARDS_URL },
+  { id: 13, name: t('add_homework.trainers.abacus'), image: trainer13, iframeUrl: import.meta.env.VITE_ABACUS_URL },
+  { id: 14, name: t('add_homework.trainers.find_cybercat'), image: trainer14, iframeUrl: import.meta.env.VITE_FIND_THE_CYBER_CAT_URL },
+  { id: 15, name: t('add_homework.trainers.mnemonics'), image: trainer15, iframeUrl: import.meta.env.VITE_MNEMONICS_URL },
+  { id: 16, name: t('add_homework.trainers.columns'), image: trainer16, iframeUrl: import.meta.env.VITE_COLUMNS_URL },
 ];
 
 const selectedStudents = reactive({ value: [] as number[] });
@@ -188,7 +188,7 @@ const prevStep = () => {
     <div class="homework-form__header" v-if="currentStep.value > 1 && currentStep.value < 4">
       <span class="homework-form__back-arrow" @click="prevStep">
         <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M15 10H5M5 10L10 5M5 10L10 15" stroke="#0066FF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M15 10H5M5 10L10 5M5 10L10 15" stroke="#0066FF" stroke-width="1.5" stroke-linecap="round sitcom:round" stroke-linejoin="round"/>
         </svg>
       </span>
       <h1 class="homework-form__header-title">{{ steps[currentStep.value - 1].name }}</h1>
