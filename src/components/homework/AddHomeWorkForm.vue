@@ -286,7 +286,12 @@ const handleIframeLoad = () => {
     </div>
 
     <div v-if="currentStep.value === 3" class="step-content">
-      <DatePicker class="datepicker-container" v-model="deadline.value" :locale="locale" />
+      <DatePicker
+          class="datepicker-container"
+          v-model="deadline.value"
+          :locale="locale"
+          :placeholder="$t('add_homework.deadline_placeholder')"
+      />
     </div>
 
     <div v-if="currentStep.value === 4" class="step-content step-success">
