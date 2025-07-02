@@ -7,21 +7,31 @@ const { t } = useI18n();
 const model = defineModel<string>({ required: true });
 
 const selectedDate = ref('');
-const selectedTime = ref('00:00');
+const selectedHour = ref('00'); // New ref for hour
+const selectedMinute = ref('00'); // New ref for minute
 
+// Watch the model value for initial setup or external changes
 watch(model, (newValue) => {
   if (newValue) {
     const dateTime = new Date(newValue);
     selectedDate.value = dateTime.toISOString().split('T')[0];
-    selectedTime.value = dateTime.toTimeString().substring(0, 5);
+    selectedHour.value = String(dateTime.getHours()).padStart(2, '0');
+    selectedMinute.value = String(dateTime.getMinutes()).padStart(2, '0');
+  } else {
+    // If model becomes empty, reset date and time inputs
+    selectedDate.value = '';
+    selectedHour.value = '00';
+    selectedMinute.value = '00';
   }
 }, { immediate: true });
 
-watch([selectedDate, selectedTime], ([date, time]) => {
-  if (date && time) {
-    model.value = new Date(`${date}T${time}:00`).toISOString();
+// Watch selectedDate, selectedHour, and selectedMinute to update the model
+watch([selectedDate, selectedHour, selectedMinute], ([date, hour, minute]) => {
+  if (date && hour && minute) {
+    // Construct the ISO string from the individual parts
+    model.value = new Date(`${date}T${hour}:${minute}:00`).toISOString();
   } else {
-    model.value = '';
+    model.value = ''; // Set model to empty if date or time is not fully selected
   }
 });
 
@@ -44,11 +54,11 @@ const minutesOptions = computed(() => {
           :placeholder="$t('add_homework.deadline_placeholder')"
       />
       <div class="deadline-picker__time-inputs">
-        <select v-model="selectedTime.split(':')[0]" @change="selectedTime = `${$event.target.value}:${selectedTime.split(':')[1]}`" class="deadline-picker__time-select">
+        <select v-model="selectedHour" class="deadline-picker__time-select">
           <option v-for="hour in hoursOptions" :key="hour" :value="hour">{{ hour }}</option>
         </select>
         <span>:</span>
-        <select v-model="selectedTime.split(':')[1]" @change="selectedTime = `${selectedTime.split(':')[0]}:${$event.target.value}`" class="deadline-picker__time-select">
+        <select v-model="selectedMinute" class="deadline-picker__time-select">
           <option v-for="minute in minutesOptions" :key="minute" :value="minute">{{ minute }}</option>
         </select>
       </div>

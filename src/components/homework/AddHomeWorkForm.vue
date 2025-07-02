@@ -117,6 +117,7 @@ const isStep1Valid = computed(() => {
 });
 
 const isStep3Valid = computed(() => {
+  console.log('isStep3Valid computed:', deadline.value, deadline.value !== ''); // Added log
   return deadline.value !== '';
 });
 
@@ -167,6 +168,15 @@ watch(() => currentStep.value, (newVal) => {
   } else {
     isLoadingIframe.value = false;
   }
+});
+
+watch(() => deadline.value, (newVal) => {
+  console.log('deadline.value changed:', newVal); // Existing log
+});
+
+// Added watch for isStep3Valid to confirm its state
+watch(isStep3Valid, (newVal) => {
+  console.log('isStep3Valid changed:', newVal);
 });
 
 const addMoreHomework = () => {
@@ -269,7 +279,7 @@ const handleIframeLoad = () => {
         <img :src="successImage" alt="Success" class="success-image" />
         <h2>{{ $t('add_homework.success_title') }}</h2>
         <button class="add-more-button" @click="addMoreHomework">
-          {{ $t('add_homework.add_more_button') }}
+          {{ $t('add_homework.ready') }}
         </button>
       </div>
     </div>
@@ -278,7 +288,7 @@ const handleIframeLoad = () => {
         v-if="currentStep.value < 4"
         :steps="steps"
         :current-step="currentStep.value"
-        :is-next-disabled="currentStep.value === 1 ? !isStep1Valid : currentStep.value === 3 ? !isStep3Valid.value : false"
+        :is-next-disabled="currentStep.value === 1 ? !isStep1Valid : currentStep.value === 3 ? !isStep3Valid : false"
         :is-button-visible="currentStep.value < 3"
         @next="nextStep"
         @prev="prevStep"
