@@ -1,10 +1,10 @@
 <script setup lang="ts">
-import { reactive, computed } from 'vue';
+import { reactive, computed, watch } from 'vue';
 import StepNavigator from './StepNavigator.vue';
 import StudentSelector from './StudentSelector.vue';
 import TrainerSelector from './TrainerSelector.vue';
 import DeadlinePicker from './DeadlinePicker.vue';
-import StudentTag from './StudentTag.vue'; // Import the new StudentTag component
+import StudentTag from './StudentTag.vue';
 import successImage from '@/assets/backgrounds/certification/success.png';
 
 // Import images for trainers
@@ -30,7 +30,7 @@ const steps = [
   { id: 1, name: 'Вибір тренажера' },
   { id: 2, name: 'Налаштування' },
   { id: 3, name: 'Термін виконання' },
-  { id: 4, name: 'Термін виконання' },
+  // Step 4 (Success) is handled separately and doesn't need a name here for the navigator
 ];
 
 const students = [
@@ -82,7 +82,7 @@ const students = [
   { id: 46, name: 'Анатолій Вознюк' },
   { id: 47, name: 'Лариса Бондарчук' },
   { id: 48, name: 'Григорій Морозюк' },
-  { id: 49, name: 'Світлана Олійник' },
+  { id: 49, 'name': 'Світлана Олійник' },
   { id: 50, name: 'Юрій Шевчук' },
 ];
 
@@ -114,6 +114,7 @@ const isStep1Valid = computed(() => {
 });
 
 const isStep3Valid = computed(() => {
+  // DeadlinePicker now ensures a valid ISO string if date and time are selected
   return deadline.value !== '';
 });
 
@@ -137,21 +138,42 @@ const resetForm = () => {
   currentStep.value = 1;
 };
 
+// New computed property for the backend object
+const homeworkDataForBackend = computed(() => {
+  if (isStep1Valid.value && isStep3Valid.value) {
+    return {
+      studentIds: selectedStudents.value,
+      trainerId: selectedTrainer.value?.id,
+      deadline: deadline.value, // This will be the ISO string from DeadlinePicker
+    };
+  }
+  return null;
+});
+
 const addHomework = () => {
   if (isStep3Valid.value) {
-    currentStep.value = 4;
-    resetForm();
+    currentStep.value = 4; // Move to the success screen
   }
 };
+
+// Watch for currentStep becoming 4 to log the data
+watch(() => currentStep.value, (newVal) => {
+  if (newVal === 4 && homeworkDataForBackend.value) {
+    console.log('Homework Data for Backend:', homeworkDataForBackend.value);
+  }
+});
 
 const addMoreHomework = () => {
   resetForm();
 };
 
 const nextStep = () => {
-  if (currentStep.value === 1 && !isStep1Valid.value) return;
-  if (currentStep.value === 3 && !isStep3Valid.value) return;
-  if (currentStep.value < steps.length - 1) {
+  // For the final step (Step 3), the "Next" button should trigger addHomework
+  if (currentStep.value === 3) {
+    addHomework();
+  } else if (currentStep.value === 1 && !isStep1Valid.value) {
+    return;
+  } else if (currentStep.value < 3) { // Only increment up to step 3
     currentStep.value++;
   }
 };
@@ -165,7 +187,7 @@ const prevStep = () => {
 
 <template>
   <div class="homework-form">
-    <div class="homework-form__header" v-if="currentStep.value > 1">
+    <div class="homework-form__header" v-if="currentStep.value > 1 && currentStep.value < 4">
       <span class="homework-form__back-arrow" @click="prevStep">
         <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M15 10H5M5 10L10 5M5 10L10 15" stroke="#0066FF" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
@@ -237,10 +259,11 @@ const prevStep = () => {
     </div>
 
     <StepNavigator
+        v-if="currentStep.value < 4"
         :steps="steps"
         :current-step="currentStep.value"
         :is-next-disabled="currentStep.value === 1 ? !isStep1Valid : currentStep.value === 3 ? !isStep3Valid.value : false"
-        :is-button-visible="currentStep.value < steps.length - 1"
+        :is-button-visible="currentStep.value < 3"
         @next="nextStep"
         @prev="prevStep"
     />
@@ -278,7 +301,7 @@ const prevStep = () => {
   margin-bottom: 32px;
 }
 
-.selected-students-tags { /* Changed from .selected-students */
+.selected-students-tags {
   display: flex;
   flex-wrap: wrap;
   gap: 16px;
