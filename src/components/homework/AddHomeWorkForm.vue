@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { reactive, computed, watch, ref } from 'vue';
+import { reactive, computed, watch, ref, onUnmounted } from 'vue';
 import { useI18n } from 'vue-i18n';
 import StepNavigator from './StepNavigator.vue';
 import StudentSelector from './StudentSelector.vue';
@@ -110,14 +110,15 @@ const trainers = [
 const selectedStudents = reactive({ value: [] as number[] });
 const selectedTrainer = reactive({ value: null as { id: number; name: string; image?: string; iframeUrl: string } | null });
 const deadline = reactive({ value: '' });
-const isLoadingIframe = ref(false); // New state for spinner
+const isLoadingIframe = ref(false);
+const iframeData = reactive({ value: null as any }); // New state to store iframe data
 
 const isStep1Valid = computed(() => {
   return selectedStudents.value.length > 0 && selectedTrainer.value !== null;
 });
 
 const isStep3Valid = computed(() => {
-  console.log('isStep3Valid computed:', deadline.value, deadline.value !== ''); // Added log
+  console.log('isStep3Valid computed:', deadline.value, deadline.value !== '');
   return deadline.value !== '';
 });
 
@@ -138,6 +139,7 @@ const resetForm = () => {
   selectedStudents.value = [];
   selectedTrainer.value = null;
   deadline.value = '';
+  iframeData.value = null; // Reset iframe data
   currentStep.value = 1;
 };
 
@@ -147,6 +149,7 @@ const homeworkDataForBackend = computed(() => {
       studentIds: selectedStudents.value,
       trainerId: selectedTrainer.value?.id,
       deadline: deadline.value,
+      homeWorkSettings: iframeData.value, // Include iframe data
     };
   }
   return null;
@@ -158,11 +161,27 @@ const addHomework = () => {
   }
 };
 
+// Handle messages from iframe
+const handleIframeMessage = (event: MessageEvent) => {
+  // Verify the origin of the message for security
+  if (selectedTrainer.value && event.origin === new URL(selectedTrainer.value.iframeUrl).origin) {
+    console.log('Received message from iframe:', JSON.parse(event.data.payload.current));
+    iframeData.value = JSON.parse(event.data.payload.current);
+  }
+};
+
+// Add event listener for iframe messages
+window.addEventListener('message', handleIframeMessage);
+
+// Cleanup event listener on component unmount
+onUnmounted(() => {
+  window.removeEventListener('message', handleIframeMessage);
+});
+
 watch(() => currentStep.value, (newVal) => {
   if (newVal === 4 && homeworkDataForBackend.value) {
     console.log('Homework Data for Backend:', homeworkDataForBackend.value);
   }
-  // When navigating to step 2 (iframe step), set loading to true
   if (newVal === 2 && selectedTrainer.value?.iframeUrl) {
     isLoadingIframe.value = true;
   } else {
@@ -171,10 +190,9 @@ watch(() => currentStep.value, (newVal) => {
 });
 
 watch(() => deadline.value, (newVal) => {
-  console.log('deadline.value changed:', newVal); // Existing log
+  console.log('deadline.value changed:', newVal);
 });
 
-// Added watch for isStep3Valid to confirm its state
 watch(isStep3Valid, (newVal) => {
   console.log('isStep3Valid changed:', newVal);
 });
@@ -200,7 +218,7 @@ const prevStep = () => {
 };
 
 const handleIframeLoad = () => {
-  isLoadingIframe.value = false; // Set loading to false when iframe is loaded
+  isLoadingIframe.value = false;
 };
 </script>
 
@@ -338,19 +356,19 @@ const handleIframeLoad = () => {
 .iframe-container {
   position: relative;
   width: 100%;
-  height: 600px; /* Same height as your iframe */
+  height: 600px;
   border-radius: 8px;
-  overflow: hidden; /* Ensure spinner doesn't overflow */
+  overflow: hidden;
 }
 
 .trainer-iframe {
   width: 100%;
-  height: 100%; /* Take full height of container */
+  height: 100%;
   border-radius: 8px;
 }
 
 .iframe-hidden {
-  visibility: hidden; /* Hide iframe while loading, but maintain its space */
+  visibility: hidden;
 }
 
 .spinner-overlay {
@@ -363,13 +381,13 @@ const handleIframeLoad = () => {
   display: flex;
   justify-content: center;
   align-items: center;
-  z-index: 10; /* Ensure spinner is above iframe */
+  z-index: 10;
   border-radius: 8px;
 }
 
 .spinner {
-  border: 4px solid #f3f3f3; /* Light grey */
-  border-top: 4px solid #3498db; /* Blue */
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #3498db;
   border-radius: 50%;
   width: 50px;
   height: 50px;
@@ -422,14 +440,17 @@ const handleIframeLoad = () => {
 }
 
 .success-step h2 {
-  font-family: 'Onest', sans-serif;
+  font-family: Onest;
   font-weight: 500;
-  font-size: 24px;
-  color: #333;
+  font-size: 48px;
+  line-height: 120%;
+  letter-spacing: -2%;
   text-align: center;
+
 }
 
 .add-more-button {
+  min-width: 280px;
   background: #0066FF;
   color: white;
   border: none;
