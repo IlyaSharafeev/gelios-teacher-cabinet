@@ -26,10 +26,10 @@ import trainer16 from '@/assets/backgrounds/trainers/16.png';
 
 const currentStep = reactive({ value: 1 });
 const steps = [
-  { id: 1, name: 'Мої учні, тренажери' },
-  { id: 2, name: 'Тренажер' },
+  { id: 1, name: 'Вибір тренажера' },
+  { id: 2, name: 'Налаштування' },
   { id: 3, name: 'Термін виконання' },
-  { id: 4, name: 'Завдання додане' },
+  { id: 4, name: 'Термін виконання' },
 ];
 
 const students = [
@@ -152,7 +152,6 @@ const prevStep = () => {
 
     <div v-if="currentStep.value === 2" class="step-content">
       <div class="selected-students">
-        <h2 class="selected-students__title">Вибрані учні</h2>
         <p>{{ selectedStudentsNames }}</p>
       </div>
       <iframe
