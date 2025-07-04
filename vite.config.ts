@@ -9,6 +9,13 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src'),
     },
   },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        quietDeps: false, // Подавляет предупреждения от импортированных SCSS-файлов
+      },
+    },
+  },
   build: {
     assetsInclude: ['**/*.json'],
     rollupOptions: {
