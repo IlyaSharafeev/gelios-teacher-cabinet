@@ -340,7 +340,7 @@ watch(route, () => {
 </template>
 
 <style scoped lang="scss">
-@import "@/assets/scss/mixins/mixins-media";
+@use "@/assets/scss/mixins/mixins-media" as *;
 
 .login-page {
   .background-gradient {

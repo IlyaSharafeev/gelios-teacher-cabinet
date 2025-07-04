@@ -359,7 +359,7 @@ const closeSidebar = () => {
 </template>
 
 <style scoped lang="scss">
-@import "@/assets/scss/mixins/mixins-media";
+@use "@/assets/scss/mixins/mixins-media" as *;
 
 $color-speed-reading: rgba(36, 124, 255, 0.15);
 $color-mental-arithmetic: rgba(255, 132, 197, 0.15);
@@ -890,7 +890,7 @@ tr {
   color: #ff5050;
 }
 
-.homework__filter-select ::v-deep .v-field.v-field {
+.homework__filter-select :deep(.v-field.v-field) {
   border: 1.5px solid #30303D26 !important;
   border-radius: 12px;
 }

@@ -1,3 +1,5 @@
+@use "sass:map";
+
 // Breakpoints для адаптивного дизайна
 $breakpoints: (
         mobile: 390px,
@@ -8,8 +10,8 @@ $breakpoints: (
 
 // Миксин для медиа-запросов (max-width)
 @mixin media-max($breakpoint) {
-  @if map-has-key($breakpoints, $breakpoint) {
-    @media (max-width: #{map-get($breakpoints, $breakpoint)}) {
+  @if map.has-key($breakpoints, $breakpoint) {
+    @media (max-width: #{map.get($breakpoints, $breakpoint)}) {
       @content;
     }
   } @else {
@@ -19,8 +21,8 @@ $breakpoints: (
 
 // Миксин для медиа-запросов (min-width)
 @mixin media-min($breakpoint) {
-  @if map-has-key($breakpoints, $breakpoint) {
-    @media (min-width: #{map-get($breakpoints, $breakpoint)}) {
+  @if map.has-key($breakpoints, $breakpoint) {
+    @media (min-width: #{map.get($breakpoints, $breakpoint)}) {
       @content;
     }
   } @else {
@@ -30,28 +32,11 @@ $breakpoints: (
 
 // Миксин для медиа-запросов в диапазоне (min-width и max-width)
 @mixin media-between($min-breakpoint, $max-breakpoint) {
-  @if map-has-key($breakpoints, $min-breakpoint) and map-has-key($breakpoints, $max-breakpoint) {
-    @media (min-width: #{map-get($breakpoints, $min-breakpoint)}) and (max-width: #{map-get($breakpoints, $max-breakpoint)}) {
+  @if map.has-key($breakpoints, $min-breakpoint) and map.has-key($breakpoints, $max-breakpoint) {
+    @media (min-width: #{map.get($breakpoints, $min-breakpoint)}) and (max-width: #{map.get($breakpoints, $max-breakpoint)}) {
       @content;
     }
   } @else {
     @warn "One or both breakpoints ('#{$min-breakpoint}', '#{$max-breakpoint}') not found in $breakpoints map.";
   }
 }
-
-// Пример использования миксинов
-// .example {
-//   font-size: 16px;
-
-//   @include media-max(desktop) {
-//     font-size: 14px;
-//   }
-
-//   @include media-min(tablet) {
-//     font-size: 18px;
-//   }
-
-//   @include media-between(mobile, tablet) {
-//     font-size: 12px;
-//   }
-// }
