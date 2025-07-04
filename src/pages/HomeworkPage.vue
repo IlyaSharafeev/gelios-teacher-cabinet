@@ -74,14 +74,9 @@ const clearDateRange = () => {
 // Table headers
 const headers = [
   {
-    title: t('homework.table.direction'),
-    key: 'direction',
-    formatter: (value: string) => {
-      const direction = directions.find((d) => t(`homework.directions.${d.name_key}`) === value);
-      return direction ? direction.abbreviation : value;
-    },
+    title: t('homework.table.student'),
+    key: 'name',
   },
-  { title: t('homework.table.student'), key: 'name' },
   { title: t('homework.table.task'), key: 'task' },
   {
     title: t('homework.table.date'),
@@ -188,11 +183,12 @@ const filteredItems = computed(() => {
         :hide-default-footer="false"
         :hide-default-header="true"
     >
-      <!-- Custom slot for direction column to apply blue uppercase styling -->
-      <template v-slot:item.direction="{ item }">
+      <!-- Custom slot for name column to include direction abbreviation -->
+      <template v-slot:item.name="{ item }">
         <span class="homework__direction-abbr">
           {{ directions.find((d) => t(`homework.directions.${d.name_key}`) === item.direction)?.abbreviation || item.direction }}
         </span>
+        <span class="homework__student-name">{{ item.name }}</span>
       </template>
       <!-- Custom slot for date column to apply conditional coloring -->
       <template v-slot:item.date="{ item }">
@@ -329,6 +325,11 @@ const filteredItems = computed(() => {
     color: #1976d2;
     text-transform: uppercase;
     font-weight: 500;
+    margin-right: 8px;
+  }
+
+  &__student-name {
+    font-weight: 400;
   }
 
   &__date-default {
@@ -476,6 +477,11 @@ const filteredItems = computed(() => {
       color: #1976d2;
       text-transform: uppercase;
       font-weight: 500;
+      margin-right: 8px;
+    }
+
+    &__student-name {
+      font-weight: 400;
     }
 
     &__date-default {
