@@ -934,16 +934,15 @@ watch(route, () => {
     .password-recovery,
     .password-reset {
       width: 539px;
-      position: absolute;
-      right: 69px;
+      position: sticky;
       top: 50%;
       transform: translateY(-20%);
-      z-index: 100;
       margin: 0 auto;
       padding: 39px 44px;
       border-radius: 40px;
       box-shadow: 0px 25px 42.9px -18px #0066ff5c;
       background-color: #ffffff;
+      z-index: 100;
 
       .back-to-login {
         text-align: center;
