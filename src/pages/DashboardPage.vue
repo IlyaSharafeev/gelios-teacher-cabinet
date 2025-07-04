@@ -101,6 +101,8 @@ const { t } = useI18n();
 </template>
 
 <style scoped lang="scss">
+@import "@/assets/scss/mixins/mixins-media";
+
 .dashboard {
   .header {
     display: flex;
@@ -131,6 +133,7 @@ const { t } = useI18n();
         background-repeat: no-repeat;
         width: 284px;
         height: 243px;
+        display: none;
       }
     }
 
@@ -404,5 +407,16 @@ const { t } = useI18n();
         width: 100%;
     }
   }}
+
+  @include media-max(desktop) {
+    .dashboard {
+      padding: 32px;
+    }
+    
+    .main  {
+      display: flex;
+      flex-direction: column;
+    }
+  }
 }
 </style>
