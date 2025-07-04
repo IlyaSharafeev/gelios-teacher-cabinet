@@ -405,17 +405,151 @@ const { t } = useI18n();
 
       .btn-watch-all {
         width: 100%;
+        margin-top: 32px;
     }
   }}
+}
 
-  @include media-max(desktop) {
-    .dashboard {
-      padding: 32px;
-    }
-    
+@include media-max(desktop) {
+  .dashboard {
+    padding: 32px;
+
     .main  {
       display: flex;
       flex-direction: column;
+    }
+
+    .header {
+      .welcome-message {
+        .text {
+          font-family: "Onest", sans-serif;
+          font-size: 40px;
+        }
+      }
+
+      .profile {
+        .notification-wrapper {
+          .notification {
+            /* Font not applicable */
+          }
+        }
+
+        .profile-image {
+          /* Font not applicable */
+        }
+      }
+    }
+
+    .content-left {
+      .statistic {
+        .statistic_title {
+          font-family: "Onest", sans-serif;
+          font-size: 20px;
+        }
+
+        .statistic_blocks {
+          .statistic_block {
+            .statistic_block-title {
+              font-family: "Onest", sans-serif;
+              font-size: 44px;
+            }
+
+            .statistic_block-description {
+              font-family: "Onest", sans-serif; /* Update font here */
+              font-size: 16px; /* Adjust as needed */
+            }
+
+            &--students_count {
+              .statistic_block-title {
+                font-family: "Onest", sans-serif; /* Update font here */
+              }
+            }
+
+            &--homework_count {
+              .statistic_block-title {
+                font-family: "Onest", sans-serif; /* Update font here */
+              }
+            }
+
+            &--lessons_count {
+              .statistic_block-title {
+                font-family: "Onest", sans-serif; /* Update font here */
+              }
+            }
+          }
+        }
+      }
+
+      .homework {
+        .homework__title {
+          font-family: "Onest", sans-serif; /* Update font here */
+          font-size: 18px; /* Adjust as needed */
+        }
+
+        .homework__items {
+          .homework__item {
+            .name-student {
+              font-family: "Onest", sans-serif; /* Update font here */
+              font-size: 16px; /* Adjust as needed */
+            }
+
+            .name-trainer {
+              font-family: "Onest", sans-serif; /* Update font here */
+              font-size: 16px; /* Adjust as needed */
+            }
+
+            .homework-date {
+              font-family: "Onest", sans-serif; /* Update font here */
+              font-size: 16px; /* Adjust as needed */
+            }
+
+            &--overdue {
+              .name-student,
+              .name-trainer,
+              .homework-date {
+                font-family: "Onest", sans-serif; /* Update font here */
+              }
+            }
+          }
+        }
+
+        .btn-watch-all {
+          font-family: "Onest", sans-serif; /* Update font here */
+          font-size: 16px; /* Adjust as needed */
+        }
+      }
+    }
+
+    .content-right {
+      .upcoming-classes {
+        .upcoming-classes__title {
+          font-family: "Onest", sans-serif; /* Update font here */
+          font-size: 18px; /* Adjust as needed */
+        }
+
+        .upcoming-classes__items {
+          .upcoming-classes__item {
+            .upcoming-classes__item-name {
+              font-family: "Onest", sans-serif; /* Update font here */
+              font-size: 16px; /* Adjust as needed */
+            }
+
+            .upcoming-classes__item-date {
+              font-family: "Onest", sans-serif; /* Update font here */
+              font-size: 16px; /* Adjust as needed */
+            }
+
+            .upcoming-classes__item-icon {
+              /* Font not applicable */
+            }
+          }
+        }
+      }
+
+      .btn-watch-all {
+        font-family: "Onest", sans-serif; /* Update font here */
+        font-size: 16px; /* Adjust as needed */
+      }
     }
   }
 }

@@ -178,7 +178,7 @@
   .sidebar ul {
     flex-direction: row;
     justify-content: center;
-    gap: 20px;
+    gap: 25px;
     flex-grow: 1;
   }
 
@@ -199,7 +199,7 @@
 
   .content {
     margin: 0;
-    margin-bottom: 150px;
+    margin-bottom: 120px;
     margin-left: 0;
     width: 100%;
   }
