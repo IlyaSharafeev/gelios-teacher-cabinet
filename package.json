@@ -16,6 +16,7 @@
     "@vuelidate/validators": "^2.0.4",
     "@vuepic/vue-datepicker": "^11.0.2",
     "axios": "^1.9.0",
+    "jspdf": "^3.0.1",
     "path": "^0.12.7",
     "pinia": "^3.0.2",
     "vue": "^3.5.13",

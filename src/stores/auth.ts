@@ -50,12 +50,10 @@ export const useAuthStore = defineStore('auth', {
 
         async login({email, password}) {
             try {
-                const response = await axios.post(`${baseURL}/api/auth/login`, {
-                teacher: {
+                const response = await axios.post(`${baseURL}/api/auth/sign-in`, {
                     email,
-                        password,
-                }
-            });
+                    password,
+                });
                 console.log(response);
                 this.token = response.data.access_token;
                 this.user = response.data.user;

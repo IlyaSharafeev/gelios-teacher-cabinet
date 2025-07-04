@@ -20,7 +20,7 @@ const i18n = createI18n({
         uk,
     },
     warnHtmlInMessage: 'off',
-    silentTranslationWarn: false, // Показываем предупреждения о пропущенных переводах
+    silentTranslationWarn: true, // Показываем предупреждения о пропущенных переводах
 });
 
 export default i18n;

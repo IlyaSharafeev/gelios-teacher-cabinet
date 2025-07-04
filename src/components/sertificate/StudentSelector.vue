@@ -10,9 +10,11 @@ const props = withDefaults(defineProps<{
   selectAllText?: string;
   singleSelect?: boolean;
   isVisibleSearch?: boolean;
+  showCheckbox?: boolean;
 }>(), {
   isVisibleSearch: true,
-  singleSelect: false
+  singleSelect: false,
+  showCheckbox: true
 });
 
 const emit = defineEmits(['update:modelValue']);
@@ -90,7 +92,7 @@ const toggleItem = (itemId: number) => {
             @click="selectAll"
         >
           {{ selectAllText }}
-          <span v-if="Array.isArray(selected) && selected.length === items.length" class="selector__checkmark"></span>
+          <span v-if="showCheckbox && Array.isArray(selected) && selected.length === items.length" class="selector__checkmark"></span>
         </div>
         <div
             v-for="item in filteredItems"
@@ -108,7 +110,10 @@ const toggleItem = (itemId: number) => {
             />
             <span>{{ item.name }}</span>
           </div>
-          <span v-if="singleSelect ? selected === item.id : Array.isArray(selected) && selected.includes(item.id)" class="selector__checkmark"></span>
+          <span
+              v-if="showCheckbox && (singleSelect ? selected === item.id : Array.isArray(selected) && selected.includes(item.id))"
+              class="selector__checkmark"
+          ></span>
         </div>
       </template>
       <div v-else class="selector__no-items">
@@ -228,7 +233,7 @@ const toggleItem = (itemId: number) => {
     width: 60px;
     height: 40px;
     object-fit: contain;
-    border-radius: 4px;
+    border-radius: 5px;
   }
 }
 </style>

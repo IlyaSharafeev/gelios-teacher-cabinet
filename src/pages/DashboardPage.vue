@@ -40,8 +40,6 @@ const homeworks: Homework[] = [
 ];
 
 const { t } = useI18n();
-
-console.log('current locale:', useI18n().locale.value)
 </script>
 
 <template>
@@ -67,7 +65,7 @@ console.log('current locale:', useI18n().locale.value)
             {{ t('dashboard.statistics.title') }}
           </div>
           <div class="statistic_blocks">
-            <div v-for="(stat, index) in statistics" :key="index" class="statistic_block">
+            <div v-for="(stat, index) in statistics" :key="index" class="statistic_block" :class="`statistic_block--${stat.description_key}`">
               <div class="statistic_block-title">{{ stat.title }}</div>
               <div class="statistic_block-description">{{ t(`dashboard.statistics.${stat.description_key}`) }}</div>
             </div>
@@ -82,8 +80,8 @@ console.log('current locale:', useI18n().locale.value)
               <div class="homework-date">{{ homework.date }}</div>
             </div>
           </div>
+          <router-link to="homework" class="button btn-watch-all">{{ t('dashboard.view_all') }}</router-link>
         </div>
-        <router-link to="homework" class="button btn-watch-all">{{ t('dashboard.view_all') }}</router-link>
       </div>
       <div class="content-right">
         <div class="upcoming-classes">
@@ -103,6 +101,8 @@ console.log('current locale:', useI18n().locale.value)
 </template>
 
 <style scoped lang="scss">
+@import "@/assets/scss/mixins/mixins-media";
+
 .dashboard {
   .header {
     display: flex;
@@ -133,6 +133,7 @@ console.log('current locale:', useI18n().locale.value)
         background-repeat: no-repeat;
         width: 284px;
         height: 243px;
+        display: none;
       }
     }
 
@@ -179,6 +180,11 @@ console.log('current locale:', useI18n().locale.value)
 
       .statistic {
         border-radius: 12px;
+        backdrop-filter: blur(12px);
+        background: #FFFFFF82;
+        border-radius: 28px;
+        padding: 24px;
+        max-height: 251px;
 
         .statistic_title {
           font-family: "Onest", sans-serif;
@@ -186,7 +192,7 @@ console.log('current locale:', useI18n().locale.value)
           font-size: 20px;
           line-height: 100%;
           letter-spacing: 0%;
-          color: #a4b9d4;
+          color: #2C2C3A;
         }
 
         .statistic_blocks {
@@ -220,13 +226,36 @@ console.log('current locale:', useI18n().locale.value)
             line-height: 100%;
             letter-spacing: 0%;
             color: #30303d;
+            opacity: 0.5;
+          }
+
+          &--students_count {
+            .statistic_block-title {
+              color: #0066FF;
+            }
+          }
+
+          &--homework_count {
+            .statistic_block-title {
+              color: #1FAC08;
+            }
+          }
+
+          &--lessons_count {
+            .statistic_block-title {
+              color: #FF7B7B;
+            }
           }
         }
       }
 
       .homework {
-        margin-top: 60px;
+        margin-top: 22px;
         border-radius: 12px;
+        backdrop-filter: blur(12px);
+        background: #FFFFFF82;
+        border-radius: 28px;
+        padding: 24px;
 
         .homework__title {
           font-family: "Onest", sans-serif;
@@ -234,7 +263,7 @@ console.log('current locale:', useI18n().locale.value)
           font-size: 20px;
           line-height: 100%;
           letter-spacing: 0%;
-          color: #a4b9d4;
+          color: #2C2C3A;
           margin-bottom: 24px;
         }
 
@@ -305,6 +334,13 @@ console.log('current locale:', useI18n().locale.value)
       flex: 1;
       min-height: 400px;
       border-radius: 12px;
+      backdrop-filter: blur(12px);
+      background: #FFFFFF82;
+      border-radius: 28px;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
 
       .upcoming-classes {
         border-radius: 12px;
@@ -315,14 +351,14 @@ console.log('current locale:', useI18n().locale.value)
           font-size: 20px;
           line-height: 100%;
           letter-spacing: 0%;
-          color: #a4b9d4;
+          color: #2C2C3A;
           margin-bottom: 24px;
         }
 
         .upcoming-classes__items {
           display: flex;
           flex-direction: column;
-          gap: 16px;
+          gap: 12px;
         }
 
         .upcoming-classes__item {
@@ -368,7 +404,151 @@ console.log('current locale:', useI18n().locale.value)
       }
 
       .btn-watch-all {
+        width: 100%;
         margin-top: 32px;
+    }
+  }}
+}
+
+@include media-max(desktop) {
+  .dashboard {
+    padding: 32px;
+
+    .main  {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .header {
+      .welcome-message {
+        .text {
+          font-family: "Onest", sans-serif;
+          font-size: 40px;
+        }
+      }
+
+      .profile {
+        .notification-wrapper {
+          .notification {
+            /* Font not applicable */
+          }
+        }
+
+        .profile-image {
+          /* Font not applicable */
+        }
+      }
+    }
+
+    .content-left {
+      .statistic {
+        .statistic_title {
+          font-family: "Onest", sans-serif;
+          font-size: 20px;
+        }
+
+        .statistic_blocks {
+          .statistic_block {
+            .statistic_block-title {
+              font-family: "Onest", sans-serif;
+              font-size: 44px;
+            }
+
+            .statistic_block-description {
+              font-family: "Onest", sans-serif; /* Update font here */
+              font-size: 16px; /* Adjust as needed */
+            }
+
+            &--students_count {
+              .statistic_block-title {
+                font-family: "Onest", sans-serif; /* Update font here */
+              }
+            }
+
+            &--homework_count {
+              .statistic_block-title {
+                font-family: "Onest", sans-serif; /* Update font here */
+              }
+            }
+
+            &--lessons_count {
+              .statistic_block-title {
+                font-family: "Onest", sans-serif; /* Update font here */
+              }
+            }
+          }
+        }
+      }
+
+      .homework {
+        .homework__title {
+          font-family: "Onest", sans-serif; /* Update font here */
+          font-size: 18px; /* Adjust as needed */
+        }
+
+        .homework__items {
+          .homework__item {
+            .name-student {
+              font-family: "Onest", sans-serif; /* Update font here */
+              font-size: 16px; /* Adjust as needed */
+            }
+
+            .name-trainer {
+              font-family: "Onest", sans-serif; /* Update font here */
+              font-size: 16px; /* Adjust as needed */
+            }
+
+            .homework-date {
+              font-family: "Onest", sans-serif; /* Update font here */
+              font-size: 16px; /* Adjust as needed */
+            }
+
+            &--overdue {
+              .name-student,
+              .name-trainer,
+              .homework-date {
+                font-family: "Onest", sans-serif; /* Update font here */
+              }
+            }
+          }
+        }
+
+        .btn-watch-all {
+          font-family: "Onest", sans-serif; /* Update font here */
+          font-size: 16px; /* Adjust as needed */
+        }
+      }
+    }
+
+    .content-right {
+      .upcoming-classes {
+        .upcoming-classes__title {
+          font-family: "Onest", sans-serif; /* Update font here */
+          font-size: 18px; /* Adjust as needed */
+        }
+
+        .upcoming-classes__items {
+          .upcoming-classes__item {
+            .upcoming-classes__item-name {
+              font-family: "Onest", sans-serif; /* Update font here */
+              font-size: 16px; /* Adjust as needed */
+            }
+
+            .upcoming-classes__item-date {
+              font-family: "Onest", sans-serif; /* Update font here */
+              font-size: 16px; /* Adjust as needed */
+            }
+
+            .upcoming-classes__item-icon {
+              /* Font not applicable */
+            }
+          }
+        }
+      }
+
+      .btn-watch-all {
+        font-family: "Onest", sans-serif; /* Update font here */
+        font-size: 16px; /* Adjust as needed */
       }
     }
   }

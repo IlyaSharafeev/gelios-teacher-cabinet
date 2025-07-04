@@ -6,6 +6,7 @@
     <div class="sidebar-wrapper">
       <aside class="sidebar">
         <nav>
+          <div class="logo-mobile"></div>
           <ul>
             <li>
               <router-link to="/dashboard" class="sidebar-link">
@@ -77,7 +78,9 @@
   </div>
 </template>
 
-<style scoped>
+<style scoped lang="scss">
+@import "@/assets/scss/mixins/mixins-media";
+
 .layout {
   display: flex;
   background-image: url('@/assets/backgrounds/dashboard.png');
@@ -94,6 +97,7 @@
   position: fixed;
   top: 60px;
   left: 60px;
+  z-index: 1000;
 }
 
 .sidebar ul {
@@ -143,7 +147,7 @@
   background-color: #FFFFFF;
   border-radius: 27px;
   padding: 21px;
-  
+
   .logo {
     width: 50px;
     height: 50px;
@@ -153,4 +157,52 @@
     background-repeat: no-repeat;
   }
 }
+
+@include media-max(desktop) {
+  .sidebar {
+    top: auto;
+    bottom: 32px;
+    left: 32px;
+    right: 32px;
+    border-radius: 16px;
+    padding: 16px;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+
+    nav {
+      display: flex;
+      align-items: center;
+      position: relative;
+    }
+  }
+
+  .sidebar ul {
+    flex-direction: row;
+    justify-content: center;
+    gap: 25px;
+    flex-grow: 1;
+  }
+
+  .logo-wrapper {
+    display: none;
+  }
+
+  .logo-mobile {
+    width: 50px;
+    height: 50px;
+    background-image: url('@/assets/images/logo/logo.svg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: absolute;
+    left: 0;
+  }
+
+  .content {
+    margin: 0;
+    margin-bottom: 120px;
+    margin-left: 0;
+    width: 100%;
+  }
+}
+
 </style>

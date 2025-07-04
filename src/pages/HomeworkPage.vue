@@ -74,14 +74,9 @@ const clearDateRange = () => {
 // Table headers
 const headers = [
   {
-    title: t('homework.table.direction'),
-    key: 'direction',
-    formatter: (value: string) => {
-      const direction = directions.find((d) => t(`homework.directions.${d.name_key}`) === value);
-      return direction ? direction.abbreviation : value;
-    },
+    title: t('homework.table.student'),
+    key: 'name',
   },
-  { title: t('homework.table.student'), key: 'name' },
   { title: t('homework.table.task'), key: 'task' },
   {
     title: t('homework.table.date'),
@@ -188,11 +183,14 @@ const filteredItems = computed(() => {
         :hide-default-footer="false"
         :hide-default-header="true"
     >
-      <!-- Custom slot for direction column to apply blue uppercase styling -->
-      <template v-slot:item.direction="{ item }">
-        <span class="homework__direction-abbr">
-          {{ directions.find((d) => t(`homework.directions.${d.name_key}`) === item.direction)?.abbreviation || item.direction }}
-        </span>
+      <!-- Custom slot for name column to include direction abbreviation -->
+      <template v-slot:item.name="{ item }">
+        <div class="homework__name-container">
+          <span class="homework__student-name">{{ item.name }}</span>
+          <span class="homework__direction-abbr">
+            {{ directions.find((d) => t(`homework.directions.${d.name_key}`) === item.direction)?.abbreviation || item.direction }}
+          </span>
+        </div>
       </template>
       <!-- Custom slot for date column to apply conditional coloring -->
       <template v-slot:item.date="{ item }">
@@ -212,6 +210,8 @@ const filteredItems = computed(() => {
 </template>
 
 <style scoped lang="scss">
+@import "@/assets/scss/mixins/mixins-media";
+
 .homework {
   position: relative;
   padding: 40px 48px;
@@ -323,10 +323,20 @@ const filteredItems = computed(() => {
     padding: 20px 0;
   }
 
+  &__name-container {
+    display: flex;
+    align-items: center;
+  }
+
   &__direction-abbr {
     color: #1976d2;
     text-transform: uppercase;
     font-weight: 500;
+    margin-left: 8px;
+  }
+
+  &__student-name {
+    font-weight: 400;
   }
 
   &__date-default {
@@ -354,6 +364,166 @@ const filteredItems = computed(() => {
   &__progress-icon {
     margin-left: 4px;
     font-size: 16px;
+  }
+}
+
+@include media-max(desktop) {
+  .homework {
+    position: relative;
+    padding: 40px 48px;
+    border-radius: 32px;
+    background-color: #FFFFFF;
+    margin: 32px;
+
+    .book-float {
+      position: absolute;
+      top: -50px;
+      right: 48px;
+      background-image: url("@/assets/images/pages/dashboard/book.png");
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      width: 136px;
+      height: 120px;
+    }
+
+    &__title {
+      margin-bottom: 40px;
+      font-family: "Onest" sans-serif;
+      font-weight: 500;
+      font-size: 48px;
+      line-height: 130%;
+      letter-spacing: -2%;
+    }
+
+    &__filters {
+      display: flex;
+      gap: 20px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      align-items: flex-start;
+    }
+
+    &__filter-toggle {
+      :deep(.v-btn) {
+        height: 44px !important;
+        min-height: 44px !important;
+        text-transform: none;
+        font-weight: 600;
+        font-size: 16px;
+        line-height: 24px;
+        padding: 10px 17px;
+      }
+
+      :deep(.v-btn--active) {
+        background-color: #0066ff !important;
+        color: #ffffff !important;
+        border-radius: 16px;
+      }
+
+      :deep(.v-btn:not(.v-btn--active)) {
+        border-radius: 16px;
+      }
+    }
+
+    &__filter-select {
+      width: 232px;
+      max-width: 232px;
+
+      :deep(.v-field) {
+        height: 44px !important;
+        border-radius: 12px !important;
+        border: 1.5px solid #30303D26 !important;
+        box-shadow: none !important;
+        outline: none !important;
+      }
+
+      :deep(.v-field__input) {
+        height: 44px !important;
+        padding: 0 12px !important;
+        display: flex;
+        align-items: center;
+      }
+
+      :deep(.v-field--focused) {
+        outline: none !important;
+        box-shadow: none !important;
+      }
+
+      :deep(.v-field__append) {
+        display: none !important;
+      }
+    }
+
+    &__date-picker-wrapper {
+      width: 286px;
+
+      .calendar-icon {
+        margin-left: 10px;
+      }
+    }
+
+    &__table {
+      background-color: transparent;
+    }
+
+    :deep(.v-data-table-header) {
+      display: none;
+    }
+
+    :deep(.v-data-table__tr:not(:first-child):not(:last-child)) {
+      border-bottom: 1px solid #e0e0e0;
+    }
+
+    :deep(.v-data-table__td) {
+      vertical-align: middle;
+      padding: 20px 0;
+    }
+
+    &__name-container {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    &__direction-abbr {
+      color: #1976d2;
+      text-transform: uppercase;
+      font-weight: 500;
+      margin-left: 0;
+      margin-top: 4px;
+    }
+
+    &__student-name {
+      font-weight: 400;
+    }
+
+    &__date-default {
+      color: #1976d2;
+      font-weight: 500;
+    }
+
+    &__date-upcoming {
+    color: #d32f2f;
+    font-weight: 500;
+  }
+
+    &__progress-link {
+    display: inline-flex;
+    align-items: center;
+    color: #1976d2;
+    text-decoration: none;
+    font-weight: 500;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+    &__progress-icon {
+    margin-left: 4px;
+    font-size: 16px;
+  }
   }
 }
 </style>

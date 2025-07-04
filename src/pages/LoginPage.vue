@@ -340,6 +340,8 @@ watch(route, () => {
 </template>
 
 <style scoped lang="scss">
+@import "@/assets/scss/mixins/mixins-media";
+
 .login-page {
   .background-gradient {
     position: relative;
@@ -701,5 +703,375 @@ watch(route, () => {
   font-family: Onest;
   font-size: 14px;
   margin-top: 8px;
+}
+
+@include media-max(large-desktop) {
+  .login-page {
+    .background-gradient {
+      position: relative;
+      height: 450px;
+      padding: 35px 60px;
+      display: flex;
+
+      &::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(147.31deg, #2d9aff 18.95%, #0066ff 121.1%);
+        opacity: 0.7;
+        z-index: -1;
+      }
+
+      .content {
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+        max-width: 373px;
+        z-index: 2;
+
+        .logo {
+          background-image: url("@/assets/images/logo/logo.svg");
+          background-size: cover;
+          background-position: center;
+          background-repeat: no-repeat;
+          width: 46px;
+          height: 46px;
+        }
+
+        .text {
+          display: flex;
+          flex-direction: column;
+          gap: 30px;
+
+          .title {
+            font-size: 40px;
+            color: #ffffff;
+            font-family: "Onest", sans-serif;
+            font-optical-sizing: auto;
+            font-weight: 600;
+            font-style: normal;
+          }
+
+          .description {
+            font-family: "Onest", sans-serif;
+            font-optical-sizing: auto;
+            font-weight: 300;
+            font-size: 16px;
+            line-height: 100%;
+            color: #ffffff;
+
+            .second-description {
+              font-family: "Onest", sans-serif;
+              font-optical-sizing: auto;
+              font-weight: 300;
+              font-size: 16px;
+              line-height: 100%;
+              color: #ffffff;
+              margin-top: 30px;
+            }
+          }
+        }
+      }
+
+      .woman-lego-wrapper {
+        position: relative;
+
+        .woman-lego {
+          position: absolute;
+          bottom: -35px;
+          background-image: url("@/assets/images/lego-models/woman-with-roses.png");
+          background-size: cover;
+          background-position: center;
+          background-repeat: no-repeat;
+          width: 326px;
+          height: 285px;
+          z-index: 3;
+        }
+      }
+    }
+
+    .login-form-wrapper {
+      width: 539px;
+      position: relative;
+      top: 50%;
+      transform: translateY(-10%);
+      margin: 0 auto;
+      right: initial;
+      display: flex;
+      flex-direction: column;
+      gap: 59px;
+      z-index: 1000;
+
+      .login-form {
+        padding: 39px 44px;
+        border-radius: 40px;
+        box-shadow: 0px 25px 42.9px -18px #0066ff5c;
+        background-color: #ffffff;
+        z-index: 2;
+
+        .title {
+          font-family: "Onest", sans-serif;
+          font-weight: 600;
+          font-size: 48px;
+          line-height: 100%;
+          letter-spacing: -2%;
+        }
+
+        .description {
+          margin-top: 5px;
+          font-family: Onest;
+          font-weight: 400;
+          font-size: 21px;
+          line-height: 100%;
+          letter-spacing: 0%;
+          color: #888888;
+
+          .name-company {
+            color: #0066ff;
+          }
+        }
+
+        .form {
+          margin-top: 53px;
+          display: flex;
+          flex-direction: column;
+          gap: 22px;
+
+          .form-email,
+          .form-password {
+            .label {
+              font-family: Onest;
+              font-weight: 400;
+              font-size: 16px;
+              line-height: 100%;
+              letter-spacing: 0%;
+              color: #30303d;
+              margin-bottom: 17px;
+            }
+
+            .field-email,
+            .field-password {
+              .input {
+                width: 100%;
+                padding: 12px 16px;
+                border: 1.5px solid #30303D26;
+                border-radius: 12px;
+                font-family: Onest;
+                font-size: 16px;
+                line-height: 100%;
+                color: #30303d;
+                outline: none;
+                transition: border-color 0.3s;
+
+                &:focus {
+                  border-color: #0066ff;
+                }
+              }
+
+              .input-error {
+                border-color: #ff0000;
+              }
+
+              .error-message {
+                color: #ff0000;
+                font-family: Onest;
+                font-size: 14px;
+                margin-top: 8px;
+              }
+            }
+          }
+
+          .form-password {
+            .label {
+              margin-bottom: 9px;
+            }
+          }
+        }
+
+        .login-button {
+          margin-top: 35px;
+          background-color: #0066ff;
+          color: #ffffff;
+          padding: 16px;
+          border-radius: 16px;
+          text-align: center;
+          cursor: pointer;
+          font-family: Onest;
+          font-weight: 600;
+          font-size: 18px;
+
+          &:hover {
+            background-color: #0055cc;
+          }
+        }
+
+        .forgot-password {
+          margin-top: 15px;
+          display: flex;
+          gap: 4px;
+          justify-content: center;
+          font-weight: 500;
+          font-size: 16px;
+          line-height: 100%;
+          letter-spacing: 0%;
+          color: #30303d;
+
+          .refresh {
+            cursor: pointer;
+            color: #0066ff;
+
+            &:hover {
+              text-decoration: underline;
+            }
+          }
+        }
+      }
+    }
+
+    .password-recovery,
+    .password-reset {
+      width: 539px;
+      position: sticky;
+      top: 50%;
+      transform: translateY(-20%);
+      margin: 0 auto;
+      padding: 39px 44px;
+      border-radius: 40px;
+      box-shadow: 0px 25px 42.9px -18px #0066ff5c;
+      background-color: #ffffff;
+      z-index: 100;
+
+      .back-to-login {
+        text-align: center;
+        cursor: pointer;
+        color: #0066ff;
+        font-family: Onest;
+        font-weight: 500;
+        font-size: 16px;
+        margin-bottom: 20px;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+
+      .title {
+        font-family: "Onest", sans-serif;
+        font-weight: 600;
+        font-size: 44px;
+        line-height: 100%;
+        letter-spacing: -2%;
+      }
+
+      .description {
+        margin-top: 10px;
+        font-family: Onest;
+        font-weight: 400;
+        font-size: 21px;
+        line-height: 100%;
+        color: #888888;
+
+        .second-description {
+          color: #0066ff;
+        }
+      }
+
+      .form {
+        display: flex;
+        flex-direction: column;
+        gap: 22px;
+
+        .form-email,
+        .form-password {
+          .label {
+            font-family: Onest;
+            font-weight: 400;
+            font-size: 16px;
+            line-height: 100%;
+            color: #30303d;
+            margin-bottom: 17px;
+          }
+
+          .field-email,
+          .field-password {
+            .input {
+              width: 100%;
+              padding: 12px 16px;
+              border: 1.5px solid #30303D26;
+              border-radius: 12px;
+              font-family: Onest;
+              font-size: 16px;
+              line-height: 100%;
+              color: #30303d;
+              outline: none;
+              transition: border-color 0.3s;
+
+              &:focus {
+                border-color: #0066ff;
+              }
+            }
+
+            .input-error {
+              border-color: #ff0000;
+            }
+
+            .error-message {
+              color: #ff0000;
+              font-family: Onest;
+              font-size: 14px;
+              margin-top: 8px;
+            }
+          }
+        }
+
+        .success-message {
+          color: #30303d;
+          margin-bottom: 53px;
+          margin-top: 53px;
+          font-family: "Onest", sans-serif;
+          font-weight: 400;
+          font-size: 21px;
+          line-height: 150%;
+          letter-spacing: 0%;
+        }
+      }
+
+      .recovery-button,
+      .reset-button {
+        margin-top: 35px;
+        background-color: #0066ff;
+        color: #ffffff;
+        padding: 16px;
+        border-radius: 16px;
+        text-align: center;
+        cursor: pointer;
+        font-family: Onest;
+        font-weight: 600;
+        font-size: 18px;
+
+        &:hover {
+          background-color: #0055cc;
+        }
+      }
+    }
+
+    .select-language {
+      margin: 0;
+      position: absolute;
+      top: 34px;
+      right: 34px;
+      width: 200px;
+    }
+  }
+
+  .error-message {
+    color: #ff0000;
+    font-family: Onest;
+    font-size: 14px;
+    margin-top: 8px;
+  }
 }
 </style>

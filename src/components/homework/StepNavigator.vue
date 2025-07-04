@@ -1,6 +1,8 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { useI18n } from 'vue-i18n';
 import type { Step } from '@/types';
+
+const { t } = useI18n();
 
 defineProps<{
   steps: Step[];
@@ -35,14 +37,14 @@ defineEmits<{
           class="nav-button back"
           @click="$emit('prev')"
       >
-        Назад
+        {{ $t('add_homework.back_button') }}
       </button>
       <button
           class="nav-button next"
           @click="$emit('next')"
           :disabled="isNextDisabled"
       >
-        Далі
+        {{ $t('add_homework.next_button') }}
       </button>
     </div>
   </div>
