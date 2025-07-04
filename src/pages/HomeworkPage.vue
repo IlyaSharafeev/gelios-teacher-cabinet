@@ -185,10 +185,12 @@ const filteredItems = computed(() => {
     >
       <!-- Custom slot for name column to include direction abbreviation -->
       <template v-slot:item.name="{ item }">
-        <span class="homework__direction-abbr">
-          {{ directions.find((d) => t(`homework.directions.${d.name_key}`) === item.direction)?.abbreviation || item.direction }}
-        </span>
-        <span class="homework__student-name">{{ item.name }}</span>
+        <div class="homework__name-container">
+          <span class="homework__student-name">{{ item.name }}</span>
+          <span class="homework__direction-abbr">
+            {{ directions.find((d) => t(`homework.directions.${d.name_key}`) === item.direction)?.abbreviation || item.direction }}
+          </span>
+        </div>
       </template>
       <!-- Custom slot for date column to apply conditional coloring -->
       <template v-slot:item.date="{ item }">
@@ -321,11 +323,16 @@ const filteredItems = computed(() => {
     padding: 20px 0;
   }
 
+  &__name-container {
+    display: flex;
+    align-items: center;
+  }
+
   &__direction-abbr {
     color: #1976d2;
     text-transform: uppercase;
     font-weight: 500;
-    margin-right: 8px;
+    margin-left: 8px;
   }
 
   &__student-name {
@@ -473,11 +480,18 @@ const filteredItems = computed(() => {
       padding: 20px 0;
     }
 
+    &__name-container {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
     &__direction-abbr {
       color: #1976d2;
       text-transform: uppercase;
       font-weight: 500;
-      margin-right: 8px;
+      margin-left: 0;
+      margin-top: 4px;
     }
 
     &__student-name {
@@ -490,26 +504,26 @@ const filteredItems = computed(() => {
     }
 
     &__date-upcoming {
-      color: #d32f2f;
-      font-weight: 500;
-    }
+    color: #d32f2f;
+    font-weight: 500;
+  }
 
     &__progress-link {
-      display: inline-flex;
-      align-items: center;
-      color: #1976d2;
-      text-decoration: none;
-      font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    color: #1976d2;
+    text-decoration: none;
+    font-weight: 500;
 
-      &:hover {
-        text-decoration: underline;
-      }
+    &:hover {
+      text-decoration: underline;
     }
+  }
 
     &__progress-icon {
-      margin-left: 4px;
-      font-size: 16px;
-    }
+    margin-left: 4px;
+    font-size: 16px;
+  }
   }
 }
 </style>
