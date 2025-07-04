@@ -359,6 +359,8 @@ const closeSidebar = () => {
 </template>
 
 <style scoped lang="scss">
+@import "@/assets/scss/mixins/mixins-media";
+
 $color-speed-reading: rgba(36, 124, 255, 0.15);
 $color-mental-arithmetic: rgba(255, 132, 197, 0.15);
 $color-ukrainian-language: rgba(247, 220, 1, 0.15);
@@ -891,5 +893,11 @@ tr {
 .homework__filter-select ::v-deep .v-field.v-field {
   border: 1.5px solid #30303D26 !important;
   border-radius: 12px;
+}
+
+@include media-max(desktop) {
+  .students-page-wrapper {
+    margin: 32px;
+  }
 }
 </style>
