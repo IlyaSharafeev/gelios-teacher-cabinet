@@ -47,7 +47,7 @@ export const useCertificatesStore = defineStore('certificates', {
     state: () => ({
         languages: [] as CertificateLanguage[],
         directions: null as CertificateDirectionsResponse | null,
-        students: [] as Student[], // 1. Добавлено состояние для студентов
+        students: [] as Student[],
         loading: false,
         error: null as string | null,
     }),
@@ -111,7 +111,7 @@ export const useCertificatesStore = defineStore('certificates', {
          * @action fetchStudents
          * @description Асинхронно запрашивает и сохраняет список студентов.
          */
-        async fetchStudents() { // 2. Добавлен новый action
+        async fetchStudents() {
             this.loading = true;
             this.error = null;
             const authStore = useAuthStore();
@@ -137,12 +137,46 @@ export const useCertificatesStore = defineStore('certificates', {
                 this.loading = false;
             }
         },
+
+        /**
+         * @action assignCertificates
+         * @description Отправляет POST запрос для присвоения сертификатов.
+         */
+        async assignCertificates(payload: { directionId: number; levelIds: number[]; languageCode: string; studentIds: number[] }) {
+            this.loading = true;
+            this.error = null;
+            const authStore = useAuthStore();
+            const token = authStore.token;
+
+            if (!token) {
+                this.error = 'Токен аутентификации не найден для присвоения сертификатов.';
+                notify({ title: this.error, type: "error" });
+                this.loading = false;
+                return;
+            }
+
+            try {
+                const response = await axios.post(`${baseURL}/assign-certificate`, payload, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                notify({ title: 'Сертификаты успешно присвоены!', type: "success" });
+                console.log('Certificates assignment response:', response.data);
+                return response.data;
+            } catch (error: any) {
+                const errorMessage = error.response?.data?.message || 'Ошибка при присвоении сертификатов';
+                this.error = errorMessage;
+                notify({ title: errorMessage, type: "error" });
+                throw error; // Re-throw to allow component to handle
+            } finally {
+                this.loading = false;
+            }
+        },
     },
 
     getters: {
         isLoading: (state) => state.loading,
         getLanguages: (state) => state.languages,
         getDirections: (state) => state.directions,
-        getStudents: (state) => state.students, // 3. Добавлен новый getter
+        getStudents: (state) => state.students,
     },
 });

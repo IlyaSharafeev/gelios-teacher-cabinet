@@ -264,10 +264,20 @@ const addCertificates = async () => {
         await generateCertificate(student.name, levelId);
       }
     }
+    // After all certificates are generated, make the POST request
+    if (selectedDirection.value !== null && selectedLanguage.value !== null) {
+      await certificateStore.assignCertificates({
+        directionId: selectedDirection.value,
+        levelIds: selectedLevel.value,
+        languageCode: selectedLanguage.value,
+        studentIds: selectedStudents.value
+      });
+    }
+
     currentStep.value = 3;
     setTimeout(resetForm, 2000);
   } catch (error) {
-    console.error('Ошибка при генерации сертификатов:', error);
+    console.error('Ошибка при генерации или присвоении сертификатов:', error);
   }
 };
 </script>
@@ -284,6 +294,12 @@ const addCertificates = async () => {
     </div>
 
     <div v-if="currentStep.value === 1" class="certificate-form__content">
+      <LanguageSelector
+          :items="availableLanguages"
+          v-model="selectedLanguage.value"
+          title="Мова"
+          no-items-text="Мови не знайдено"
+      />
       <StudentSelector
           :items="availableDirections"
           v-model="selectedDirection.value"
@@ -306,12 +322,6 @@ const addCertificates = async () => {
           select-all-text="Вибрати всіх"
           no-items-text="Студенти не знайдені"
       />
-      <LanguageSelector
-          :items="availableLanguages"
-          v-model="selectedLanguage.value"
-          title="Мова"
-          no-items-text="Мови не знайдено"
-      />
     </div>
 
     <div v-if="currentStep.value === 2" class="certificate-form__content step-confirmation">
@@ -329,7 +339,7 @@ const addCertificates = async () => {
     <div v-if="currentStep.value === 3" class="certificate-form__content step-success">
       <div class="success-step">
         <img :src="successImage" alt="Success" class="success-image" />
-        <h2 class="success-title">Сертифікати успішно додані</h2>
+        <h2 class="success-title">Сертифікаты успешно додані</h2>
       </div>
     </div>
 
