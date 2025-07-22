@@ -63,6 +63,12 @@ const toggleItem = (itemId: number) => {
   }
   console.log('StudentSelector: toggleItem updated selected:', selected.value);
 };
+
+// Add a watcher for props.items to log the incoming items
+watch(() => props.items, (newItems) => {
+  console.log('StudentSelector: props.items updated:', newItems);
+}, { immediate: true, deep: true });
+
 </script>
 
 <template>

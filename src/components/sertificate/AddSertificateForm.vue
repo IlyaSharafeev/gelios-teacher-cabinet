@@ -95,7 +95,8 @@ const selectedDirection = reactive({ value: null as number | null });
 const selectedLevel = reactive({ value: [] as number[] });
 const selectedLanguage = reactive({ value: null as string | null });
 const selectedStudents = reactive({ value: [] as number[] });
-const levels = reactive<CertificateLevel[]>([]);
+// MODIFICATION START: Change levels to be an array of objects that can include the image path
+const levels = reactive<Array<{ id: number; name: string; image?: string }>>([]);
 const emit = defineEmits(['has-unsaved-changes']);
 // ------------------------------------
 
@@ -140,7 +141,15 @@ watch([() => selectedDirection.value, () => selectedLanguage.value],
       levels.splice(0, levels.length);
       if (newDirectionId !== null && newLanguageId !== null) {
         const direction = availableDirections.value.find(d => d.id === newDirectionId);
-        if (direction?.levels) levels.push(...direction.levels);
+        if (direction?.levels) {
+          // Map the levels to include the full image path from imageMap
+          const formattedLevels = direction.levels.map(level => ({
+            id: level.id,
+            name: level.name,
+            image: imageMap[level.image] // Use imageMap to get the full path
+          }));
+          levels.push(...formattedLevels);
+        }
       }
       selectedLevel.value = selectedLevel.value.filter(levelId =>
           levels.some(level => level.id === levelId)
@@ -178,9 +187,10 @@ const formatDate = (date: Date): string => {
 };
 
 const generateCertificate = async (studentName: string, levelId: number): Promise<void> => {
+  // Use the 'levels' array directly, which now contains full image paths
   const level = levels.find((l) => l.id === levelId);
-  if (!level || !imageMap[level.image]) {
-    const errorMsg = `Не найден уровень с ID: ${levelId} или изображение: ${level?.image}`;
+  if (!level || !level.image) { // Check for level.image directly
+    const errorMsg = `Не найден уровень с ID: ${levelId} или изображение: ${level?.name}`;
     console.error(errorMsg);
     throw new Error(errorMsg);
   }
@@ -188,7 +198,7 @@ const generateCertificate = async (studentName: string, levelId: number): Promis
   return new Promise((resolve, reject) => {
     const img = new Image();
     img.crossOrigin = 'anonymous';
-    img.src = imageMap[level.image]; // Используем imageMap для получения пути к изображению
+    img.src = level.image; // Use the image path directly from the level object
 
     img.onload = () => {
       const canvas = document.createElement('canvas');
