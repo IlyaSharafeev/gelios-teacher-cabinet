@@ -284,12 +284,6 @@ const addCertificates = async () => {
     </div>
 
     <div v-if="currentStep.value === 1" class="certificate-form__content">
-      <LanguageSelector
-          :items="availableLanguages"
-          v-model="selectedLanguage.value"
-          title="Мова"
-          no-items-text="Мови не знайдено"
-      />
       <StudentSelector
           :items="availableDirections"
           v-model="selectedDirection.value"
@@ -311,6 +305,12 @@ const addCertificates = async () => {
           title="Мої учні"
           select-all-text="Вибрати всіх"
           no-items-text="Студенти не знайдені"
+      />
+      <LanguageSelector
+          :items="availableLanguages"
+          v-model="selectedLanguage.value"
+          title="Мова"
+          no-items-text="Мови не знайдено"
       />
     </div>
 
@@ -371,6 +371,7 @@ const addCertificates = async () => {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-column-gap: 20px;
+  grid-row-gap: 50px;
   margin-bottom: 20px;
 }
 
